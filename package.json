@@ -20,6 +20,7 @@
     "@reduxjs/toolkit": "^2.0.1",
     "add": "^2.0.6",
     "axios": "^1.6.5",
+    "classnames": "^2.5.1",
     "js-cookie": "^3.0.5",
     "next": "14.0.4",
     "react": "^18",

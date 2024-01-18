@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Container, Stack } from "@mui/material";
 import { ReactNode } from "react";
 import { AppSideBar } from "../Componnets/Layouts/AppSideBar";
 import { cookies } from "next/headers";
@@ -24,7 +24,9 @@ const Layout: React.FC<LayoutType> = ({ children }) => {
                     p: 2,
                 }}
             >
-                {children}
+                <Container>
+                    {children}
+                </Container>
             </Stack>
         </Stack>
     );

@@ -1,6 +1,7 @@
 'use server';
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { Router } from "next/router";
 
 export const logout = async () => {
     'use server';
@@ -8,3 +9,8 @@ export const logout = async () => {
     cookies().delete('auth');
     redirect('/auth');
 };
+
+export const onCheck = async () => {
+    'use server';
+    redirect('/app');
+}
