@@ -9,3 +9,13 @@ $purple: #8a45fa;
 
 $peachy-light: #ffe6d1;
 $peachy-dark: #ffcda3;
+
+.unstyledButton{
+    background-color: transparent;
+    border:none;
+    width: 100%;
+    cursor: pointer;
+    &:hover{
+
+    }
+}

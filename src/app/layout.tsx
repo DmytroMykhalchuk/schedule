@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 // import { TheHeader } from '@/Components/TheHeader';
 import { StoreProvider } from '@/redux/StoreProvider';
 import ThemeRegistry from './Componnets/ThemeRegistry';
+import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
