@@ -17,13 +17,11 @@ export const AppSideBar: React.FC<AppSideBarType> = ({ }) => {
             <Stack flex={1} className={styles.sideBarWrapper__menu} spacing={2} justifyContent={'center'}>
                 {
                     menuList.map((item, index) => (
-                        <>
-                            <MenuItem
-                                key={index}
-                                Icon={<item.Icon className={`${styles.menuIcon} ${router === item.path && styles.active}`}></item.Icon>}
-                                path={item.path}
-                            />
-                        </>
+                        <MenuItem
+                            key={index}
+                            Icon={<item.Icon className={`${styles.menuIcon} ${router === item.path && styles.active}`}></item.Icon>}
+                            path={item.path}
+                        />
                     ))
                 }
             </Stack>
