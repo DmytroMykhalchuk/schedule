@@ -1,10 +1,8 @@
-
-import Paper from "@mui/material/Paper";
-import Typography from '@mui/material/Typography'
-import { Comments } from "./Elements/Comments";
-import { TagItem } from "./Elements/TagItem";
-import { Stack } from "@mui/material";
-
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { Comments } from './Elements/Comments';
+import { TagItem } from './Elements/TagItem';
 
 type NewCommentsType = {
 };
