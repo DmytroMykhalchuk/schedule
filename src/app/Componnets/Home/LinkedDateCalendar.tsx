@@ -25,7 +25,6 @@ function getRandomNumber(min: number, max: number) {
 };
 
 function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
-  console.log(date)
   return new Promise<{ daysToHighlight: number[] }>((resolve, reject) => {
     const timeout = setTimeout(() => {
       const daysInMonth = date.daysInMonth();
