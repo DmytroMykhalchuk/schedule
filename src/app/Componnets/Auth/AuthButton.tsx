@@ -34,15 +34,16 @@ export const GoogleButton: React.FC<GoogleButtonType> = ({ }) => {
         onSuccess: async (credentialResponse) => {
             const user = await authApi.getGoogleUser(credentialResponse.access_token);
             const { email, locale, name, picture, sub } = user;
-            // UserActions.storeUser({name})
+            //todo change locale
+
             axios.post('/api/auth', { ...user })
                 .then((response) => {
-                    console.log(response.data?.sessionId)
-                    console.log(response.data)
+                    const data = response.data;
                     Cookies.set('auth', JSON.stringify(user));
-                    Cookies.set('auth_id', response.data.sessionId);
-                    // redirect('about');
-                    push('/app');
+                    Cookies.set('auth_id', data.data.sessionId);
+                    data.data.projectsIds
+                        ? push('/app')
+                        : push('/enter');
                 });
 
         },

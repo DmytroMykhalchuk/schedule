@@ -14,6 +14,10 @@ const Layout: React.FC<LayoutType> = ({ children }) => {
         redirect('/auth');
     }
 
+    if (!cookies().get('target_project')) {
+        redirect('/enter');
+    }
+
     return (
         <Stack direction={'row'}>
             <AppSideBar />
@@ -23,7 +27,6 @@ const Layout: React.FC<LayoutType> = ({ children }) => {
                     height: '100%',
                     minHeight: '100vh',
                     p: 2,
-                    backgroundColor: '#F7F5F4',
                 }}
             >
                 <Container>

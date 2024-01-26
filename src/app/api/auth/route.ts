@@ -8,12 +8,13 @@ export const POST = async (req: Request) => {
     const email = params.email as string;
     const name = params.name as string;
     const sub = params.sub as string;
+    const picture = params.picture as string;
 
     if (!email || !name || !sub) {
         return NextResponse.json({ code: 500 })
     }
 
-    const data = await UserActions.login({ name, google_id: sub, email })
+    const data = await UserActions.login({ name, google_id: sub, email, picture })
 
     return NextResponse.json(data);
 };
