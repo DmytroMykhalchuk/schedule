@@ -4,7 +4,7 @@ import Project from "../models/Project";
 import User from "../models/User";
 import { getRandomBoolean, getRandomInt, getRandomString } from "../utils/utils";
 import { UserActions } from "./UserActions";
-import { priorities, statuses } from "../constants";
+import { priorities, requiredDateLength, statuses } from "../constants";
 
 type ProjectDB = {
     directories: string[]
@@ -100,9 +100,36 @@ export const ProjectActions = {
         }
 
         const result = await Project.findOneAndUpdate({ _id: projectId, }, { $push: { directories: generatedDirectories } });
-        
+
         return generatedDirectories;
 
+    },
+
+    async getMonthTaskDays(projectId: string, sessionId: string, findDate: string): Promise<number[]> {
+        await connectDB();
+        const user = await UserActions.getUserBySessionId(sessionId);
+        if (!user?._id) {
+            return [];
+        }
+        const formattedDate = findDate?.slice(0, -2);
+        const result = await Project.findOne({
+            _id: projectId,
+            users: user._id,
+        }, {
+            'tasks': 1,
+        });
+        //@ts-ignore
+        const requiredDays = [] as number[];
+        result.tasks.forEach((task: { dueDate: string }) => {
+            if (task.dueDate.includes(formattedDate)) {
+                requiredDays.push(+task.dueDate.slice(-2));
+            }
+        });
+
+        const uniqueDays = requiredDays.filter((value, index, array) => {
+            return array.indexOf(value) === index;
+        });
+        return uniqueDays;
     },
 
     async genearateRandomTasks(projectId: string, count = 50, maxDayCount = 30): Promise<void> {
@@ -120,7 +147,7 @@ export const ProjectActions = {
                 assignee: randomUserId,
                 description: getRandomBoolean() ? getRandomString() : '',
                 directory: directories[Math.floor(Math.random() * users.length)],
-                dueDate: `${randomDate.getFullYear()}.${randomDate.getMonth() + 1}.${randomDate.getDate()}`,
+                dueDate: `${randomDate.getFullYear()}.${(randomDate.getMonth() + 1).toString().padStart(2, '0')}.${randomDate.getDate().toString().toString().padStart(2, '0')}`,
                 name: getRandomString(3, 20),
                 priority: priorities[Math.floor(Math.random() * priorities.length)].statusName,
                 status: statuses[Math.floor(Math.random() * statuses.length)].statusName,

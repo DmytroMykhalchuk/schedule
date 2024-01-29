@@ -33,3 +33,6 @@ export const statuses = [
         secondaryColor: '#FCFCE5',
     }
 ];
+
+
+export const requiredDateLength = 10;
