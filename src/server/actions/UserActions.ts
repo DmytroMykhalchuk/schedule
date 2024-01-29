@@ -1,7 +1,9 @@
+import { getMaxListeners } from "events";
 import connectDB from "../connectDB";
 import User from "../models/User";
 //@ts-ignore
 import uniqid from 'uniqid';
+import { getRandomNumber, getRandomPictureUrl } from "../utils/utils";
 
 export type StoreUser = {
     name: string
@@ -71,5 +73,24 @@ export const UserActions = {
         const users = await User.find({ _id: { $in: ids } }, mask);
 
         return users;
-    }
+    },
+    async randomGenerate(count = 10): Promise<void> {
+        await connectDB();
+
+        const mailMask = 'example.user';
+        const mailSufix = '@getMaxListeners.com';
+        const nameMask = 'example.user';
+
+        for (let index = 0; index < count; index++) {
+            const person = new User({
+                name: nameMask + getRandomNumber(),
+                email: mailMask + getRandomNumber() + mailSufix,
+                google_id: getRandomNumber(12),
+                picture: getRandomPictureUrl(),
+                sessions: [],
+            });
+            const result = await person.save();
+        }
+    },
 };
+

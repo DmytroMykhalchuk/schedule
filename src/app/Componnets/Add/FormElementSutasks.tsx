@@ -22,7 +22,6 @@ export const FormElementSutasks: React.FC<FormElementSutasksType> = ({ }) => {
 
     const onDeleteSubTask = (position: number) => {
         const test = subtasks.filter((_, index) => index != position)
-        console.log(test)
         setSubtasks((prev: string[]) => prev.filter((_, index) => index != position))
     };
 
@@ -53,7 +52,6 @@ type SubtasksItemType = {
 };
 
 const SubtasksItem: React.FC<SubtasksItemType> = ({ task, position, isLastIndex, onAddNewSubtask, onDeleteSubTask }) => {
-    console.log(isLastIndex)
     return (
         <Stack direction={'row'} alignItems={'center'} spacing={1}>
             <Typography variant="body1">{position + 1}.</Typography>

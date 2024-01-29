@@ -48,7 +48,7 @@ export const GoogleButton: React.FC<GoogleButtonType> = ({ }) => {
 
         },
         onError: () => {
-            console.log('Login Failed');
+            console.warn('Login Failed');
         },
         flow: 'implicit',
     }) as () => void;

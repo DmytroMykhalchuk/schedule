@@ -9,10 +9,6 @@ const Page: React.FC<PageType> = ({ }) => {
     if (!Cookies.get('auth_id')) {
         // redirect('/auth');
     }
-    console.log(
-        1,
-        Cookies.get('auth_id'),
-    )
     return (
         <>
             about

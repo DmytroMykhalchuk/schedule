@@ -4,24 +4,7 @@ import Typography from "@mui/material/Typography";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Chip from "@mui/material/Chip";
-
-const statuses = [
-    {
-        statusName: 'not_started',
-        primaryColor: '#A94BF2',
-        secondaryColor: '#F5EDFF',
-    },
-    {
-        statusName: 'in_progress',
-        primaryColor: '#039F6D',
-        secondaryColor: '#E3FFEB',
-    },
-    {
-        statusName: 'done',
-        primaryColor: '#DBB200',
-        secondaryColor: '#FCFCE5',
-    }
-];
+import { statuses } from "@/server/constants";
 
 type FormElementStatusType = {
 };

@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const DATABASE_URL = process.env.DATABASE_URL || 'mongodb://127.0.0.1:27017/shedule';
 
 if (!DATABASE_URL) {
-  console.log(DATABASE_URL)
+  console.warn(DATABASE_URL)
   throw new Error(DATABASE_URL);
   throw new Error("Please define the DATABASE_URL environment variable inside .env.local");
 }

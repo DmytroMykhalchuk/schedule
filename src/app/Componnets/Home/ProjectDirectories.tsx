@@ -19,8 +19,6 @@ export const ProjectDirectories: React.FC<ProjectDirectoriesType> = async ({ }) 
 
     const directories = await geetDirectories();
 
-    console.log(directories)
-
 
     return (
         <Paper elevation={4} sx={{ p: 2 }}>

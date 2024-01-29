@@ -24,7 +24,6 @@ export const appSlice = createSlice({
             state.value -= 1
         },
         incrementByAmount: (state, action: PayloadAction<{ id: number, msg?: string }>) => {
-            console.log(action.payload.id);
             state.value += action.payload.id
         },
     },

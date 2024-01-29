@@ -4,24 +4,8 @@ import Typography from "@mui/material/Typography";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Chip from "@mui/material/Chip";
+import { priorities } from "@/server/constants";
 
-const priorities = [
-    {
-        statusName: 'low_priority',
-        primaryColor: '#039F6D',
-        secondaryColor: '#E3FFEB',
-    },
-    {
-        statusName: 'medium priority',
-        primaryColor: '#DBB200',
-        secondaryColor: '#FCFCE5',
-    },
-    {
-        statusName: 'critical_prority',
-        primaryColor: '#ff2626',
-        secondaryColor: '#ffe9e9',
-    }
-];
 
 type FormElementPriorityType = {
 };

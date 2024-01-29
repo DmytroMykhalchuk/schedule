@@ -14,7 +14,6 @@ type NotificationInviteType = {
 
 export const NotificationInvite: React.FC<NotificationInviteType> = ({ }) => {
     const { searchParams } = new URL(window.location.href);
-    console.log(searchParams.get('sended_inviting'))
     const [isOpen, setIsOpen] = useState(() => Boolean(searchParams.get('sended_inviting')));
 
     return (
