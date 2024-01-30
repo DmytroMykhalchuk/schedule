@@ -3,8 +3,9 @@ import connectDB from "../connectDB";
 import Project from "../models/Project";
 import User from "../models/User";
 import { getRandomBoolean, getRandomInt, getRandomString } from "../utils/utils";
-import { UserActions } from "./UserActions";
+import { UserActions, UserTeamItemType } from "./UserActions";
 import { priorities, requiredDateLength, statuses } from "../constants";
+import dayjs from "dayjs";
 
 type ProjectDB = {
     directories: string[]
@@ -19,6 +20,7 @@ type ProjectUsers = {
     name: string,
     _id: string,
     picture: string,
+    email: string
 };
 
 type StoreTaskType = {
@@ -30,7 +32,10 @@ type StoreTaskType = {
     priority: string,
     description: string,
     subtasks: string[] | null,
-}
+};
+
+type TaskType = StoreTaskType & { _id: string }
+type UrgentTaskType = Pick<TaskType, '_id' | 'name' | 'dueDate'>
 
 export const ProjectActions = {
     async storeProject(project: StoreProjectType, sessionId: string): Promise<string> {
@@ -64,7 +69,7 @@ export const ProjectActions = {
         const usersIds = project.users || [];
         usersIds.push(project.admin_id);
 
-        const users = await UserActions.getUsersByIds(usersIds, { _id: true, name: true, picture: true });
+        const users = await UserActions.getUsersByIds(usersIds, { _id: true, name: true, picture: true, email: true });
 
         return users;
     },
@@ -132,6 +137,26 @@ export const ProjectActions = {
         return uniqueDays;
     },
 
+    async getUrgentTasks(projectId: string, sessionId: string): Promise<UrgentTaskType[]> {
+        await connectDB();
+        const user = await UserActions.getUserBySessionId(sessionId);
+
+        const project = await Project.findOne({ _id: projectId, users: user._id }, { 'tasks.name': 1, 'tasks.dueDate': 1, });
+
+        const requiredDates = [
+            dayjs().format('YYYY.MM.DD'),
+            dayjs().add(1, 'day').format('YYYY.MM.DD'),
+            dayjs().add(2, 'day').format('YYYY.MM.DD'),
+        ];
+
+        const urgentsTasks =
+            project.tasks?.filter((item: { dueDate: string }) => requiredDates.includes(item.dueDate))
+                .sort((a: { dueDate: string }, b: { dueDate: string }) => a.dueDate.localeCompare(b.dueDate))
+            || [];
+
+        return urgentsTasks;
+    },
+
     async genearateRandomTasks(projectId: string, count = 50, maxDayCount = 30): Promise<void> {
         await connectDB();
         const users = await User.find();
@@ -158,7 +183,48 @@ export const ProjectActions = {
             tasks.push(newTask);
         }
         const result = await Project.findOneAndUpdate({ _id: projectId }, { $push: { tasks: tasks, users: userIds } })
-    }
+    },
+
+    async getTeam(projectId: string, sessionId: string): Promise<UserTeamItemType[]> {
+        await connectDB();
+        const user = await UserActions.getUserBySessionId(sessionId);
+
+        const project = await Project.findOne({ _id: projectId, users: user._id }, { team: 1 });
+        if (!project._id) {
+            return [];
+        }
+        const userIdRoleMap = {} as any;
+        const userIds = project.team.map((user: { id: string, role: string }) => {
+            userIdRoleMap[user.id] = user.role
+            return user.id
+        });
+
+        const users = await UserActions.getUsersByIds(userIds);
+
+        const result = [] as UserTeamItemType[];
+
+        users.forEach((user) => {
+            const role = userIdRoleMap[user._id];
+            role && result.push({
+                name: user.name,
+                _id: user._id,
+                email: user.email,
+                picture: user.picture,
+                role,
+            })
+        });
+
+        return result;
+    },
+
+    async getProjectBySessionAndId(projectId: string, sessionId: string, projectFieldMask = {} as {}) {
+        await connectDB();
+
+        const user = await UserActions.getUserBySessionId(sessionId);
+        const project = Project.findOne({ _id: projectId, users: user._id }, { ...projectFieldMask })
+
+        return project;
+    },
 };
 
 const generateSubtasks = (min = 1, max = 10): string[] => {

@@ -32,19 +32,6 @@ export const ProjectDirectories: React.FC<ProjectDirectoriesType> = async ({ }) 
                     />
                 ))
             }
-            {/* <ProjectDirectoryItem
-                title="Project ttile"
-                users={[
-                    {
-                        name: 'Volodymyr',
-                        image: `https://random-d.uk/api/v2/randomimg`,
-                    },
-                    {
-                        name: 'Oleg',
-                        image: `https://random-d.uk/api/v2/randomimg`,
-                    }
-                ]}
-            /> */}
             <AddDirectory />
         </Paper>
     );

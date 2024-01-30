@@ -3,8 +3,8 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import styles from './styles.module.scss';
 import { createDirectory } from "./actions";
+import styles from '@/app/Componnets/Add/styles.module.scss';
 
 type PageType = {
 };

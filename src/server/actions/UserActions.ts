@@ -11,13 +11,17 @@ export type StoreUser = {
     google_id: string
     picture: string
 };
+
 export type UserDB = {
     sessions: string[],
     google_id: number,
     name: string,
     picture: string,
+    email: string
     _id: string,
-}
+};
+
+export type UserTeamItemType = Pick<UserDB, '_id' | 'email' | 'name' | 'picture'> & { role: string }
 
 export const UserActions = {
     async login(user: StoreUser) {
@@ -78,7 +82,7 @@ export const UserActions = {
         await connectDB();
 
         const mailMask = 'example.user';
-        const mailSufix = '@getMaxListeners.com';
+        const mailSufix = '@gmail.com';
         const nameMask = 'example.user';
 
         for (let index = 0; index < count; index++) {
