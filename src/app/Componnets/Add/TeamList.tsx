@@ -38,7 +38,7 @@ export const TeamList: React.FC<TeamListType> = async ({ }) => {
                                 </Link>
                                 {
                                     member.isAdmin ||
-                                    <Link href={'#'}>
+                                    <Link href={`${member._id}/delete`}>
                                         <DeleteIcon color="warning" />
                                     </Link>
                                 }

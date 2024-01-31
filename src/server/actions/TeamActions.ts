@@ -99,5 +99,15 @@ export const TeamActions = {
         project.save();
 
         return { success: true };
-    }
+    },
+
+    async removeTeamMemeber(projectId: string, sessionId: string, memberId: string): Promise<{ success: boolean }> {
+        await connectDB();
+        const project = await ProjectActions.getProjectBySessionAndId(projectId, sessionId, { team: 1 });
+
+        project.team = project.team.filter((member: { id: string }) => member.id !== memberId);
+        project.save();
+
+        return { success: true };
+    },
 }
