@@ -28,18 +28,6 @@ export const Team: React.FC<TeamType> = async ({ }) => {
         <Paper elevation={4} sx={{ p: 2 }}>
             <Typography variant="h6">Team Directory</Typography>
             <Grid container spacing={2} alignItems={'stretch'}>
-                {/* {
-                    team.map((person, index) => (
-                        <Grid key={index} item xs={12} sm={6}>
-                            <TeamItem
-                                avatar={person.image}
-                                name={person.name}
-                                role={person.role}
-                                email=''
-                            />
-                        </Grid>
-                    ))
-                } */}
                 {
                     team.map(person => (
                         <Grid key={person._id} item xs={12} sm={6}>

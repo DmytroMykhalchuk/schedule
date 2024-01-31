@@ -35,7 +35,7 @@ const projectSchema = new Schema({
             subtasks: { type: [String], default: [], },
             comments: {
                 type: [{
-                    _id: { type: String, required: true },
+                    userId: { type: String, required: true },
                     name: { type: String, required: true },
                     picture: { type: String, required: true },
                     text: { type: String, required: true }

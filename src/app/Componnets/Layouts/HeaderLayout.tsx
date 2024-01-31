@@ -10,7 +10,7 @@ import Avatar from "@mui/material/Avatar";
 type HeaderLayoutType = {
     title: string
     subtitle: string
-    slot: ReactNode
+    slot?: ReactNode
 };
 
 export const HeaderLayout: React.FC<HeaderLayoutType> = ({ title, subtitle, slot }) => {

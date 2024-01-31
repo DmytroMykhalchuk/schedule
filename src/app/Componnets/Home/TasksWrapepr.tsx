@@ -12,7 +12,7 @@ export const TasksWrapepr: React.FC<TasksWrapeprType> = ({ }) => {
 
     return (
         <Paper elevation={4} sx={{ p: 2, mb: 2 }}>
-            <Link href={'/app/calendar/urgent-tasks'}>
+            <Link href={'/app/my-tasks'}>
                 <Stack direction={'row'}>
                     <Typography variant="h6" fontWeight={600} flex={1}>Urgent Tasks</Typography>
                     <ArrowForwardIosIcon />
