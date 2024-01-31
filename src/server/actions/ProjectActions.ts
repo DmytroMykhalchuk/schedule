@@ -225,6 +225,7 @@ export const ProjectActions = {
 
         return project;
     },
+
 };
 
 const generateSubtasks = (min = 1, max = 10): string[] => {

@@ -43,6 +43,10 @@ const projectSchema = new Schema({
                 default: [],
             }
         }]
+    },
+    invitations: {
+        type: [String],
+        default: [],
     }
 });
 

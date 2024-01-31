@@ -18,6 +18,10 @@ const urls = [
     {
         title: 'Team',
         href: '/app/add/team'
+    },
+    {
+        title: 'Invitations',
+        href: '/app/add/invitations',
     }
 ];
 
