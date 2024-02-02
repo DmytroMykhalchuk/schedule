@@ -22,8 +22,6 @@ export const UserSelect: React.FC<UserSelectType> = async ({ fieldName, showEmai
         email: '',
     });
 
-    console.log(users[0]._id)
-
     return (
         <>
             <Select

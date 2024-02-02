@@ -25,6 +25,7 @@ const projectSchema = new Schema({
     },
     tasks: {
         type: [{
+            _id: { type: Schema.Types.ObjectId, default: mongoose.Types.ObjectId },
             name: { type: String, required: true, },
             assignee: { type: String, default: '', },
             status: { type: String, required: true, },
@@ -35,6 +36,7 @@ const projectSchema = new Schema({
             subtasks: { type: [String], default: [], },
             comments: {
                 type: [{
+                    _id: { type: Schema.Types.ObjectId, default: mongoose.Types.ObjectId },
                     userId: { type: String, required: true },
                     name: { type: String, required: true },
                     picture: { type: String, required: true },

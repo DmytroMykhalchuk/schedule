@@ -8,9 +8,10 @@ import { priorities } from "@/server/constants";
 
 
 type FormElementPriorityType = {
+    defaultPriority?: string
 };
 
-export const FormElementPriority: React.FC<FormElementPriorityType> = ({ }) => {
+export const FormElementPriority: React.FC<FormElementPriorityType> = ({ defaultPriority = priorities[0].statusName }) => {
 
     return (
         <>
@@ -28,14 +29,14 @@ export const FormElementPriority: React.FC<FormElementPriorityType> = ({ }) => {
                             '& svg.MuiSelect-icon': {
                                 display: 'none',
                             },
-                            '& .MuiSelect-select':{
-                                p:0,
+                            '& .MuiSelect-select': {
+                                p: 0,
                             },
                             '& fieldset': {
                                 border: 'none',
                             }
                         }}
-                        defaultValue={priorities[0].statusName}
+                        defaultValue={defaultPriority}
                         required
                         name="priority"
                     >

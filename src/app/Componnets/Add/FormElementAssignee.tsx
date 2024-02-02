@@ -4,9 +4,11 @@ import Typography from '@mui/material/Typography';
 import { UserSelect } from './Elements/UserSelect';
 
 type FormElementAssigneeType = {
+    fieldName: string
+    defaultValue: string
 };
 
-export const FormElementAssignee: React.FC<FormElementAssigneeType> = async ({ }) => {
+export const FormElementAssignee: React.FC<FormElementAssigneeType> = async ({ fieldName, defaultValue }) => {
     return (
         <>
             <Grid container spacing={2} sx={{ p: 2 }}>
@@ -16,7 +18,7 @@ export const FormElementAssignee: React.FC<FormElementAssigneeType> = async ({ }
                     </Stack>
                 </Grid>
                 <Grid item xs={9}>
-                    <UserSelect />
+                    <UserSelect fieldName={fieldName} defaultUserId={defaultValue} />
                 </Grid>
             </Grid>
         </>

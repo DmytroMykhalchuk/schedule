@@ -11,13 +11,14 @@ type HeaderLayoutType = {
     title: string
     subtitle: string
     slot?: ReactNode
+    isCenter?: boolean
 };
 
-export const HeaderLayout: React.FC<HeaderLayoutType> = ({ title, subtitle, slot }) => {
+export const HeaderLayout: React.FC<HeaderLayoutType> = ({ title, subtitle, slot, isCenter }) => {
     const authUser = JSON.parse(cookies().get('auth')?.value || '{}');
 
     return (
-        <Grid container sx={{ pb: 2 }}>
+        <Grid container sx={{ pb: 2 }} alignItems={isCenter ? 'center' : undefined}>
             <Grid item xs={12} md={4}>
                 <Typography variant="h4" fontWeight={600}>
                     {title}

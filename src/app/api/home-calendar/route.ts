@@ -3,7 +3,7 @@ import { NextResponse } from "next/server"
 
 export const GET = async (req: Request) => {
     const { searchParams } = new URL(req.url);
-    // console.log();
+
     const date = searchParams.get('date') || '';
     const projectId = searchParams.get('project_id') || '';
     const sessionId = searchParams.get('session_id') || '';

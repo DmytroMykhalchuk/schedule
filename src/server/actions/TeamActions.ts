@@ -12,10 +12,10 @@ type StoreMemberType = {
 type TeamItemType = UserTeamItemType & { isAdmin: boolean }
 
 export const TeamActions = {
-    async storeMember(targetProjectId: string, sessionId: string, member: StoreMemberType): Promise<{ success: boolean }> {
+    async storeMember(projectId: string, sessionId: string, member: StoreMemberType): Promise<{ success: boolean }> {
         await connectDB();
 
-        const project = await ProjectActions.getProjectBySessionAndId(targetProjectId, sessionId, { team: 1 });
+        const project = await ProjectActions.getProjectByFilters({ projectId, sessionId }, { team: 1 });
         if (!project?._id)
             return { success: false };
 
@@ -33,9 +33,9 @@ export const TeamActions = {
         return { success: true };
     },
 
-    async getTeam(targetProjectId: string, sessionId: string): Promise<TeamItemType[]> {
+    async getTeam(projectId: string, sessionId: string): Promise<TeamItemType[]> {
         await connectDB();
-        const project = await ProjectActions.getProjectBySessionAndId(targetProjectId, sessionId, { team: 1, users: 1, admin_id: 1 });
+        const project = await ProjectActions.getProjectByFilters({ projectId, sessionId }, { team: 1, users: 1, admin_id: 1 });
 
         const userIdRoleMap = {} as any;
         const userIds = project.team.map((user: { id: string, role: string }) => {
@@ -65,7 +65,7 @@ export const TeamActions = {
 
     async getTeamMember(projectId: string, sessionId: string, userId: string): Promise<string> {
         await connectDB();
-        const project = await ProjectActions.getProjectBySessionAndId(projectId, sessionId, { team: 1 });
+        const project = await ProjectActions.getProjectByFilters({ projectId, sessionId }, { team: 1 });
 
         const memeber = project?.team.find((user: { id: string, role: string }) => {
             if (userId === user.id) {
@@ -83,19 +83,16 @@ export const TeamActions = {
 
     async updateTeamMember(projectId: string, sessionId: string, member: StoreMemberType): Promise<{ success: boolean }> {
         await connectDB();
-        const project = await ProjectActions.getProjectBySessionAndId(projectId, sessionId, { team: 1 });
+        const project = await ProjectActions.getProjectByFilters({ projectId, sessionId }, { team: 1 });
 
         if (!project?.team)
             return { success: false };
 
         project.team.forEach((user: { id: string, role: string }) => {
-            console.log(user.id, member.userId)
             if (user.id !== member.userId)
                 return;
-            console.log('changed')
             user.role = member.role;
         });
-        console.log(project.team)
         project.save();
 
         return { success: true };
@@ -103,7 +100,7 @@ export const TeamActions = {
 
     async removeTeamMemeber(projectId: string, sessionId: string, memberId: string): Promise<{ success: boolean }> {
         await connectDB();
-        const project = await ProjectActions.getProjectBySessionAndId(projectId, sessionId, { team: 1 });
+        const project = await ProjectActions.getProjectByFilters({ projectId, sessionId }, { team: 1 });
 
         project.team = project.team.filter((member: { id: string }) => member.id !== memberId);
         project.save();

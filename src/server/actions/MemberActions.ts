@@ -14,7 +14,7 @@ export const MemberActions = {
     async getMembers(projectId: string, sessionId: string): Promise<MemberType[]> {
         await connectDB();
 
-        const project = await ProjectActions.getProjectBySessionAndId(projectId, sessionId, { users: 1, admin_id: 1 });
+        const project = await ProjectActions.getProjectByFilters({projectId, sessionId}, { users: 1, admin_id: 1 });
 
         const users = await User.find({ _id: { $in: project?.users } }, { name: 1, picture: 1, email: 1 });
 
@@ -32,7 +32,7 @@ export const MemberActions = {
 
     async removeMember(projectId: string, sessionId: string, userId: string): Promise<{ success: boolean }> {
         await connectDB();
-        const project = await ProjectActions.getProjectBySessionAndId(projectId, sessionId, { users: 1, tasks: 1 });
+        const project = await ProjectActions.getProjectByFilters({projectId, sessionId}, { users: 1, tasks: 1 });
 
         project.users = project.users.filter((id: string) => id !== userId);
 

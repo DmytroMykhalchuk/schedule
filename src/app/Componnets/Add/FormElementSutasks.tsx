@@ -10,10 +10,11 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 type FormElementSutasksType = {
+    defaultSubtasks?: string[]
 };
 
-export const FormElementSutasks: React.FC<FormElementSutasksType> = ({ }) => {
-    const [isExtended, setIsExtended] = useState(false);
+export const FormElementSutasks: React.FC<FormElementSutasksType> = ({ defaultSubtasks }) => {
+    const [isExtended, setIsExtended] = useState(Boolean(defaultSubtasks?.length) || false);
     const [subtasks, setSubtasks] = useState([''] as string[]);
 
     const onChangeIsExtended = () => {

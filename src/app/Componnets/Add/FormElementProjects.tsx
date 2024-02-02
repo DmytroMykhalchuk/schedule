@@ -7,9 +7,10 @@ import ShareIcon from '@mui/icons-material/Share';
 import { defaultFirstDirectory, getProjectDirectories } from "./actions";
 
 type FormElementProjectsType = {
+    defaultDirectory?: string
 };
 
-export const FormElementProjects: React.FC<FormElementProjectsType> = async ({ }) => {
+export const FormElementProjects: React.FC<FormElementProjectsType> = async ({ defaultDirectory }) => {
 
     const directories = await getProjectDirectories() || [] as string[];
     directories.unshift(defaultFirstDirectory)
@@ -37,7 +38,7 @@ export const FormElementProjects: React.FC<FormElementProjectsType> = async ({ }
                                 border: 'none',
                             }
                         }}
-                        defaultValue={directories[0]}
+                        defaultValue={defaultDirectory || directories[0]}
                         required
                         name="directory"
                     >

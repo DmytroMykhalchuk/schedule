@@ -26,8 +26,6 @@ const Page: React.FC<PageType> = async ({ params }) => {
     const targetUserId = params.id;
     const role = await getTeamUser(targetUserId);
 
-    console.log({ role })
-
     return (
         <Stack alignItems={'center'} justifyContent={'center'} spacing={2}>
             <MiddlePaperWrapper>

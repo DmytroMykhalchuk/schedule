@@ -217,11 +217,16 @@ export const ProjectActions = {
         return result;
     },
 
-    async getProjectBySessionAndId(projectId: string, sessionId: string, projectFieldMask = {} as {}) {
+    async getProjectByFilters(filter: { projectId: string, sessionId: string, otherFilters?: {} }, projectFieldMask = {} as {}) {
         await connectDB();
 
-        const user = await UserActions.getUserBySessionId(sessionId);
-        const project = Project.findOne({ _id: projectId, users: user._id }, { ...projectFieldMask })
+        const preparedFilter: any = filter?.otherFilters ? { ...filter?.otherFilters } : {};
+        const user = await UserActions.getUserBySessionId(filter.sessionId);
+
+        preparedFilter._id = filter.projectId;
+        preparedFilter.users = user._id;
+
+        const project = Project.findOne(preparedFilter, { ...projectFieldMask })
 
         return project;
     },

@@ -7,9 +7,10 @@ import Chip from "@mui/material/Chip";
 import { statuses } from "@/server/constants";
 
 type FormElementStatusType = {
+    defaultStatus?: string
 };
 
-export const FormElementStatus: React.FC<FormElementStatusType> = ({ }) => {
+export const FormElementStatus: React.FC<FormElementStatusType> = ({ defaultStatus = statuses[0].statusName }) => {
 
     return (
         <>
@@ -34,7 +35,7 @@ export const FormElementStatus: React.FC<FormElementStatusType> = ({ }) => {
                                 border: 'none',
                             }
                         }}
-                        defaultValue={statuses[0].statusName}
+                        defaultValue={defaultStatus}
                         required
                         name="status"
                     >
