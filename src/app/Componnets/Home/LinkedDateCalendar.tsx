@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@mui/material';
 import { cookies } from 'next/headers';
-import { getCookieValue } from '@/utlis/getTargetProjectId';
+import { getCookieValue } from '@/utlis/getCookieValue';
 
 dayjs.locale(uk);
 dayjs.extend(updateLocale)
@@ -24,7 +24,7 @@ function getRandomNumber(min: number, max: number) {
 };
 
 function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
-  const formattedDate = date.format('YYYY.MM.DD');
+  const formattedDate = date.format('DD.MM.YYYY');
   const targetProjectId = getCookieValue('target_project');
   const sessionId = getCookieValue('auth_id');
 

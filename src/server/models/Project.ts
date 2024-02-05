@@ -2,6 +2,31 @@ import mongoose, { Schema } from "mongoose";
 
 mongoose.Promise = global.Promise;
 
+const commentSchema = new Schema({
+    _id: { type: Schema.Types.ObjectId, default: mongoose.Types.ObjectId },
+    userId: { type: String, required: true },
+    name: { type: String, required: true },
+    picture: { type: String, required: true },
+    text: { type: String, required: true },
+    replyId: { type: String, default: '' },
+});
+
+const taskShema = new Schema({
+    _id: { type: Schema.Types.ObjectId, default: mongoose.Types.ObjectId },
+    name: { type: String, required: true, },
+    assignee: { type: String, default: '', },
+    status: { type: String, required: true, },
+    directory: { type: String, default: '', },
+    dueDate: { type: String, default: '', },
+    priority: { type: String, required: true, },
+    description: { type: String, default: '', },
+    subtasks: { type: [String], default: [], },
+    comments: {
+        type: [commentSchema],
+        default: [],
+    }
+}, { _id: true });
+
 const projectSchema = new Schema({
     name: {
         type: String,
@@ -24,27 +49,8 @@ const projectSchema = new Schema({
         default: [],
     },
     tasks: {
-        type: [{
-            _id: { type: Schema.Types.ObjectId, default: mongoose.Types.ObjectId },
-            name: { type: String, required: true, },
-            assignee: { type: String, default: '', },
-            status: { type: String, required: true, },
-            directory: { type: String, default: '', },
-            dueDate: { type: String, default: '', },
-            priority: { type: String, required: true, },
-            description: { type: String, default: '', },
-            subtasks: { type: [String], default: [], },
-            comments: {
-                type: [{
-                    _id: { type: Schema.Types.ObjectId, default: mongoose.Types.ObjectId },
-                    userId: { type: String, required: true },
-                    name: { type: String, required: true },
-                    picture: { type: String, required: true },
-                    text: { type: String, required: true }
-                }],
-                default: [],
-            }
-        }]
+        type: [taskShema],
+        default: [],
     },
     invitations: {
         type: [String],

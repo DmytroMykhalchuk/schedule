@@ -6,6 +6,8 @@ import { getRandomBoolean, getRandomInt, getRandomString } from "../utils/utils"
 import { UserActions, UserTeamItemType } from "./UserActions";
 import { priorities, requiredDateLength, statuses } from "../constants";
 import dayjs from "dayjs";
+import mongoose from "mongoose";
+import { ObjectId } from "mongodb";
 
 type ProjectDB = {
     directories: string[]
@@ -32,6 +34,7 @@ type StoreTaskType = {
     priority: string,
     description: string,
     subtasks: string[] | null,
+    comment?: string | null
 };
 
 type TaskType = StoreTaskType & { _id: string }
@@ -88,13 +91,35 @@ export const ProjectActions = {
         return project.directories
     },
 
-    async storeTask(projectId: String, task: StoreTaskType): Promise<void> {
+    async storeTask(auth: { projectId: string, sessionId: string }, task: StoreTaskType): Promise<{ projectId?: string }> {
         await connectDB();
-        const result = await Project.findOneAndUpdate({ _id: projectId }, {
-            $push: {
-                tasks: task,
-            }
+        const user = await UserActions.getUserBySessionId(auth.sessionId);
+
+        const project = await ProjectActions.getProjectByFilters(auth, { tasks: 1 });
+        project.tasks.push({
+            _id: new ObjectId(),
+            name: task.name,
+            assignee: task.assignee,
+            status: task.status,
+            directory: task.directory,
+            dueDate: task.dueDate,
+            priority: task.priority,
+            description: task.description,
+            subtasks: task.subtasks,
+            comments: task.comment
+                ? [{
+                    _id: new ObjectId(),
+                    userId: user._id,
+                    name: user.name,
+                    picture: user.picture,
+                    text: task.comment,
+                }]
+                : []
         });
+
+        project.save();
+
+        return { projectId: project?._id };
     },
 
     async generateDirectories(projectId: string, count = 12): Promise<string[]> {
@@ -144,9 +169,9 @@ export const ProjectActions = {
         const project = await Project.findOne({ _id: projectId, users: user._id }, { 'tasks.name': 1, 'tasks.dueDate': 1, });
 
         const requiredDates = [
-            dayjs().format('YYYY.MM.DD'),
-            dayjs().add(1, 'day').format('YYYY.MM.DD'),
-            dayjs().add(2, 'day').format('YYYY.MM.DD'),
+            dayjs().format('DD.MM.YYYY'),
+            dayjs().add(1, 'day').format('DD.MM.YYYY'),
+            dayjs().add(2, 'day').format('DD.MM.YYYY'),
         ];
 
         const urgentsTasks =
@@ -157,7 +182,7 @@ export const ProjectActions = {
         return urgentsTasks;
     },
 
-    async genearateRandomTasks(projectId: string, count = 50, maxDayCount = 30): Promise<void> {
+    async genearateRandomTasks(projectId: string, count = 350, maxDayCount = 30): Promise<void> {
         await connectDB();
         const users = await User.find();
         const directories = await this.generateDirectories(projectId);
@@ -168,7 +193,8 @@ export const ProjectActions = {
             const randomDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * getRandomInt(1, maxDayCount)));
             const randomUserId = users[Math.floor(Math.random() * users.length)]._id;
 
-            const newTask: StoreTaskType = {
+            const newTask: StoreTaskType & { _id: mongoose.Types.ObjectId } = {
+                _id: new ObjectId(),
                 assignee: randomUserId,
                 description: getRandomBoolean() ? getRandomString() : '',
                 directory: directories[Math.floor(Math.random() * users.length)],

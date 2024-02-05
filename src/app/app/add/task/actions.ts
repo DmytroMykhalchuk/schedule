@@ -3,14 +3,12 @@
 import { defaultFirstDirectory, defaultFirstUserId } from "@/app/Componnets/Add/actions";
 import { ProjectActions } from "@/server/actions/ProjectActions";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export const createTask = (formDate: FormData) => {
+export const createTask = async (formDate: FormData) => {
     'use server';
-    const targetProjectId = cookies().get('target_project')?.value || '';
-
-    if (!targetProjectId) {
-        return;
-    }
+    const projectId = cookies().get('target_project')?.value || '';
+    const sessionId = cookies().get('auth_id')?.value || '';
 
     const assignee = formDate.get('assignee') as string;
     const directory = formDate.get('directory') as string;
@@ -24,6 +22,10 @@ export const createTask = (formDate: FormData) => {
         priority: formDate.get('priority') as string,
         description: formDate.get('description') as string,
         subtasks: formDate.getAll('subtasks') as string[] | null,
+        comment: formDate.get('comment') as string | null,
     };
-    ProjectActions.storeTask(targetProjectId, newTask);
+    const result = await ProjectActions.storeTask({ projectId, sessionId }, newTask);
+
+    //todo message notify about success
+    redirect('/app/add/task');
 };

@@ -4,16 +4,10 @@ import { ProjectActions } from "./ProjectActions";
 import User from "../models/User";
 import { UserActions } from "./UserActions";
 import Project from "../models/Project";
+import { CommentType } from "./CommentActions";
 
 export type StatusType = 'not_started' | 'in_progress' | 'done';
 export type PriorityType = 'low_priority' | 'medium_priority' | 'critical_prority';
-export type CommentType = {
-    _id: string
-    userId: string
-    name: string
-    picture: string
-    text: string
-};
 
 export type TaskShortType = {
     taskId: string
@@ -34,7 +28,6 @@ type ViewTaskType = {
     assignee: string | null
     directory: string
     subtasks: string[] | null
-    comments: CommentType[]
 };
 
 type TaskUpdateType = {
@@ -54,11 +47,11 @@ export const TaskActions = {
         await connectDB();
 
         const requiredDates = [
-            dayjs().day(1).format('YYYY.MM.DD'),
-            dayjs().day(2).format('YYYY.MM.DD'),
-            dayjs().day(3).format('YYYY.MM.DD'),
-            dayjs().day(4).format('YYYY.MM.DD'),
-            dayjs().day(5).format('YYYY.MM.DD'),
+            dayjs().day(1).format('DD.MM.YYYY'),
+            dayjs().day(2).format('DD.MM.YYYY'),
+            dayjs().day(3).format('DD.MM.YYYY'),
+            dayjs().day(4).format('DD.MM.YYYY'),
+            dayjs().day(5).format('DD.MM.YYYY'),
         ];
 
         const selector = {
@@ -75,7 +68,6 @@ export const TaskActions = {
             return task.assignee === user._id.toString() && requiredDates.includes(task.dueDate);
         });
 
-
         const preparedTasks: TaskShortType[] = filteredTasks.map((task: TaskShortType & { _id: string }) => ({
             taskId: task._id.toString(),
             name: task.name,
@@ -88,15 +80,22 @@ export const TaskActions = {
         return preparedTasks;
     },
 
-    async getTaskById(auth: { projectId: string, sessionId: string }, taskId: string): Promise<ViewTaskType> {
+    async getTaskAndCommentsById(auth: { projectId: string, sessionId: string }, taskId: string): Promise<{ comments: CommentType[], task: ViewTaskType }> {
         await connectDB();
+
+        const user = await UserActions.getUserBySessionId(auth.sessionId);
 
         const project = await ProjectActions.getProjectByFilters(auth, { tasks: 1 });
 
 
         const task = project?.tasks.find((task: { _id: string }) => task._id.toString() === taskId);
 
-        return task;
+        const comments = task?.comments?.map((item: { userId: string, isOwner: boolean }) => {
+            item.isOwner = item.userId === user._id.toString();
+            return item;
+        });
+
+        return { task, comments };
     },
 
     async updateTask(auth: { projectId: string, sessionId: string }, updateTask: TaskUpdateType): Promise<{ success: boolean }> {

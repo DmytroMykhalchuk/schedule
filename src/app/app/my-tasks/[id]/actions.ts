@@ -6,9 +6,8 @@ export const getTask = async (taskId: string) => {
     const projectId = cookies().get('target_project')?.value || '';
     const sessionId = cookies().get('auth_id')?.value || '';
 
-    const task = TaskActions.getTaskById({ projectId, sessionId }, taskId);
-
-    return task;
+    const response = await TaskActions.getTaskAndCommentsById({ projectId, sessionId }, taskId);
+    return response;
 };
 
 export const updateTask = async (formData: FormData) => {
