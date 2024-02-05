@@ -1,5 +1,4 @@
 import { PriorityType, StatusType, TaskActions } from '@/server/actions/TaskActions';
-import { red } from '@mui/material/colors';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -25,7 +24,7 @@ export const updateTask = async (formData: FormData) => {
     const dueDate = formData.get('due_date') as string;
     const priority = formData.get('priority') as PriorityType;
     const description = formData.get('description') as string;
-    const subtasks = formData.get('substasks') as string[] | null;
+    const subtasks = formData.getAll('subtasks') as string[] | null;
 
     const result = await TaskActions.updateTask(
         { projectId, sessionId },

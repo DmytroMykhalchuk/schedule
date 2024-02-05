@@ -16,14 +16,14 @@ import { CommentType } from "@/server/actions/TaskActions";
 
 type TaskFormType = {
     defaultValues: {
-        assignee?: string
+        assignee?: string | null
         status?: string
         directory?: string
         dueDate?: string
         priority?: string
         description?: string
         title?: string
-        subtasks?: string[]
+        subtasks?: string[] | null
         comments?: CommentType[]
     },
     labelConfirm: string
