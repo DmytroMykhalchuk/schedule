@@ -7,6 +7,8 @@ import Typography from '@mui/material/Typography';
 import { authApi } from '@/api/authApi';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { useRouter } from 'next/navigation';
+import { UserActions } from '@/server/actions/UserActions';
+import axios from 'axios';
 
 type AuthButtonType = {
 };
@@ -32,13 +34,21 @@ export const GoogleButton: React.FC<GoogleButtonType> = ({ }) => {
         onSuccess: async (credentialResponse) => {
             const user = await authApi.getGoogleUser(credentialResponse.access_token);
             const { email, locale, name, picture, sub } = user;
-            Cookies.set('auth', JSON.stringify(user));
-            Cookies.set('auth_id', JSON.stringify(sub));
-            // redirect('about');
-            push('/app')
+            //todo change locale
+
+            axios.post('/api/auth', { ...user })
+                .then((response) => {
+                    const data = response.data;
+                    Cookies.set('auth', JSON.stringify(user));
+                    Cookies.set('auth_id', data.data.sessionId);
+                    data.data.projectsIds
+                        ? push('/app')
+                        : push('/enter');
+                });
+
         },
         onError: () => {
-            console.log('Login Failed');
+            console.warn('Login Failed');
         },
         flow: 'implicit',
     }) as () => void;

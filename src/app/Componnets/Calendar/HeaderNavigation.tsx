@@ -30,7 +30,6 @@ type HeaderNavigationType = {
 };
 
 export const HeaderNavigation: React.FC<HeaderNavigationType> = ({ type = 'week' }) => {
-    console.log(type)
     return (
         <Stack className={styles.navigationHeader} direction={'row'}>
             {

@@ -14,7 +14,6 @@ type BigCalendarWrapperType = {
 };
 
 export const BigCalendarWrapper: React.FC<BigCalendarWrapperType> = ({ type = 'week' }) => {
-    console.log({type})
     const TargetCalendar = calendars[type];
     return (
         <>
