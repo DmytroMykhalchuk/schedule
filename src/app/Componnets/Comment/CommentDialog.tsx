@@ -10,6 +10,7 @@ import { deleteComment, sendComment } from "./actions";
 import { TransitionGroup } from 'react-transition-group';
 import { Collapse } from "@mui/material";
 import styles from './styles.module.scss'
+import { PusherComponent } from "./Elements/PusherComponent";
 
 const SET_REPLY_TO = 'SET_REPLY_TO';
 const ADD_COMMENT = 'ADD_COMMENT';
@@ -43,10 +44,16 @@ const reducer = (state: StateType, action: ActionType): StateType => {
         }
 
         case ADD_COMMENT: {
+            const comment = state.comments.find(comment => comment._id === action.comment._id);
+            
+            if (comment)
+                return state;
+
             return {
                 ...state,
                 comments: [...state.comments, action.comment],
             };
+
         }
 
         case SET_HIGHLIGHT_COMMENT: {
@@ -123,10 +130,17 @@ export const CommentDialog: React.FC<CommentDialogType> = ({ comments, taskId })
         element && element.scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
 
+    const addComment = (comment: CommentType) => {
+        dispatch({ type: ADD_COMMENT, comment });
+    };
 
+    const removeComment = (commentId: string) => {
+        dispatch({ type: DELETE_COMMENT, commentId });
+    };
 
     return (
         <>
+            <PusherComponent addComment={addComment} removeComment={removeComment} />
             <Stack spacing={2}>
                 <TransitionGroup>
                     {

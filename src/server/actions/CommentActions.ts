@@ -1,10 +1,26 @@
-import mongoose from "mongoose";
-import connectDB from "../connectDB";
-import Project from "../models/Project";
-import { ProjectActions } from "./ProjectActions";
-import { UserActions } from "./UserActions";
-import { ObjectId } from "mongodb";
+import connectDB from '../connectDB';
+import mongoose from 'mongoose';
+import Pusher from 'pusher';
+import { ObjectId } from 'mongodb';
+import { ProjectActions } from './ProjectActions';
+import { UserActions } from './UserActions';
+import { channelPrefixName, newCommentEventName, removedCommentEventName } from '../constants';
 
+const pusher = new Pusher({
+    appId: "1752490",
+    key: "90149ab3e623050894c1",
+    secret: "9a5bc84db603fc34ddaa",
+    cluster: "eu",
+    useTLS: true
+});
+
+
+// const pushfer = new Pusher({
+//     key: "90149ab3e623050894c1",
+//     secret: "9a5bc84db603fc34ddaa",
+//     cluster: "eu",
+//     useTLS: true
+// });
 export type CommentType = {
     _id: string,
     userId: string
@@ -48,6 +64,10 @@ export const CommentActions = {
 
         project.save();
 
+        pusher.trigger(`${channelPrefixName}${project._id}`, newCommentEventName, {
+            comment: createComment
+        });
+
         const responseComment: CommentType = { ...createComment, isOwner: true, _id: createComment._id.toString() };
 
         return responseComment;
@@ -77,6 +97,9 @@ export const CommentActions = {
         });
 
         project.save();
+        pusher.trigger(`${channelPrefixName}${project._id}`, removedCommentEventName, {
+            commentId,
+        });
 
         return { success: isDeleted };
     }
