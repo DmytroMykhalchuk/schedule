@@ -45,11 +45,39 @@ export const CommentActions = {
         if (!createComment) {
             return 'Not found task or project';
         }
-        
+
         project.save();
 
         const responseComment: CommentType = { ...createComment, isOwner: true, _id: createComment._id.toString() };
 
         return responseComment;
     },
+
+    async removeComment(auth: { projectId: string, sessionId: string }, taskId: string, commentId: string): Promise<{ success: boolean }> {
+        await connectDB();
+
+        const user = await UserActions.getUserBySessionId(auth.sessionId);
+        const project = await ProjectActions.getProjectByFilters(auth, { tasks: 1 });
+
+        let isDeleted = false;
+        project.tasks = project.tasks.map((task: { _id: mongoose.Types.ObjectId, comments: CommentDB[] }) => {
+            if (task._id.toString() === taskId) {
+                console.log(task.comments)
+                task.comments = task.comments.filter(comment => {
+                    if (
+                        comment._id.toString() === commentId && comment.userId === user._id.toString()
+                    ) {
+                        isDeleted = true;
+                        return false;
+                    }
+                    return true;
+                })
+            }
+            return task;
+        });
+
+        project.save();
+
+        return { success: isDeleted };
+    }
 };

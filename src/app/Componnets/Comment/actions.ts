@@ -16,4 +16,22 @@ export const sendComment = async (taskId: string, comment: string, replyToCommen
     }).catch(err => {
         console.log(err)
     });
+};
+
+export const deleteComment = async (taskId: string, commentId: string) => {
+    const projectId = getCookieValue('target_project');
+    const sessionId = getCookieValue('auth_id');
+
+    return axios.delete('/api/comments', {
+        params: {
+            comment_id: commentId,
+            task_id: taskId,
+            project_id: projectId,
+            session_id: sessionId,
+        }
+    }).then(response => {
+        return response.data;
+    }).catch(error => {
+        return { code: 500, error };
+    });
 }

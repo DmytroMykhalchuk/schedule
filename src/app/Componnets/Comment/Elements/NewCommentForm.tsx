@@ -23,7 +23,7 @@ export const NewCommentForm: React.FC<NewCommentFormType> = ({ onSend, replydTo,
 
     const onConfirm = () => {
         onSend(newComment);
-        // setNewComment('');
+        setNewComment('');
     };
 
     return (
