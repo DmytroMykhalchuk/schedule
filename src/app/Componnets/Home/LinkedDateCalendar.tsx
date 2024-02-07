@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { useTheme } from '@mui/material';
 import { cookies } from 'next/headers';
 import { getCookieValue } from '@/utlis/getCookieValue';
+import { authCookieKey, projectIdCookieKey } from '@/server/constants';
 
 dayjs.locale(uk);
 dayjs.extend(updateLocale)
@@ -25,8 +26,8 @@ function getRandomNumber(min: number, max: number) {
 
 function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
   const formattedDate = date.format('DD.MM.YYYY');
-  const targetProjectId = getCookieValue('target_project');
-  const sessionId = getCookieValue('auth_id');
+  const targetProjectId = getCookieValue(projectIdCookieKey);
+  const sessionId = getCookieValue(authCookieKey);
 
   return fetch(`/api/home-calendar?date=${formattedDate}&project_id=${targetProjectId}&session_id=${sessionId}`, {
     next: {

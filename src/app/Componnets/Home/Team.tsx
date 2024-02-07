@@ -9,12 +9,12 @@ import { TeamItem } from "./Elements/TeamItem";
 import { cookies } from "next/headers";
 import { ProjectActions } from "@/server/actions/ProjectActions";
 import Link from "next/link";
+import { getAuthParams } from "../actions";
 
 const getTeam = async () => {
-    const targetProjectId = cookies().get('target_project')?.value || '';
-    const sessionId = cookies().get('auth_id')?.value || '';
+    const { projectId, sessionId } =  await getAuthParams();
 
-    const users = await ProjectActions.getTeam(targetProjectId, sessionId);
+    const users = await ProjectActions.getTeam(projectId, sessionId);
     return users;
 }
 

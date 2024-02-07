@@ -8,10 +8,10 @@ import { MemberForm } from '@/app/Componnets/Add/MemberForm';
 import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
 import { TeamActions } from '@/server/actions/TeamActions';
 import { updateMember } from '../actions';
+import { getAuthParams } from '@/app/Componnets/actions';
 
 const getTeamUser = async (id: string) => {
-    const projectId = cookies().get('target_project')?.value || '';
-    const sessionId = cookies().get('auth_id')?.value || '';
+    const { projectId, sessionId } =  await getAuthParams();
 
     const role = await TeamActions.getTeamMember(projectId, sessionId, id)
 

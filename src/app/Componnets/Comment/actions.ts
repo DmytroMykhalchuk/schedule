@@ -1,9 +1,10 @@
+import { authCookieKey, projectIdCookieKey } from "@/server/constants";
 import { getCookieValue } from "@/utlis/getCookieValue";
 import axios from "axios";
 
 export const sendComment = async (taskId: string, comment: string, replyToCommentId: string) => {
-    const projectId = getCookieValue('target_project');
-    const sessionId = getCookieValue('auth_id');
+    const projectId = getCookieValue(projectIdCookieKey);
+    const sessionId = getCookieValue(authCookieKey);
 
     return axios.post('/api/comments', {
         project_id: projectId,
@@ -19,8 +20,8 @@ export const sendComment = async (taskId: string, comment: string, replyToCommen
 };
 
 export const deleteComment = async (taskId: string, commentId: string) => {
-    const projectId = getCookieValue('target_project');
-    const sessionId = getCookieValue('auth_id');
+    const projectId = getCookieValue(projectIdCookieKey);
+    const sessionId = getCookieValue(authCookieKey);
 
     return axios.delete('/api/comments', {
         params: {

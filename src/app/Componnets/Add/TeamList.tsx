@@ -7,10 +7,11 @@ import Typography from '@mui/material/Typography'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Link from "next/link";
+import { getAuthParams } from "../actions";
 
 const getTeam = async () => {
-    const projectId = cookies().get('target_project')?.value || '';
-    const sessionId = cookies().get('auth_id')?.value || '';
+    const { projectId, sessionId } =  await getAuthParams();
+
     const team = await TeamActions.getTeam(projectId, sessionId);
     return team;
 };

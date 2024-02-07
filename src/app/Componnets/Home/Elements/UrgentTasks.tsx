@@ -6,6 +6,7 @@ import cn from 'classnames';
 import { cookies } from 'next/headers';
 import { ProjectActions } from '@/server/actions/ProjectActions';
 import dayjs from 'dayjs';
+import { getAuthParams } from '../../actions';
 
 const dateMap = {
     [dayjs().format('DD.MM.YYYY')]: 'Today',
@@ -14,8 +15,7 @@ const dateMap = {
 };
 
 const getUrgantTasks = async () => {
-    const sessionId = cookies().get('auth_id')?.value || '';
-    const projectId = cookies().get('target_project')?.value || '';
+    const { projectId, sessionId } =  await getAuthParams();
 
     const tasks = await ProjectActions.getUrgentTasks(projectId, sessionId)
     return tasks;

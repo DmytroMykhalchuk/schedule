@@ -4,6 +4,7 @@ import { ProjectDirectoryItem } from "./Elements/ProjectDirectoryItem";
 import { AddDirectory } from "./Elements/AddDirectory";
 import { ProjectActions } from "@/server/actions/ProjectActions";
 import { cookies } from "next/headers";
+import { projectIdCookieKey } from "@/server/constants";
 
 type ProjectDirectoriesType = {
 };
@@ -11,7 +12,7 @@ type ProjectDirectoriesType = {
 export const ProjectDirectories: React.FC<ProjectDirectoriesType> = async ({ }) => {
 
     const geetDirectories = async () => {
-        const targetProjectId = cookies().get('target_project')?.value || '';
+        const targetProjectId = cookies().get(projectIdCookieKey)?.value || '';
         const directories = await ProjectActions.getDirectories(targetProjectId)
 
         return directories;

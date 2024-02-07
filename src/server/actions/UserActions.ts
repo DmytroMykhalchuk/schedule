@@ -52,6 +52,7 @@ export const UserActions = {
             };
         }
     },
+
     async logout(sessionId: string) {
         await connectDB();
         const person = await User.findOneAndUpdate({
@@ -60,6 +61,29 @@ export const UserActions = {
             },
         },
             { $pull: { sessions: sessionId } });
+    },
+
+    async updateSessionId(sessionId: string): Promise<{ sessionId: string }> {
+        await connectDB();
+        //todo ceheck update is still member in some project
+        let uuid = uniqid();
+
+        const response = await User.findOneAndUpdate({
+            sessions: {
+                $in: [sessionId],
+            },
+        }, {
+            $pull: {
+                sessions: sessionId
+            },
+            $push: {
+                sessions: uuid
+            },
+        });
+
+        console.log({response},'update sessionId');
+
+        return { sessionId: uuid };
     },
 
     async getUserBySessionId(sessionId: string): Promise<UserDB> {
@@ -78,6 +102,7 @@ export const UserActions = {
 
         return users;
     },
+
     async randomGenerate(count = 10): Promise<void> {
         await connectDB();
 

@@ -86,6 +86,10 @@ export const taskDayPropertyStyle = {
 
 export const requiredDateLength = 10;
 
-export const channelPrefixName = 'target_project_';
+export const channelPrefixName = 'target_project';
 export const newCommentEventName = 'new_comment';
 export const removedCommentEventName = 'removed_comment';
+export const authCookieKey = 'session_id';
+export const projectIdCookieKey = 'project_id';
+
+export const sessionLifeTimeInHours = 2;

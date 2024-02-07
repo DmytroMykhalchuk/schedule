@@ -1,14 +1,14 @@
 'use server';
 
 import { defaultFirstDirectory, defaultFirstUserId } from "@/app/Componnets/Add/actions";
+import { getAuthParams } from "@/app/Componnets/actions";
 import { ProjectActions } from "@/server/actions/ProjectActions";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const createTask = async (formDate: FormData) => {
     'use server';
-    const projectId = cookies().get('target_project')?.value || '';
-    const sessionId = cookies().get('auth_id')?.value || '';
+    const { projectId, sessionId } =  await getAuthParams();
 
     const assignee = formDate.get('assignee') as string;
     const directory = formDate.get('directory') as string;
