@@ -1,8 +1,5 @@
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
-import { ReactNode } from "react";
-import Typography from '@mui/material/Typography'
-import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import { HomeHeader } from "../Componnets/Home/HomeHeader";
 import { ProjectDirectories } from "../Componnets/Home/ProjectDirectories";
@@ -15,7 +12,7 @@ type PageType = {
 };
 
 const Page: React.FC<PageType> = ({ }) => {
-
+    
     return (
         <>
             <Box>

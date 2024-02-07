@@ -135,33 +135,6 @@ export const ProjectActions = {
 
     },
 
-    async getMonthTaskDays(projectId: string, sessionId: string, findDate: string): Promise<number[]> {
-        await connectDB();
-        const user = await UserActions.getUserBySessionId(sessionId);
-        if (!user?._id) {
-            return [];
-        }
-        const formattedDate = findDate?.slice(0, -2);
-        const result = await Project.findOne({
-            _id: projectId,
-            users: user._id,
-        }, {
-            'tasks': 1,
-        });
-        //@ts-ignore
-        const requiredDays = [] as number[];
-        result.tasks.forEach((task: { dueDate: string }) => {
-            if (task.dueDate.includes(formattedDate)) {
-                requiredDays.push(+task.dueDate.slice(-2));
-            }
-        });
-
-        const uniqueDays = requiredDays.filter((value, index, array) => {
-            return array.indexOf(value) === index;
-        });
-        return uniqueDays;
-    },
-
     async getUrgentTasks(projectId: string, sessionId: string): Promise<UrgentTaskType[]> {
         await connectDB();
         const user = await UserActions.getUserBySessionId(sessionId);

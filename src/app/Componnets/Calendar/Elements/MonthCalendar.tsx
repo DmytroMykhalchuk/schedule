@@ -1,21 +1,29 @@
 import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
+import Divider from '@mui/material/Divider';
 import dayjs from 'dayjs';
-import { ReactNode, useRef } from 'react';
 import Typography from '@mui/material/Typography';
 import styles from './../styles.module.scss';
+import { getDaysWithCurrentMonth } from '../actions';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import Link from 'next/link';
+import { ControlPageCalendar } from './ControlPageCalendar';
 
-const weekdaysMin = ['',"Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+const weekdaysMin = ['', "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
 type MonthCalendarType = {
+    date?: string
 };
 
-export const MonthCalendar: React.FC<MonthCalendarType> = ({ }) => {
-    const currentDate = new Date();
-    const dateRequested = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-1`
+export const MonthCalendar: React.FC<MonthCalendarType> = async ({ date }) => {
+    const currentDate = dayjs(date);
+    const dateRequested = `${currentDate.year()}-${currentDate.month() + 1}-1`
     const startMonthDay = dayjs(dateRequested).date(1).day();
     const totalDays = dayjs(dateRequested).daysInMonth();
+    const selectedDays = await getDaysWithCurrentMonth(currentDate.format('DD.MM.YYYY'));
 
     let isBreakRendreWeeks = true;
     let rangeDay = 1;
@@ -33,8 +41,8 @@ export const MonthCalendar: React.FC<MonthCalendarType> = ({ }) => {
 
                     {
                         numberOfWeek === 0
-                            ? <HeaderDayItem numberOfDay={startMonthDay <= index ? rangeDay : ''} tasks='' isHeaderIndex={index} />
-                            : rangeDay <= totalDays ? <HeaderDayItem numberOfDay={rangeDay} tasks='' /> : ''
+                            ? <HeaderDayItem numberOfDay={startMonthDay <= index ? rangeDay : ''} hasTask={selectedDays.includes(rangeDay)} isHeaderIndex={index} />
+                            : rangeDay <= totalDays ? <HeaderDayItem numberOfDay={rangeDay} hasTask={selectedDays.includes(rangeDay)} /> : ''
                     }
 
                 </Grid>
@@ -65,31 +73,47 @@ export const MonthCalendar: React.FC<MonthCalendarType> = ({ }) => {
     }
 
     return (
-        <Grid container columns={7}
-        >
-            <Paper sx={{
-                width: '100%',
-                borderRadius: 6,
-            }}>
-                {renderTable()}
-            </Paper>
-        </Grid>
+        <>
+            <Grid container columns={7} mb={2}
+            >
+                <Paper sx={{
+                    width: '100%',
+                    borderRadius: 6,
+                }}>
+                    {renderTable()}
+                </Paper>
+            </Grid>
+            <ControlPageCalendar
+                calendarType='month'
+                nextPath={currentDate.add(1, 'month').format('YYYY-MM-DD')}
+                previousPath={currentDate.subtract(1, 'month').format('YYYY-MM-DD')}
+            />
+        </>
     );
 };
 
 type HeaderDayItemType = {
     numberOfDay: number | string,
-    tasks: string,
+    hasTask: boolean,
     isHeaderIndex?: number
 };
 
-export const HeaderDayItem: React.FC<HeaderDayItemType> = ({ numberOfDay, tasks, isHeaderIndex }) => {
+export const HeaderDayItem: React.FC<HeaderDayItemType> = ({ numberOfDay, hasTask, isHeaderIndex }) => {
 
     return (
         <Stack alignItems={'center'} justifyContent={'center'} width={'100%'}>
             {isHeaderIndex && <Typography variant="h6" fontWeight={600} textAlign={'center'}>{weekdaysMin[isHeaderIndex]}</Typography>}
             <Typography variant="subtitle1" textAlign={'center'}>{numberOfDay}</Typography>
-            {/* <Typography variant="h6">{tasks}</Typography> */}
+            {
+                hasTask && <Box
+                    sx={{
+                        backgroundColor: 'warning.main',
+                        width: 6,
+                        aspectRatio: 1,
+                        borderRadius: '50%',
+                    }}
+                />
+            }
         </Stack>
     );
 };

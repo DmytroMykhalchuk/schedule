@@ -8,9 +8,10 @@ dayjs.locale(uk)
 
 type CalendarLayoutType = {
     type?: CalendarType
+    date?: string
 };
 
-export const CalendarLayout: React.FC<CalendarLayoutType> = ({ type }) => {
+export const CalendarLayout: React.FC<CalendarLayoutType> = ({ type, date }) => {
 
     return (
         <>
@@ -21,7 +22,7 @@ export const CalendarLayout: React.FC<CalendarLayoutType> = ({ type }) => {
                     slot={<HeaderNavigation type={type} />}
                 />
             </Box>
-            <BigCalendarWrapper type={type} />
+            <BigCalendarWrapper type={type} date={date} />
         </>
     );
 };
