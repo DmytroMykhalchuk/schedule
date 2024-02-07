@@ -45,7 +45,7 @@ export const UserSelect: React.FC<UserSelectType> = async ({ fieldName, showEmai
             >
                 {
                     users.map((user, index) => (
-                        <MenuItem value={user._id} key={index}>
+                        <MenuItem value={user._id.toString()} key={index}>
                             <Stack direction={'row'} alignItems={'center'} spacing={2}>
                                 <Avatar src={user.picture} alt={user.name} />
                                 <Stack>

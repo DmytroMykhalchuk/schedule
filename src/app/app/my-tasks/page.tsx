@@ -4,6 +4,9 @@ import dayjs from "dayjs";
 import { PaperWrapper } from "@/app/Componnets/MyTasks/PaperWrapper";
 import { TaskShortType } from "@/server/actions/TaskActions";
 import Stack from "@mui/material/Stack";
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat)
 
 type PageType = {
 };
@@ -32,8 +35,11 @@ const Page: React.FC<PageType> = async ({ }) => {
     };
 
     tasks.forEach(task => {
-        const dueDate = dayjs(task.dueDate);
-
+        const dueDate = dayjs(task.dueDate, 'DD.MM.YYYY');
+        console.log(
+            dueDate.format('DD.MM.YYYY'),
+            taskFiltered.today.dateStamp.format('DD.MM.YYYY'),
+        )
         if (dueDate.isSame(taskFiltered.today.dateStamp, 'day')) {
             //today
             taskFiltered.today.tasks.push(task);
@@ -41,11 +47,11 @@ const Page: React.FC<PageType> = async ({ }) => {
             //tomorrow
             taskFiltered.tomorrow.tasks.push(task);
         } else if (dueDate.diff(taskFiltered.next.dateStamp.diff(dueDate))) {
-            //prev
-            taskFiltered.previous.tasks.push(task);
-        } else {
             //next
             taskFiltered.next.tasks.push(task);
+        } else {
+            //prev
+            taskFiltered.previous.tasks.push(task);
         }
     });
 
@@ -55,10 +61,11 @@ const Page: React.FC<PageType> = async ({ }) => {
             <Stack spacing={4}>
                 <PaperWrapper tasks={taskFiltered.today.tasks} title="Today" />
                 <PaperWrapper tasks={taskFiltered.tomorrow.tasks} title="Tommorow" />
-                <PaperWrapper tasks={taskFiltered.next.tasks} title="This week" subtasks={{
-                    tasks:taskFiltered.previous.tasks,
-                    title:'Later'
-                }} isGeneralTask />
+                <PaperWrapper tasks={taskFiltered.next.tasks} title="This week"
+                    subtasks={taskFiltered.previous.tasks.length ? {
+                        tasks: taskFiltered.previous.tasks,
+                        title: 'Later'
+                    } : undefined} isGeneralTask />
 
             </Stack>
         </>

@@ -8,9 +8,9 @@ import { ProjectActions } from '@/server/actions/ProjectActions';
 import dayjs from 'dayjs';
 
 const dateMap = {
-    [dayjs().format('YYYY.MM.DD')]: 'Today',
-    [dayjs().add(1, 'day').format('YYYY.MM.DD')]: 'Tommorow',
-    [dayjs().add(2, 'day').format('YYYY.MM.DD')]: 'Day after tomorrow',
+    [dayjs().format('DD.MM.YYYY')]: 'Today',
+    [dayjs().add(1, 'day').format('DD.MM.YYYY')]: 'Tommorow',
+    [dayjs().add(2, 'day').format('DD.MM.YYYY')]: 'Day after tomorrow',
 };
 
 const getUrgantTasks = async () => {

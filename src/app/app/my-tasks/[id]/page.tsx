@@ -7,6 +7,8 @@ import { getTask, updateTask } from './actions';
 import { HeaderLayout } from '@/app/Componnets/Layouts/HeaderLayout';
 import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
 import { TaskForm } from '@/app/Componnets/Add/TaskForm';
+import { CommentContainer } from '@/app/Componnets/Add/CommentsBox';
+import { CommentDialog } from '@/app/Componnets/Comment/CommentDialog';
 
 type PageType = {
     params: {
@@ -14,12 +16,23 @@ type PageType = {
     },
 };
 
-const Page: React.FC<PageType> = async ({ params, ...props }) => {
+const Page: React.FC<PageType> = async ({ params }) => {
     const { id: taskId } = params;
 
-    const task = await getTask(taskId);
+    const response = await getTask(taskId);
+    const { task, comments } = response;
 
-    console.log(task)
+    const handledComments = comments.map(item => {
+        return {
+            _id: item._id.toString(),
+            name: item.name,
+            picture: item.picture,
+            userId: item.userId,
+            isOwner: item.isOwner,
+            text: item.text,
+            replyId: item.replyId,
+        };
+    });
 
     return (
         <>
@@ -46,7 +59,6 @@ const Page: React.FC<PageType> = async ({ params, ...props }) => {
                         </Link> */}
                     </Stack>
                     <form action={updateTask}>
-                        <input type="hidden" name="task_id" value={task._id} />
                         <TaskForm
                             defaultValues={{
                                 title: task.name,
@@ -57,11 +69,14 @@ const Page: React.FC<PageType> = async ({ params, ...props }) => {
                                 priority: task.priority,
                                 status: task.status,
                                 subtasks: task.subtasks,
-                                comments: task.comments,
                             }}
                             labelConfirm='Update'
                         />
+                        <input type="hidden" name="task_id" value={task?._id?.toString() || ''} />
                     </form>
+                    <Box px={2}>
+                        <CommentDialog comments={handledComments} taskId={task._id.toString()} />
+                    </Box>
                 </MiddlePaperWrapper>
             </Stack>
         </>

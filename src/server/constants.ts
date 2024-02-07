@@ -85,3 +85,7 @@ export const taskDayPropertyStyle = {
 };
 
 export const requiredDateLength = 10;
+
+export const channelPrefixName = 'target_project_';
+export const newCommentEventName = 'new_comment';
+export const removedCommentEventName = 'removed_comment';

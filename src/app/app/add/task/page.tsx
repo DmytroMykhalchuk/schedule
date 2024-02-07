@@ -24,6 +24,7 @@ import Link from 'next/link';
 import { createTask } from './actions';
 import { FormElementDescription } from '@/app/Componnets/Add/FormElementDescription';
 import { TaskForm } from '@/app/Componnets/Add/TaskForm';
+import { CommentField } from '@/app/Componnets/Add/CommentField';
 
 
 
@@ -59,6 +60,7 @@ const Page: React.FC<PageType> = ({ }) => {
                 </Stack>
                 <TaskForm defaultValues={{}}
                     labelConfirm='Confirm'
+                    UnderFormSlot={<CommentField />}
                 />
             </Paper>
         </Stack>

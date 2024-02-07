@@ -9,23 +9,23 @@ import { TaskRowItem } from "./TaskRowItem";
 import { StyleRangeType, priorityStyling, statusStyling, taskDayPropertyStyle } from "@/server/constants";
 
 const datePointStyle = {
-    [dayjs().format('YYYY.MM.DD')]: taskDayPropertyStyle.today,
-    [dayjs().add(1, 'day').format('YYYY.MM.DD')]: taskDayPropertyStyle.today,
+    [dayjs().format('DD.MM.YYYY')]: taskDayPropertyStyle.today,
+    [dayjs().add(1, 'day').format('DD.MM.YYYY')]: taskDayPropertyStyle.today,
     ...taskDayPropertyStyle,
 };
 
 const weekMapNames = {
-    [dayjs().day(1).format('YYYY.MM.DD')]: 'monday',
-    [dayjs().day(2).format('YYYY.MM.DD')]: 'tuesday',
-    [dayjs().day(3).format('YYYY.MM.DD')]: 'wednesday',
-    [dayjs().day(4).format('YYYY.MM.DD')]: 'thursday',
-    [dayjs().day(5).format('YYYY.MM.DD')]: 'friday',
+    [dayjs().day(1).format('DD.MM.YYYY')]: 'monday',
+    [dayjs().day(2).format('DD.MM.YYYY')]: 'tuesday',
+    [dayjs().day(3).format('DD.MM.YYYY')]: 'wednesday',
+    [dayjs().day(4).format('DD.MM.YYYY')]: 'thursday',
+    [dayjs().day(5).format('DD.MM.YYYY')]: 'friday',
 
 };
 
 const relativePointNames = {
-    [dayjs().format('YYYY.MM.DD')]: 'today',
-    [dayjs().add(1, 'day').format('YYYY.MM.DD')]: 'tomorrow',
+    [dayjs().format('DD.MM.YYYY')]: 'today',
+    [dayjs().add(1, 'day').format('DD.MM.YYYY')]: 'tomorrow',
 };
 
 type PaperWrapperType = {
@@ -82,7 +82,6 @@ export const PaperWrapper: React.FC<PaperWrapperType> = ({ title, tasks, subtask
                                 //@ts-ignore
                                 const dateColor = (isGeneralTask ? datePointStyle[task.priority] : datePointStyle[task.dueDate]) as string;
                                 const dateName = isGeneralTask ? weekMapNames[task.dueDate] : relativePointNames[task.dueDate];
-                                console.log(task)
                                 return (
                                     <TaskRowItem key={index}
                                         taskId={task.taskId}

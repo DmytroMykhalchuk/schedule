@@ -13,6 +13,7 @@ import { FormElementStatus } from "./FormElementStatus";
 import { FormElementAssignee } from "./FormElementAssignee";
 import { FormElementSutasks } from "./FormElementSutasks";
 import { CommentType } from "@/server/actions/TaskActions";
+import { ReactNode } from "react";
 
 type TaskFormType = {
     defaultValues: {
@@ -27,9 +28,10 @@ type TaskFormType = {
         comments?: CommentType[]
     },
     labelConfirm: string
+    UnderFormSlot?: ReactNode
 };
 
-export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm }) => {
+export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, UnderFormSlot }) => {
     return (
         <>
             <Box px={2} py={1}>
@@ -49,22 +51,12 @@ export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm }
                     <Box width={'100%'}>
                         <FormElementSutasks defaultSubtasks={defaultValues.subtasks} />
                     </Box>
-                    <Box width={'100%'}>
-                        <TextField
-                            multiline
-                            minRows={3}
-                            color='warning'
-                            fullWidth
-                            sx={{
-                                borderWidth: 2,
-                                backgroundColor: '#f1f1f1',
-                            }}
-                            defaultValue={'No comments yet.'}
-                        />
-                        <Button variant="text" color="warning" size='small'>
-                            Send
-                        </Button>
-                    </Box>
+                    {
+                        UnderFormSlot &&
+                        <Box width={'100%'}>
+                            {UnderFormSlot}
+                        </Box>
+                    }
                 </Stack>
             </Stack>
             <Stack alignItems={'center'} py={2}>
