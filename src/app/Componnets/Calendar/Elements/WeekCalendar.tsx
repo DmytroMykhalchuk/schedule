@@ -1,23 +1,31 @@
-import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
-import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 import dayjs from 'dayjs';
-import { ReactNode } from 'react';
-import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
 import styles from './../styles.module.scss';
-
+import Typography from '@mui/material/Typography';
+import { ControlPageCalendar } from './ControlPageCalendar';
+import { getWeekTasks } from '../actions';
+import { priorityStyling } from '@/server/constants';
 
 const workHours = ['', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
-
+const weekdays = [
+    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+]
 type WeekCalendarType = {
+    date?: string
 };
 
-export const WeekCalendar: React.FC<WeekCalendarType> = ({ }) => {
+export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date }) => {
+    const currentDate = dayjs(date);
+    const tasks = await getWeekTasks(currentDate.format('YYYY-MM-DD'));
+
     const renderHeader = (): JSX.Element[] => {
         const days = [] as JSX.Element[];
         for (let index = 1; index < 6; index++) {
-            const targetDay = dayjs().day(index);
-            const monthName = targetDay.format('MMMM');
+            const targetDay = currentDate.day(index);
+            const monthName = weekdays[index];
             const formattedName = monthName[0].toUpperCase() + monthName.substring(1);
             const numberOfDay = targetDay.date();
 
@@ -35,6 +43,8 @@ export const WeekCalendar: React.FC<WeekCalendarType> = ({ }) => {
     const renderRow = (numberOfLines: number): JSX.Element[] => {
         const items = [] as JSX.Element[];
         for (let index = 1; index < 6; index++) {
+            const dayTasks = tasks.filter(item => item.dueDate === dayjs().day(index).format('DD.MM.YYYY'));
+
             items.push(
                 <Grid className={styles.tableRow__td} item key={index} xs={2}
                     sx={{
@@ -45,14 +55,19 @@ export const WeekCalendar: React.FC<WeekCalendarType> = ({ }) => {
                         index === 0
                             ? <>{workHours[numberOfLines]}</>
                             : workHours[numberOfLines] && numberOfLines !== workHours.length - 1 && <>
-                                <TaskItem
-                                    color='#0f0'
-                                    task='Lorem ipsim dolor sit amet consectetur'
-                                />
+                                {
+                                    dayTasks.map(task => (
+                                        <TaskItem
+                                            task={task.name}
+                                            primaryColor={priorityStyling[task.priority].primaryColor}
+                                            secondaryColor={priorityStyling[task.priority].secondaryColor}
+                                        />
+                                    ))
+                                }
                             </>
                     }
                 </Grid>
-            )
+            );
         }
         return items;
     };
@@ -68,20 +83,29 @@ export const WeekCalendar: React.FC<WeekCalendarType> = ({ }) => {
         return rows;
     }
     return (
-        <Grid container columns={10}
-            sx={{
-                //calculated from data-time left attribute
-                marginLeft: '50px',
-            }}
-        >
-            {renderHeader()}
-            <Paper sx={{
-                width: '100%',
-                borderRadius: 8,
-            }}>
-                {renderTable()}
-            </Paper>
-        </Grid>
+        <>
+            <Grid container columns={10}
+                sx={{
+                    //calculated from data-time left attribute
+                    marginLeft: '50px',
+                }}
+            >
+                {renderHeader()}
+                <Paper sx={{
+                    width: '100%',
+                    borderRadius: 8,
+                }}>
+                    {renderTable()}
+                </Paper>
+            </Grid>
+            <Box pt={2}>
+                <ControlPageCalendar
+                    calendarType='week'
+                    nextPath={currentDate.add(1, 'week').format('YYYY-MM-DD')}
+                    previousPath={currentDate.subtract(1, 'week').format('YYYY-MM-DD')}
+                />
+            </Box>
+        </>
     );
 };
 
@@ -103,21 +127,20 @@ export const HeaderDayItem: React.FC<HeaderDayItemType> = ({ numberOfDay, monthN
 };
 
 type TaskItemType = {
-    color: string
+    primaryColor: string
+    secondaryColor: string
     task: string
 };
 
-export const TaskItem: React.FC<TaskItemType> = ({ color, task }) => {
+export const TaskItem: React.FC<TaskItemType> = ({ primaryColor, secondaryColor, task }) => {
 
     return (
         <Typography variant="subtitle2" sx={{
-            backgroundColor: color,
+            backgroundColor: secondaryColor,
+            color: primaryColor,
             borderRadius: 2,
             px: 1,
-            // position: 'absolute',
-            // top: 0,
-            // left: 8, right: 8,
-            // height:'10%',
+            mb: 0.5,
         }}>
             {task}
         </Typography>

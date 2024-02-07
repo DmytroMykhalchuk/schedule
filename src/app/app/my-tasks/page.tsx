@@ -25,7 +25,7 @@ const Page: React.FC<PageType> = async ({ }) => {
             tasks: [] as TaskShortType[],
         },
         next: {
-            dateStamp: dayjs().add(1, 'day'),
+            dateStamp: dayjs().add(2, 'day'),
             tasks: [] as TaskShortType[],
         },
         previous: {
@@ -36,22 +36,20 @@ const Page: React.FC<PageType> = async ({ }) => {
 
     tasks.forEach(task => {
         const dueDate = dayjs(task.dueDate, 'DD.MM.YYYY');
-        console.log(
-            dueDate.format('DD.MM.YYYY'),
-            taskFiltered.today.dateStamp.format('DD.MM.YYYY'),
-        )
+
         if (dueDate.isSame(taskFiltered.today.dateStamp, 'day')) {
             //today
             taskFiltered.today.tasks.push(task);
         } else if (dueDate.isSame(taskFiltered.tomorrow.dateStamp, 'day')) {
             //tomorrow
             taskFiltered.tomorrow.tasks.push(task);
-        } else if (dueDate.diff(taskFiltered.next.dateStamp.diff(dueDate))) {
+        } else if (taskFiltered.previous.dateStamp.diff(dueDate) > 0) {
+            //prev
+            console.log(taskFiltered.previous.dateStamp.diff(dueDate))
+            taskFiltered.previous.tasks.push(task);
+        } else {
             //next
             taskFiltered.next.tasks.push(task);
-        } else {
-            //prev
-            taskFiltered.previous.tasks.push(task);
         }
     });
 

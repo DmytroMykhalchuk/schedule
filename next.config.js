@@ -2,15 +2,15 @@
 const nextConfig = {
     trailingSlash: true,
     reactStrictMode: true,
-    // async redirects() {
-    //   return [
-    //     {
-    //       source: "/about",
-    //       destination: "/about",
-    //       permanent: true,
-    //     },
-    //   ]
-    // },
+    async redirects() {
+        return [
+            {
+                source: '/app/calendar/day',
+                destination: '/app/my-tasks',
+                permanent: true,
+            },
+        ]
+    },
     images: {
         remotePatterns: [
             {

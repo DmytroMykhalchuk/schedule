@@ -5,6 +5,7 @@ import User from "../models/User";
 import { UserActions } from "./UserActions";
 import Project from "../models/Project";
 import { CommentType } from "./CommentActions";
+import mongoose from "mongoose";
 
 export type StatusType = 'not_started' | 'in_progress' | 'done';
 export type PriorityType = 'low_priority' | 'medium_priority' | 'critical_prority';
@@ -20,6 +21,18 @@ export type TaskShortType = {
 
 type ViewTaskType = {
     _id: string,
+    name: string,
+    description: string,
+    dueDate: string,
+    status: StatusType,
+    priority: PriorityType,
+    assignee: string | null
+    directory: string
+    subtasks: string[] | null
+};
+
+export type TaskDB = {
+    _id: mongoose.Types.ObjectId,
     name: string,
     description: string,
     dueDate: string,
