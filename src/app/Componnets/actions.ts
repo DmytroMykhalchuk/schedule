@@ -18,20 +18,22 @@ export const getAuthParams = async () => {
     }
 
     const dateMark = dayjs((authData?.lastUpdatedAt || 0) * 1000);
-    const diffInSeconds = dateMark.diff(dayjs().add(1, 'day')) / 1000;
+    const diffInSeconds = dateMark.diff() / 1000;
     const diffInHours = Math.abs(diffInSeconds / 60 / 60);
 
     let sessionId = '';
-    if (sessionLifeTimeInHours < diffInHours) {
-        const response = await UserActions.updateSessionId(authData.sessionId);
-        if (!response.sessionId) {
-            return { projectId: '', sessionId: '' };
-        }
-        cookies().set(authCookieKey, JSON.stringify({
-            sessionId: response.sessionId,
-            lastUpdatedAt: dayjs().unix(),
-        }));
-        sessionId = response.sessionId;
+
+    // if (sessionLifeTimeInHours < diffInHours) {
+    if (false) {
+        // const response = await UserActions.updateSessionId(authData.sessionId);
+        // if (!response.sessionId) {
+        //     return { projectId: '', sessionId: '' };
+        // }
+        // cookies().set(authCookieKey, JSON.stringify({
+        //     sessionId: response.sessionId,
+        //     lastUpdatedAt: dayjs().unix(),
+        // }));
+        // sessionId = response.sessionId;
     } else {
         sessionId = authData.sessionId;
     }

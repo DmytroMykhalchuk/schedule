@@ -66,33 +66,30 @@ export const UserActions = {
     async updateSessionId(sessionId: string): Promise<{ sessionId: string }> {
         await connectDB();
         //todo ceheck update is still member in some project
+        console.log(sessionId)
         let uuid = uniqid();
 
         const response = await User.findOneAndUpdate({
             sessions: {
-                $in: [sessionId],
+                $in: sessionId,
             },
         }, {
-            $pull: {
-                sessions: sessionId
-            },
-            $push: {
-                sessions: uuid
-            },
+            $set: { "sessions.$": uuid },
         });
 
-        console.log({response},'update sessionId');
-
+        console.log({ response }, 'update sessionId');
         return { sessionId: uuid };
     },
 
-    async getUserBySessionId(sessionId: string): Promise<UserDB> {
+    async getUserBySessionId(sessionId: string, selectMask = {}): Promise<UserDB> {
         await connectDB();
+        console.log(sessionId)
         const person = await User.findOne({
             sessions: {
-                $in: [sessionId],
+                $in: sessionId,
             },
-        });
+        }, selectMask);
+        
         return person;
     },
 

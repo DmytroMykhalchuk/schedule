@@ -12,7 +12,7 @@ type PageType = {
 };
 
 const Page: React.FC<PageType> = ({ }) => {
-    
+
     return (
         <>
             <Box>
@@ -21,20 +21,28 @@ const Page: React.FC<PageType> = ({ }) => {
             <Grid container spacing={2}>
                 <Grid item sm={12} md={4}>
                     <Stack spacing={2}>
-                        <HomeCalendar />
-                        <ProjectDirectories />
+                        {/* <HomeCalendar /> */}
+                        <div>
+                            <ProjectDirectories />
+                        </div>
                     </Stack>
                 </Grid>
                 <Grid item sm={12} md={8}>
-                    <TasksWrapepr />
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} md={6}>
-                            <NewComments />
+                    <div>
+                        <div>
+                            <TasksWrapepr />
+                        </div>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} md={6}>
+                                <NewComments />
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <div>
+                                    <Team />
+                                </div>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12} md={6}>
-                            <Team />
-                        </Grid>
-                    </Grid>
+                    </div>
                 </Grid>
             </Grid>
         </>

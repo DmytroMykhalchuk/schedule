@@ -1,3 +1,4 @@
+import { UrgentTask } from './types';
 import dayjs from "dayjs";
 import connectDB from "../connectDB";
 import { ProjectActions } from "./ProjectActions";
@@ -6,6 +7,7 @@ import { UserActions } from "./UserActions";
 import Project from "../models/Project";
 import { CommentType } from "./CommentActions";
 import mongoose from "mongoose";
+import Task from '../models/Task';
 
 export type StatusType = 'not_started' | 'in_progress' | 'done';
 export type PriorityType = 'low_priority' | 'medium_priority' | 'critical_prority';
@@ -132,5 +134,28 @@ export const TaskActions = {
         project.save();
 
         return { success: true };
+    },
+
+    async getUrgentTasks(projectId: string, sessionId: string): Promise<UrgentTask[]> {
+        await connectDB();
+        const user = await UserActions.getUserBySessionId(sessionId);
+        const project = await Project.findOne({ _id: projectId, users: user._id }, { name: 1 });
+
+        if (!project?._id) {
+            return [];
+        }
+
+        const requiredDates = [
+            dayjs().format('DD.MM.YYYY'),
+            dayjs().add(1, 'day').format('DD.MM.YYYY'),
+            dayjs().add(2, 'day').format('DD.MM.YYYY'),
+        ];
+        
+        const tasks = await Task.find({ projectId, dueDate: { $in: requiredDates } }, { name: 1, dueDate: 1 });
+
+        const urgentsTasks = tasks.sort((a: { dueDate: string }, b: { dueDate: string }) => a.dueDate.localeCompare(b.dueDate))
+            || [];
+
+        return urgentsTasks;
     },
 };

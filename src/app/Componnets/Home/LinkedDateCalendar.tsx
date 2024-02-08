@@ -36,7 +36,7 @@ function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
   }).then(response => {
     return response.json();
   }).then(data => {
-    return data;
+    return data?.days;
   })
     .catch(err => {
 

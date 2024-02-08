@@ -1,55 +1,27 @@
 import mongoose, { Schema } from "mongoose";
+import { DBProjectType } from "../actions/types";
 
 mongoose.Promise = global.Promise;
 
-const commentSchema = new Schema({
-    _id: { type: Schema.Types.ObjectId, default: mongoose.Types.ObjectId },
-    userId: { type: String, required: true },
-    name: { type: String, required: true },
-    picture: { type: String, required: true },
-    text: { type: String, required: true },
-    replyId: { type: String, default: '' },
-});
-
-const taskShema = new Schema({
-    _id: { type: Schema.Types.ObjectId, default: mongoose.Types.ObjectId },
-    name: { type: String, required: true, },
-    assignee: { type: String, default: '', },
-    status: { type: String, required: true, },
-    directory: { type: String, default: '', },
-    dueDate: { type: String, default: '', },
-    priority: { type: String, required: true, },
-    description: { type: String, default: '', },
-    subtasks: { type: [String], default: [], },
-    comments: {
-        type: [commentSchema],
-        default: [],
-    }
-}, { _id: true });
-
-const projectSchema = new Schema({
+const projectSchema = new Schema<DBProjectType>({
     name: {
         type: String,
         required: true,
     },
     admin_id: {
-        type: String,
+        type: mongoose.Types.ObjectId,
         required: true,
+        ref: 'User',
     },
     directories: {
         type: [String],
         default: [],
     },
-    users: {
-        type: [String],
-        default: [],
-    },
+    users: [{
+        type: mongoose.Types.ObjectId, ref: 'User', default: [],
+    }],
     team: {
-        type: [{ id: String, role: String }],
-        default: [],
-    },
-    tasks: {
-        type: [taskShema],
+        type: [{ id: { type: Schema.Types.ObjectId, ref: 'User' }, role: String }],
         default: [],
     },
     invitations: {
@@ -58,4 +30,4 @@ const projectSchema = new Schema({
     }
 });
 
-export default mongoose.models.Project || mongoose.model('Project', projectSchema);
+export default mongoose.models.Project || mongoose.model<DBProjectType>('Project', projectSchema);

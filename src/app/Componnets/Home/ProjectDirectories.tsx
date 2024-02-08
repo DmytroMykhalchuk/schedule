@@ -1,4 +1,5 @@
 import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { ProjectDirectoryItem } from "./Elements/ProjectDirectoryItem";
 import { AddDirectory } from "./Elements/AddDirectory";
@@ -19,7 +20,6 @@ export const ProjectDirectories: React.FC<ProjectDirectoriesType> = async ({ }) 
     };
 
     const directories = await geetDirectories();
-
 
     return (
         <Paper elevation={4} sx={{ p: 2 }}>

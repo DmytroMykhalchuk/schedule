@@ -8,12 +8,8 @@ import { priorities, requiredDateLength, statuses } from "../constants";
 import dayjs from "dayjs";
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
+import { DBProjectType, AuthType } from "./types";
 
-type ProjectDB = {
-    directories: string[]
-    name: string,
-    admin_google_id: string,
-}
 type StoreProjectType = {
     name: string,
 };
@@ -38,20 +34,22 @@ type StoreTaskType = {
 };
 
 type TaskType = StoreTaskType & { _id: string }
-type UrgentTaskType = Pick<TaskType, '_id' | 'name' | 'dueDate'>
 
 export const ProjectActions = {
-    async storeProject(project: StoreProjectType, sessionId: string): Promise<string> {
+    async storeProject(project: StoreProjectType, sessionId: string) {
         await connectDB();
+        const user = await UserActions.getUserBySessionId(sessionId, { _id: 1, });
 
-        const user = await UserActions.getUserBySessionId(sessionId);
-
-        const person = new Project({
+        const modelProject = new Project({
             name: project.name,
             admin_id: user._id,
+            users: [user._id],
+            team: [{ role: 'boss', id: user._id }]
         });
-        const result = await person.save();
-        return result._id as string;
+
+        const result = await modelProject.save();
+
+        return result._id.toString();
     },
 
     async storeDirectory(directoryName: string, projectId: string) {
@@ -135,26 +133,6 @@ export const ProjectActions = {
 
     },
 
-    async getUrgentTasks(projectId: string, sessionId: string): Promise<UrgentTaskType[]> {
-        await connectDB();
-        const user = await UserActions.getUserBySessionId(sessionId);
-
-        const project = await Project.findOne({ _id: projectId, users: user._id }, { 'tasks.name': 1, 'tasks.dueDate': 1, });
-
-        const requiredDates = [
-            dayjs().format('DD.MM.YYYY'),
-            dayjs().add(1, 'day').format('DD.MM.YYYY'),
-            dayjs().add(2, 'day').format('DD.MM.YYYY'),
-        ];
-
-        const urgentsTasks =
-            project.tasks?.filter((item: { dueDate: string }) => requiredDates.includes(item.dueDate))
-                .sort((a: { dueDate: string }, b: { dueDate: string }) => a.dueDate.localeCompare(b.dueDate))
-            || [];
-
-        return urgentsTasks;
-    },
-
     async genearateRandomTasks(projectId: string, count = 350, maxDayCount = 30): Promise<void> {
         await connectDB();
         const users = await User.find();
@@ -184,26 +162,28 @@ export const ProjectActions = {
         const result = await Project.findOneAndUpdate({ _id: projectId }, { $push: { tasks: tasks, users: userIds } })
     },
 
-    async getTeam(projectId: string, sessionId: string): Promise<UserTeamItemType[]> {
+    async getTeam(auth: AuthType): Promise<UserTeamItemType[]> {
         await connectDB();
-        const user = await UserActions.getUserBySessionId(sessionId);
+        const user = await UserActions.getUserBySessionId(auth.sessionId);
 
-        const project = await Project.findOne({ _id: projectId, users: user._id }, { team: 1 });
-        if (!project._id) {
+        const project = await Project.findOne({ _id: auth.projectId, users: user._id }, { team: 1 });
+
+        if (!project?._id) {
             return [];
         }
         const userIdRoleMap = {} as any;
-        const userIds = project.team.map((user: { id: string, role: string }) => {
-            userIdRoleMap[user.id] = user.role
-            return user.id
+        const userIds = project.team.map((user: { _id: mongoose.Types.ObjectId, role: string }) => {
+            const userId = user._id.toString();
+            userIdRoleMap[userId] = user.role
+            return userId;
         });
 
+        console.log(userIds)
         const users = await UserActions.getUsersByIds(userIds);
-
         const result = [] as UserTeamItemType[];
-
         users.forEach((user) => {
             const role = userIdRoleMap[user._id];
+            console.log(role)
             role && result.push({
                 name: user.name,
                 _id: user._id,
