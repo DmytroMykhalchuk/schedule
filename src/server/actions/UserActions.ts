@@ -27,7 +27,7 @@ export const UserActions = {
     async login(user: StoreUser) {
         await connectDB();
         const targetUser = await User.findOne({ google_id: user.google_id })
-        // const targetUser = await User.findOne({ name:'dgd' });
+
         let uuid = uniqid();
         if (targetUser) {
             await User.findOneAndUpdate({ _id: targetUser._id }, { ...user, sessions: [...targetUser.sessions, uuid] }).exec()
@@ -83,7 +83,6 @@ export const UserActions = {
 
     async getUserBySessionId(sessionId: string, selectMask = {}): Promise<UserDB> {
         await connectDB();
-        console.log(sessionId)
         const person = await User.findOne({
             sessions: {
                 $in: sessionId,

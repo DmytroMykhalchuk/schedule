@@ -48,7 +48,6 @@ export const MemberActions = {
 
         project.save();
 
-
         return { success: true };
     },
 }

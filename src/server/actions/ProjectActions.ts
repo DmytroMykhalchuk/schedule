@@ -1,14 +1,12 @@
-import { get } from "http";
-import connectDB from "../connectDB";
-import Project from "../models/Project";
-import User from "../models/User";
-import { getRandomBoolean, getRandomInt, getRandomString } from "../utils/utils";
-import { UserActions, UserTeamItemType } from "./UserActions";
-import { priorities, requiredDateLength, statuses } from "../constants";
-import dayjs from "dayjs";
-import mongoose from "mongoose";
-import { ObjectId } from "mongodb";
-import { DBProjectType, AuthType } from "./types";
+import connectDB from '../connectDB';
+import mongoose from 'mongoose';
+import Project from '../models/Project';
+import User from '../models/User';
+import { AuthType, StoreTaskType } from './types';
+import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
+import { ObjectId } from 'mongodb';
+import { priorities, statuses } from '../constants';
+import { UserActions, UserTeamItemType } from './UserActions';
 
 type StoreProjectType = {
     name: string,
@@ -20,20 +18,6 @@ type ProjectUsers = {
     picture: string,
     email: string
 };
-
-type StoreTaskType = {
-    name: string,
-    assignee: string | null,
-    status: string,
-    directory: string | null,
-    dueDate: string,
-    priority: string,
-    description: string,
-    subtasks: string[] | null,
-    comment?: string | null
-};
-
-type TaskType = StoreTaskType & { _id: string }
 
 export const ProjectActions = {
     async storeProject(project: StoreProjectType, sessionId: string) {
@@ -89,37 +73,6 @@ export const ProjectActions = {
         return project.directories
     },
 
-    async storeTask(auth: { projectId: string, sessionId: string }, task: StoreTaskType): Promise<{ projectId?: string }> {
-        await connectDB();
-        const user = await UserActions.getUserBySessionId(auth.sessionId);
-
-        const project = await ProjectActions.getProjectByFilters(auth, { tasks: 1 });
-        project.tasks.push({
-            _id: new ObjectId(),
-            name: task.name,
-            assignee: task.assignee,
-            status: task.status,
-            directory: task.directory,
-            dueDate: task.dueDate,
-            priority: task.priority,
-            description: task.description,
-            subtasks: task.subtasks,
-            comments: task.comment
-                ? [{
-                    _id: new ObjectId(),
-                    userId: user._id,
-                    name: user.name,
-                    picture: user.picture,
-                    text: task.comment,
-                }]
-                : []
-        });
-
-        project.save();
-
-        return { projectId: project?._id };
-    },
-
     async generateDirectories(projectId: string, count = 12): Promise<string[]> {
         await connectDB();
         const generatedDirectories = [] as string[];
@@ -164,13 +117,15 @@ export const ProjectActions = {
 
     async getTeam(auth: AuthType): Promise<UserTeamItemType[]> {
         await connectDB();
-        const user = await UserActions.getUserBySessionId(auth.sessionId);
 
+        const user = await UserActions.getUserBySessionId(auth.sessionId);
         const project = await Project.findOne({ _id: auth.projectId, users: user._id }, { team: 1 });
+        
 
         if (!project?._id) {
             return [];
         }
+
         const userIdRoleMap = {} as any;
         const userIds = project.team.map((user: { _id: mongoose.Types.ObjectId, role: string }) => {
             const userId = user._id.toString();
@@ -178,12 +133,12 @@ export const ProjectActions = {
             return userId;
         });
 
-        console.log(userIds)
         const users = await UserActions.getUsersByIds(userIds);
         const result = [] as UserTeamItemType[];
+
         users.forEach((user) => {
             const role = userIdRoleMap[user._id];
-            console.log(role)
+
             role && result.push({
                 name: user.name,
                 _id: user._id,
@@ -210,6 +165,17 @@ export const ProjectActions = {
         return project;
     },
 
+    async getProjectById(projectId: string, selector = {}, userId?: string) {
+        await connectDB();
+
+        const filter = userId
+            ? { _id: projectId, users: userId }
+            : { _id: projectId };
+
+        const project = Project.findOne(filter, selector)
+
+        return project;
+    },
 };
 
 const generateSubtasks = (min = 1, max = 10): string[] => {

@@ -1,10 +1,11 @@
 import { getAuthParams } from '@/app/Componnets/actions';
-import { PriorityType, StatusType, TaskActions } from '@/server/actions/TaskActions';
+import { TaskActions } from '@/server/actions/TaskActions';
+import { PriorityType, StatusType } from '@/server/actions/types';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export const getTask = async (taskId: string) => {
-    const { projectId, sessionId } =  await getAuthParams();
+    const { projectId, sessionId } = await getAuthParams();
 
     const response = await TaskActions.getTaskAndCommentsById({ projectId, sessionId }, taskId);
     return response;
@@ -12,7 +13,7 @@ export const getTask = async (taskId: string) => {
 
 export const updateTask = async (formData: FormData) => {
     'use server';
-    const { projectId, sessionId } =  await getAuthParams();
+    const { projectId, sessionId } = await getAuthParams();
 
     const taskId = formData.get('task_id') as string;
     const name = formData.get('task_name') as string;

@@ -1,14 +1,16 @@
+import { ObjectId } from 'mongodb';
 import mongoose, { Schema } from "mongoose";
 
 mongoose.Promise = global.Promise;
 
 const commentSchema = new Schema({
-    _id: { type: Schema.Types.ObjectId, default: mongoose.Types.ObjectId },
     userId: { type: String, required: true, ref: 'User' },
     name: { type: String, required: true },
     picture: { type: String, required: true },
     text: { type: String, required: true },
-    replyId: { type: Schema.Types.ObjectId, default: '', ref: 'Comment' },
+    replyId: { type: String, default: '',},
+    taskId: { type: Schema.Types.ObjectId, ref: 'Task', required: true },
+    projectId: { type: Schema.Types.ObjectId, ref: 'Project', required: true },
 });
 
 export default mongoose.models.Comment || mongoose.model('Comment', commentSchema);

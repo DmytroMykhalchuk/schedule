@@ -11,7 +11,7 @@ export const GET = async (req: Request) => {
         return NextResponse.json({ error: 'Did`n received all parameters' });
     }
 
-    const response = await CalendarActions.getMonthTaskDays(projectId, sessionId, date);
+    const response = await CalendarActions.getMonthTaskDays({ projectId, sessionId }, date);
 
     if (Array.isArray(response)) {
         return NextResponse.json({

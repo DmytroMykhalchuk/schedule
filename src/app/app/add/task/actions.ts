@@ -2,8 +2,7 @@
 
 import { defaultFirstDirectory, defaultFirstUserId } from "@/app/Componnets/Add/actions";
 import { getAuthParams } from "@/app/Componnets/actions";
-import { ProjectActions } from "@/server/actions/ProjectActions";
-import { cookies } from "next/headers";
+import { TaskActions } from "@/server/actions/TaskActions";
 import { redirect } from "next/navigation";
 
 export const createTask = async (formDate: FormData) => {
@@ -24,7 +23,7 @@ export const createTask = async (formDate: FormData) => {
         subtasks: formDate.getAll('subtasks') as string[] | null,
         comment: formDate.get('comment') as string | null,
     };
-    const result = await ProjectActions.storeTask({ projectId, sessionId }, newTask);
+    const result = await TaskActions.storeTask({ projectId, sessionId }, newTask);
 
     //todo message notify about success
     redirect('/app/add/task');

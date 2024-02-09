@@ -27,7 +27,9 @@ function getRandomNumber(min: number, max: number) {
 function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
   const formattedDate = date.format('DD.MM.YYYY');
   const targetProjectId = getCookieValue(projectIdCookieKey);
-  const sessionId = getCookieValue(authCookieKey);
+  const sessionJson = getCookieValue(authCookieKey) || '';
+  const session = JSON.parse(decodeURIComponent(sessionJson) || '{}');
+  const sessionId = session?.sessionId || '';
 
   return fetch(`/api/home-calendar?date=${formattedDate}&project_id=${targetProjectId}&session_id=${sessionId}`, {
     next: {

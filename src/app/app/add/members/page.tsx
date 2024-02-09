@@ -19,7 +19,7 @@ const Page: React.FC<PageType> = async ({ }) => {
 
                 <Stack spacing={2}>
                     {users.map(user => (
-                        <Stack key={user._id} direction={'row'} spacing={1} alignItems={'center'}>
+                        <Stack key={user._id.toString()} direction={'row'} spacing={1} alignItems={'center'}>
                             <Avatar src={user.picture} alt={user.name} />
                             <Box flex={1}>
                                 <Typography variant="body1">{user.name}</Typography>

@@ -2,41 +2,35 @@ import dayjs from "dayjs";
 import connectDB from "../connectDB";
 import Project from "../models/Project";
 import { ProjectActions } from "./ProjectActions";
-import { TaskDB, TaskShortType } from "./TaskActions";
 import { UserActions } from "./UserActions";
+import Task from "../models/Task";
+import { TaskDB, TaskShortType, AuthType } from "./types";
 
 export const CalendarActions = {
-    async getMonthTaskDays(projectId: string, sessionId: string, findDate: string): Promise<number[]> {
+    async getMonthTaskDays(auth: AuthType, findDate: string): Promise<number[]> {
         await connectDB();
-        const user = await UserActions.getUserBySessionId(sessionId);
+        const user = await UserActions.getUserBySessionId(auth.sessionId);
         if (!user?._id) {
             return [];
         }
-        const formattedDate = findDate?.slice(0, -2);
-        const result = await Project.findOne({
-            _id: projectId,
-            users: user._id,
-        }, {
-            'tasks': 1,
-        });
+        const formattedDate = findDate?.slice(2);
+        const regex = new RegExp(formattedDate, 'i') // i for case insensitive
+        const tasks = await Task.find({ dueDate: { $regex: regex } });
 
-        const requiredDays = [] as number[];
-        result.tasks.forEach((task: { dueDate: string }) => {
-            if (task.dueDate.includes(formattedDate)) {
-                requiredDays.push(+task.dueDate.slice(-2));
-            }
-        });
+        const days = tasks.map(task => +task.dueDate.substr(0, 2))
 
-        const uniqueDays = requiredDays.filter((value, index, array) => {
+        const uniqueDays = days.filter((value, index, array) => {
             return array.indexOf(value) === index;
         });
+
         return uniqueDays;
     },
-    async getWeekTasks(auth: { projectId: string, sessionId: string }, data: string): Promise<TaskShortType[]> {
+
+    async getWeekTasks(auth: AuthType, data: string): Promise<TaskShortType[]> {
         await connectDB();
         const dateMark = dayjs(data);
 
-        const rquiredDates = [
+        const requiredDates = [
             dateMark.day(1).format('DD.MM.YYYY'),
             dateMark.day(2).format('DD.MM.YYYY'),
             dateMark.day(3).format('DD.MM.YYYY'),
@@ -44,10 +38,9 @@ export const CalendarActions = {
             dateMark.day(5).format('DD.MM.YYYY'),
         ];
 
-        const project = await ProjectActions.getProjectByFilters(auth, { tasks: 1 });
+        const tasks = await Task.find({ dueDate: { $in: requiredDates } });
 
-        const targetTasks: TaskShortType[] = project?.tasks
-            .filter((task: TaskDB) => rquiredDates.includes(task.dueDate))
+        const targetTasks: TaskShortType[] = tasks
             .map((task: TaskDB) => ({
                 taskId: task._id.toString(),
                 name: task.name,
@@ -55,6 +48,7 @@ export const CalendarActions = {
                 status: task.status,
                 directory: task.directory,
                 priority: task.priority,
+                _id: task._id.toString(),
             }));
 
         return targetTasks;

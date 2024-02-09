@@ -3,6 +3,7 @@ import connectDB from "../connectDB";
 import User from "../models/User";
 import { ProjectActions } from "./ProjectActions";
 import { UserActions, UserDB, UserTeamItemType } from "./UserActions";
+import mongoose from "mongoose";
 
 type StoreMemberType = {
     role: string,
@@ -14,6 +15,10 @@ type TeamItemType = UserTeamItemType & { isAdmin: boolean }
 export const TeamActions = {
     async storeMember(projectId: string, sessionId: string, member: StoreMemberType): Promise<{ success: boolean }> {
         await connectDB();
+        
+        if (!member.userId) {
+            return { success: false };
+        }
 
         const project = await ProjectActions.getProjectByFilters({ projectId, sessionId }, { team: 1 });
         if (!project?._id)
@@ -38,10 +43,12 @@ export const TeamActions = {
         const project = await ProjectActions.getProjectByFilters({ projectId, sessionId }, { team: 1, users: 1, admin_id: 1 });
 
         const userIdRoleMap = {} as any;
-        const userIds = project.team.map((user: { id: string, role: string }) => {
-            userIdRoleMap[user.id] = user.role
-            return user.id
+        const userIds = project.team.map((user: { _id: string, role: string }) => {
+            const userId = user._id.toString();
+            userIdRoleMap[userId] = user.role
+            return userId;
         });
+
 
         const users = await UserActions.getUsersByIds(userIds);
 
@@ -88,8 +95,8 @@ export const TeamActions = {
         if (!project?.team)
             return { success: false };
 
-        project.team.forEach((user: { id: string, role: string }) => {
-            if (user.id !== member.userId)
+        project.team.forEach((user: { _id: mongoose.Types.ObjectId, role: string }) => {
+            if (user._id.toString() !== member.userId)
                 return;
             user.role = member.role;
         });

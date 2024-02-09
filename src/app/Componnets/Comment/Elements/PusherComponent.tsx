@@ -1,7 +1,7 @@
-import { CommentType } from '@/server/actions/CommentActions';
-import { channelPrefixName, newCommentEventName, projectIdCookieKey, removedCommentEventName } from '@/server/constants';
-import { getCookieValue } from '@/utlis/getCookieValue';
+'use client';
 import Pusher from 'pusher-js';
+import { channelPrefixName, newCommentEventName, removedCommentEventName } from '@/server/constants';
+import { CommentType } from '@/server/actions/CommentActions';
 import { useEffect } from 'react';
 
 Pusher.logToConsole = true;
@@ -13,10 +13,10 @@ const pusher = new Pusher('90149ab3e623050894c1', {
 type PusherComponentType = {
     addComment: (comment: CommentType) => void,
     removeComment: (commentId: string) => void,
+    projectId: string
 };
 
-export const PusherComponent: React.FC<PusherComponentType> = ({ addComment, removeComment }) => {
-    const projectId = getCookieValue(projectIdCookieKey);
+export const PusherComponent: React.FC<PusherComponentType> = ({ addComment, removeComment, projectId }) => {
 
     useEffect(() => {
         if (!pusher || !projectId) return;
@@ -40,7 +40,6 @@ export const PusherComponent: React.FC<PusherComponentType> = ({ addComment, rem
 
     return (
         <>
-
         </>
     );
 };

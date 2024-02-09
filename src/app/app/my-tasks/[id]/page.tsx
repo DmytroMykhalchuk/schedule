@@ -3,12 +3,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Link from 'next/link';
 import Stack from '@mui/material/Stack';
+import { CommentContainer } from '@/app/Componnets/Add/CommentsBox';
+import { CommentDialog } from '@/app/Componnets/Comment/CommentDialog';
+import { cookies } from 'next/headers';
 import { getTask, updateTask } from './actions';
 import { HeaderLayout } from '@/app/Componnets/Layouts/HeaderLayout';
 import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
+import { projectIdCookieKey } from '@/server/constants';
 import { TaskForm } from '@/app/Componnets/Add/TaskForm';
-import { CommentContainer } from '@/app/Componnets/Add/CommentsBox';
-import { CommentDialog } from '@/app/Componnets/Comment/CommentDialog';
 
 type PageType = {
     params: {
@@ -75,7 +77,11 @@ const Page: React.FC<PageType> = async ({ params }) => {
                         <input type="hidden" name="task_id" value={task?._id?.toString() || ''} />
                     </form>
                     <Box px={2}>
-                        <CommentDialog comments={handledComments} taskId={task._id.toString()} />
+                        <CommentDialog
+                            comments={handledComments}
+                            taskId={task._id.toString()}
+                            projectId={cookies().get(projectIdCookieKey)?.value as string}
+                        />
                     </Box>
                 </MiddlePaperWrapper>
             </Stack>

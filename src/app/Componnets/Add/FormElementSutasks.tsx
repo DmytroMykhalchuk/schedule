@@ -35,7 +35,14 @@ export const FormElementSutasks: React.FC<FormElementSutasksType> = ({ defaultSu
             <FormControlLabel control={<Checkbox checked={isExtended} onChange={onChangeIsExtended} />} label="Subtasks" />
             {isExtended && <Stack spacing={2}>
                 {subtasks.map((task, index) => (
-                    <SubtasksItem task={`${task}`} position={index} isLastIndex={index === subtasks.length - 1} onDeleteSubTask={() => onDeleteSubTask(index)} onAddNewSubtask={onAddNewSubtask} />
+                    <SubtasksItem
+                        key={index}
+                        task={`${task}`}
+                        position={index}
+                        isLastIndex={index === subtasks.length - 1}
+                        onDeleteSubTask={() => onDeleteSubTask(index)}
+                        onAddNewSubtask={onAddNewSubtask}
+                    />
                 ))}
             </Stack>
             }

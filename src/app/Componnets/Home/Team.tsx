@@ -13,7 +13,6 @@ import { TeamItem } from './Elements/TeamItem';
 
 const getTeam = async () => {
     const { projectId, sessionId } = await getAuthParams();
-
     const users = await ProjectActions.getTeam({ projectId, sessionId });
     return users;
 }

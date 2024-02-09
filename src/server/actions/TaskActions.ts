@@ -1,63 +1,55 @@
-import { UrgentTask } from './types';
-import dayjs from "dayjs";
-import connectDB from "../connectDB";
-import { ProjectActions } from "./ProjectActions";
-import User from "../models/User";
-import { UserActions } from "./UserActions";
-import Project from "../models/Project";
-import { CommentType } from "./CommentActions";
-import mongoose from "mongoose";
+import connectDB from '../connectDB';
+import dayjs from 'dayjs';
+import mongoose from 'mongoose';
+import Project from '../models/Project';
 import Task from '../models/Task';
-
-export type StatusType = 'not_started' | 'in_progress' | 'done';
-export type PriorityType = 'low_priority' | 'medium_priority' | 'critical_prority';
-
-export type TaskShortType = {
-    taskId: string
-    name: string,
-    dueDate: string,
-    status: StatusType,
-    directory: string,
-    priority: PriorityType,
-};
-
-type ViewTaskType = {
-    _id: string,
-    name: string,
-    description: string,
-    dueDate: string,
-    status: StatusType,
-    priority: PriorityType,
-    assignee: string | null
-    directory: string
-    subtasks: string[] | null
-};
-
-export type TaskDB = {
-    _id: mongoose.Types.ObjectId,
-    name: string,
-    description: string,
-    dueDate: string,
-    status: StatusType,
-    priority: PriorityType,
-    assignee: string | null
-    directory: string
-    subtasks: string[] | null
-};
-
-type TaskUpdateType = {
-    taskId: string
-    name: string,
-    assignee: string | null,
-    status: StatusType,
-    directory: string | null,
-    dueDate: string,
-    priority: PriorityType,
-    description: string,
-    subtasks: string[] | null,
-};
+import { AuthType, StoreCommentType, StoreTaskType, TaskDB, TaskShortType, TaskUpdateType, UrgentTask, ViewTaskType } from './types';
+import { CommentActions, CommentType } from './CommentActions';
+import { ObjectId } from 'mongodb';
+import { ProjectActions } from './ProjectActions';
+import { UserActions } from './UserActions';
 
 export const TaskActions = {
+    async storeTask(auth: AuthType, storeTask: StoreTaskType): Promise<{ projectId?: string }> {
+        await connectDB();
+
+        const user = await UserActions.getUserBySessionId(auth.sessionId);
+
+        const taskModel = new Task({
+            name: storeTask.name,
+            assignee: storeTask.assignee,
+            status: storeTask.status,
+            directory: storeTask.directory,
+            dueDate: storeTask.dueDate,
+            priority: storeTask.priority,
+            description: storeTask.description,
+            subtasks: storeTask.subtasks,
+            projectId: auth.projectId,
+        });
+
+        const task = await taskModel.save();
+
+        if (storeTask?.comment) {
+            const storeComment: StoreCommentType = {
+                _id: new ObjectId(),
+                name: user.name,
+                picture: user.picture,
+                projectId: auth.projectId,
+                replyId: '',
+                taskId: task._id,
+                text: storeTask.comment,
+                userId: user._id,
+            };
+
+            const comment = await CommentActions.createCommentOfTask(storeComment);
+
+            task.comments.push(comment);
+            task.save();
+        }
+
+        return task;
+    },
+
     async getMyTasks(projectId: string, sessionId: string): Promise<TaskShortType[]> {
         await connectDB();
 
@@ -69,21 +61,17 @@ export const TaskActions = {
             dayjs().day(5).format('DD.MM.YYYY'),
         ];
 
-        const selector = {
-            'tasks': 1
-        };
-        const filters = {
-            projectId, sessionId
+        const user = await UserActions.getUserBySessionId(sessionId);
+        const project = await ProjectActions.getProjectByFilters({ projectId, sessionId }, { _id: 1 });
+
+        if (!project) {
+            return [];
         }
 
-        const user = await UserActions.getUserBySessionId(sessionId);
-        const project = await ProjectActions.getProjectByFilters(filters, selector);
+        const tasks = await Task.find({ projectId: project._id, assignee: user._id, dueDate: { $in: requiredDates } }).sort({ dueDate: 1 });
 
-        const filteredTasks = project?.tasks.filter((task: { assignee: string, dueDate: string }) => {
-            return task.assignee === user._id.toString() && requiredDates.includes(task.dueDate);
-        });
-
-        const preparedTasks: TaskShortType[] = filteredTasks.map((task: TaskShortType & { _id: string }) => ({
+        const preparedTasks: TaskShortType[] = tasks.map((task: TaskDB) => ({
+            _id: task._id.toString(),
             taskId: task._id.toString(),
             name: task.name,
             status: task.status,
@@ -95,25 +83,34 @@ export const TaskActions = {
         return preparedTasks;
     },
 
-    async getTaskAndCommentsById(auth: { projectId: string, sessionId: string }, taskId: string): Promise<{ comments: CommentType[], task: ViewTaskType }> {
+    async getTaskAndCommentsById(auth: AuthType, taskId: string): Promise<{ comments: CommentType[], task: ViewTaskType }> {
         await connectDB();
 
         const user = await UserActions.getUserBySessionId(auth.sessionId);
+        const project = await ProjectActions.getProjectByFilters(auth, { _id: 1 });
 
-        const project = await ProjectActions.getProjectByFilters(auth, { tasks: 1 });
+        if (!project) {
+            return { comments: [], task: {} as ViewTaskType };
+        }
 
-
-        const task = project?.tasks.find((task: { _id: string }) => task._id.toString() === taskId);
-
-        const comments = task?.comments?.map((item: { userId: string, isOwner: boolean }) => {
-            item.isOwner = item.userId === user._id.toString();
-            return item;
+        const task = await Task.findOne({ _id: taskId });
+        const comments = await CommentActions.getCommentsByIds(task.comments);
+        const preparedCommnets: CommentType[] = comments.map((item) => {
+            return {
+                name: item.name,
+                picture: item.picture,
+                replyId: item.replyId,
+                text: item.text,
+                userId: item.userId.toString(),
+                _id: item._id.toString(),
+                isOwner: item.userId.toString() === user._id.toString(),
+            };
         });
 
-        return { task, comments };
+        return { task, comments: preparedCommnets };
     },
 
-    async updateTask(auth: { projectId: string, sessionId: string }, updateTask: TaskUpdateType): Promise<{ success: boolean }> {
+    async updateTask(auth: AuthType, updateTask: TaskUpdateType): Promise<{ success: boolean }> {
         await connectDB();
 
         const project = await ProjectActions.getProjectByFilters(auth, { tasks: 1 });
@@ -126,7 +123,7 @@ export const TaskActions = {
                 task.priority = updateTask.priority;
                 task.dueDate = updateTask.dueDate;
                 task.description = updateTask.description;
-                task.subtasks = updateTask.subtasks;
+                task.subtasks = updateTask.subtasks || [];
             }
             return task;
         });
@@ -150,7 +147,7 @@ export const TaskActions = {
             dayjs().add(1, 'day').format('DD.MM.YYYY'),
             dayjs().add(2, 'day').format('DD.MM.YYYY'),
         ];
-        
+
         const tasks = await Task.find({ projectId, dueDate: { $in: requiredDates } }, { name: 1, dueDate: 1 });
 
         const urgentsTasks = tasks.sort((a: { dueDate: string }, b: { dueDate: string }) => a.dueDate.localeCompare(b.dueDate))
@@ -158,4 +155,13 @@ export const TaskActions = {
 
         return urgentsTasks;
     },
+
+    async addCommentId(taskId: string, commentId: mongoose.Types.ObjectId) {
+        await connectDB();
+
+        const result = Task.findByIdAndUpdate(taskId, { $push: { comments: commentId } });
+        console.log({ result });
+
+        return result;
+    }
 };

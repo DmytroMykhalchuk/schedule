@@ -18,7 +18,9 @@ const Page: React.FC<PageType> = ({ }) => {
                 <Typography variant="h4" textAlign={'center'} mb={2}>Add member</Typography>
                 <MemberForm action={addMember} />
             </MiddlePaperWrapper>
-            <TeamList />
+            <div>
+                <TeamList />
+            </div>
         </Stack>
     );
 };
