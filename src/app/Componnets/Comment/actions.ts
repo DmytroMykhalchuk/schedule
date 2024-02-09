@@ -1,9 +1,12 @@
+import { authCookieKey, projectIdCookieKey } from "@/server/constants";
 import { getCookieValue } from "@/utlis/getCookieValue";
 import axios from "axios";
 
 export const sendComment = async (taskId: string, comment: string, replyToCommentId: string) => {
-    const projectId = getCookieValue('target_project');
-    const sessionId = getCookieValue('auth_id');
+    const projectId = getCookieValue(projectIdCookieKey);
+    const sessionJson = getCookieValue(authCookieKey) || '';
+    const session = JSON.parse(decodeURIComponent(sessionJson) || '{}');
+    const sessionId = session?.sessionId || '';
 
     return axios.post('/api/comments', {
         project_id: projectId,
@@ -18,14 +21,15 @@ export const sendComment = async (taskId: string, comment: string, replyToCommen
     });
 };
 
-export const deleteComment = async (taskId: string, commentId: string) => {
-    const projectId = getCookieValue('target_project');
-    const sessionId = getCookieValue('auth_id');
+export const deleteComment = async (commentId: string) => {
+    const projectId = getCookieValue(projectIdCookieKey);
+    const sessionJson = getCookieValue(authCookieKey) || '';
+    const session = JSON.parse(decodeURIComponent(sessionJson) || '{}');
+    const sessionId = session?.sessionId || '';
 
     return axios.delete('/api/comments', {
         params: {
             comment_id: commentId,
-            task_id: taskId,
             project_id: projectId,
             session_id: sessionId,
         }

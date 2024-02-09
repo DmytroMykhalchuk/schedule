@@ -9,17 +9,28 @@ import styles from './styles.module.scss';
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { NotificationInvite } from "../Componnets/Enter/NotificationInvite";
-
+import { projectIdCookieKey } from "@/server/constants";
+import CircularProgress from '@mui/material/CircularProgress';
 
 type PageType = {
 };
 
 const Page: React.FC<PageType> = ({ }) => {
+    const projectId = cookies().get(projectIdCookieKey)?.value;
 
+    if (projectId) {
+        redirect('/app/');
+
+        return (
+            <Stack justifyContent={'center'} alignItems={'center'}>
+                <CircularProgress color="warning" />
+            </Stack>
+        );
+    }
 
     return (
         <Stack alignItems={'center'} justifyContent={'center'} minHeight={'100vh'}>
-            <NotificationInvite/>
+            <NotificationInvite />
             <Paper sx={{
                 p: 2,
                 borderRadius: 4,
@@ -35,11 +46,11 @@ const Page: React.FC<PageType> = ({ }) => {
                 <Typography variant="subtitle1" textAlign={'center'}>or</Typography>
                 <Stack justifyContent={'center'} alignItems={'center'}>
                     <form className={styles.formEntering} action={''}>
-                        <TextField 
-                        label="Input invite id" 
-                        variant="outlined" 
-                        name="invite_id"
-                        type="text" size="small" color="warning" value={''}
+                        <TextField
+                            label="Input invite id"
+                            variant="outlined"
+                            name="invite_id"
+                            type="text" size="small" color="warning" value={''}
                             sx={{ textAlign: 'center' }}
                         />
                         <Button variant="outlined" color="warning" sx={{ textTransform: 'none' }}>

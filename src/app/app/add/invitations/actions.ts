@@ -1,10 +1,10 @@
+import { getAuthParams } from '@/app/Componnets/actions';
 import { InvitingsActions } from '@/server/actions/InvitingsActions';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export const getInvitations = async () => {
-    const projectId = cookies().get('target_project')?.value || '';
-    const sessionId = cookies().get('auth_id')?.value || '';
+    const { projectId, sessionId } =  await getAuthParams();
 
     const invitations = await InvitingsActions.getInvitatons(projectId, sessionId);
 
@@ -13,8 +13,7 @@ export const getInvitations = async () => {
 
 export const removeInvite = async (formData: FormData) => {
     'use server';
-    const projectId = cookies().get('target_project')?.value || '';
-    const sessionId = cookies().get('auth_id')?.value || '';
+    const { projectId, sessionId } =  await getAuthParams();
 
     const invite = formData.get('invite') as string;
 
@@ -27,8 +26,7 @@ export const removeInvite = async (formData: FormData) => {
 
 export const generateInvite = async () => {
     'use server';
-    const projectId = cookies().get('target_project')?.value || '';
-    const sessionId = cookies().get('auth_id')?.value || '';
+    const { projectId, sessionId } =  await getAuthParams();
 
     const result = await InvitingsActions.generateInvite(projectId, sessionId);
 

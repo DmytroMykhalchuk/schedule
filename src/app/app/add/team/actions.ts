@@ -1,14 +1,13 @@
 'use server';
 
+import { getAuthParams } from "@/app/Componnets/actions";
 import { TeamActions } from "@/server/actions/TeamActions";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const addMember = async (formDate: FormData) => {
     'use server';
-
-    const projectId = cookies().get('target_project')?.value || '';
-    const sessionId = cookies().get('auth_id')?.value || '';
+    const { projectId, sessionId } =  await getAuthParams();
 
     const role = formDate.get('role') as string;
     const user = formDate.get('user') as string;
@@ -32,8 +31,7 @@ export const addMember = async (formDate: FormData) => {
 export const updateMember = async (formDate: FormData) => {
     'use server';
 
-    const projectId = cookies().get('target_project')?.value || '';
-    const sessionId = cookies().get('auth_id')?.value || '';
+    const { projectId, sessionId } =  await getAuthParams();
 
     const role = formDate.get('role') as string;
     const userId = formDate.get('user') as string;

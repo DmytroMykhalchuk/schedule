@@ -7,10 +7,11 @@ import Typography from '@mui/material/Typography'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Link from "next/link";
+import { getAuthParams } from "../actions";
 
 const getTeam = async () => {
-    const projectId = cookies().get('target_project')?.value || '';
-    const sessionId = cookies().get('auth_id')?.value || '';
+    const { projectId, sessionId } = await getAuthParams();
+
     const team = await TeamActions.getTeam(projectId, sessionId);
     return team;
 };
@@ -33,7 +34,7 @@ export const TeamList: React.FC<TeamListType> = async ({ }) => {
                                 <Typography variant="caption">{member.email}</Typography>
                             </Stack>
                             <Stack direction={'row'} spacing={1}>
-                                <Link href={member._id}>
+                                <Link href={member._id.toString()}>
                                     <EditIcon color='success' />
                                 </Link>
                                 {

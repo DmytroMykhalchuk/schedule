@@ -2,13 +2,14 @@ import { Button, Stack } from "@mui/material";
 import { AuthButton } from "../Componnets/Auth/AuthButton";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { authCookieKey, projectIdCookieKey } from "@/server/constants";
 
 type PageType = {
 };
 
 const Page: React.FC<PageType> = ({ }) => {
-    if (cookies().get('auth_id')) {
-        cookies().get('target_project')
+    if (cookies().get(authCookieKey)) {
+        cookies().get(projectIdCookieKey)
             ? redirect('/app')
             : redirect('/enter')
     }

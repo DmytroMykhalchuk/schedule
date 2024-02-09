@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box';
+import cn from 'classnames';
+import dayjs from 'dayjs';
 import Stack from '@mui/material/Stack';
 import styles from './../styles.module.scss';
 import Typography from '@mui/material/Typography';
-import cn from 'classnames';
-import { cookies } from 'next/headers';
-import { ProjectActions } from '@/server/actions/ProjectActions';
-import dayjs from 'dayjs';
+import { getAuthParams } from '../../actions';
+import { TaskActions } from '@/server/actions/TaskActions';
 
 const dateMap = {
     [dayjs().format('DD.MM.YYYY')]: 'Today',
@@ -14,10 +14,9 @@ const dateMap = {
 };
 
 const getUrgantTasks = async () => {
-    const sessionId = cookies().get('auth_id')?.value || '';
-    const projectId = cookies().get('target_project')?.value || '';
+    const { projectId, sessionId } =  await getAuthParams();
 
-    const tasks = await ProjectActions.getUrgentTasks(projectId, sessionId)
+    const tasks = await TaskActions.getUrgentTasks(projectId, sessionId)
     return tasks;
 }
 

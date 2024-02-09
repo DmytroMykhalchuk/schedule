@@ -2,13 +2,14 @@
 
 import { ProjectActions } from "@/server/actions/ProjectActions";
 import { UserActions } from "@/server/actions/UserActions";
+import { projectIdCookieKey } from "@/server/constants";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const generateDB = async () => {
     'use server';
 
-    const projectId = cookies().get('target_project')?.value;
+    const projectId = cookies().get(projectIdCookieKey)?.value;
     if (!projectId) {
         return;
     }

@@ -33,9 +33,8 @@ export const DELETE = async (req: Request) => {
     const projectId = searchParams.get('project_id') as string;
     const sessionId = searchParams.get('session_id') as string;
     const commentId = searchParams.get('comment_id') as string;
-    const taskId = searchParams.get('task_id') as string;
 
-    if (!(commentId && projectId && sessionId && taskId)) {
+    if (!(commentId && projectId && sessionId)) {
         return NextResponse.json({
             code: 500,
             message: 'Operation not allowed',
@@ -43,7 +42,7 @@ export const DELETE = async (req: Request) => {
         });
     }
 
-    const response = await CommentActions.removeComment({ projectId, sessionId }, taskId, commentId);
+    const response = await CommentActions.removeComment({ projectId, sessionId }, commentId);
 
     if (response?.success) {
         return NextResponse.json({

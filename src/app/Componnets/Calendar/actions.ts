@@ -1,9 +1,9 @@
 import { CalendarActions } from "@/server/actions/CalendarActions";
 import { cookies } from "next/headers";
+import { getAuthParams } from "../actions";
 
 export const getDaysWithCurrentMonth = async (date: string) => {
-    const projectId = cookies().get('target_project')?.value || '';
-    const sessionId = cookies().get('auth_id')?.value || '';
+    const { projectId, sessionId } =  await getAuthParams();
 
     const days = await CalendarActions.getMonthTaskDays(projectId, sessionId, date);
 
@@ -12,8 +12,7 @@ export const getDaysWithCurrentMonth = async (date: string) => {
 };
 
 export const getWeekTasks = async (date: string) => {
-    const projectId = cookies().get('target_project')?.value || '';
-    const sessionId = cookies().get('auth_id')?.value || '';
+    const { projectId, sessionId } =  await getAuthParams();
 
     const tasks = CalendarActions.getWeekTasks({ projectId, sessionId }, date);
     

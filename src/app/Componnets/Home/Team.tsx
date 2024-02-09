@@ -1,20 +1,19 @@
+import Grid from '@mui/material/Grid';
+import Link from 'next/link';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { Comments } from './Elements/Comments';
+import { cookies } from 'next/headers';
+import { getAuthParams } from '../actions';
+import { ProjectActions } from '@/server/actions/ProjectActions';
+import { TagItem } from './Elements/TagItem';
+import { TeamItem } from './Elements/TeamItem';
 
-import Paper from "@mui/material/Paper";
-import Typography from '@mui/material/Typography'
-import Grid from '@mui/material/Grid'
-import Stack from '@mui/material/Stack'
-import { Comments } from "./Elements/Comments";
-import { TagItem } from "./Elements/TagItem";
-import { TeamItem } from "./Elements/TeamItem";
-import { cookies } from "next/headers";
-import { ProjectActions } from "@/server/actions/ProjectActions";
-import Link from "next/link";
 
 const getTeam = async () => {
-    const targetProjectId = cookies().get('target_project')?.value || '';
-    const sessionId = cookies().get('auth_id')?.value || '';
-
-    const users = await ProjectActions.getTeam(targetProjectId, sessionId);
+    const { projectId, sessionId } = await getAuthParams();
+    const users = await ProjectActions.getTeam({ projectId, sessionId });
     return users;
 }
 

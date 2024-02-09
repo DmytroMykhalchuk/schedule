@@ -1,16 +1,18 @@
-
 'use client';
-import { CommentType } from "@/server/actions/CommentActions";
-import Stack from "@mui/material/Stack";
-import { CommentItem } from "./Elements/CommentItem";
-import { useEffect, useReducer, useState } from "react";
-import TextField from '@mui/material/TextField'
-import { NewCommentForm } from "./Elements/NewCommentForm";
-import { deleteComment, sendComment } from "./actions";
+import Stack from '@mui/material/Stack';
+import styles from './styles.module.scss';
+import TextField from '@mui/material/TextField';
+import { Collapse } from '@mui/material';
+import { CommentItem } from './Elements/CommentItem';
+import { CommentType } from '@/server/actions/CommentActions';
+import { deleteComment, sendComment } from './actions';
+import { getCookieValue } from '@/utlis/getCookieValue';
+import { NewCommentForm } from './Elements/NewCommentForm';
+import { projectIdCookieKey } from '@/server/constants';
+import { PusherComponent } from './Elements/PusherComponent';
 import { TransitionGroup } from 'react-transition-group';
-import { Collapse } from "@mui/material";
-import styles from './styles.module.scss'
-import { PusherComponent } from "./Elements/PusherComponent";
+import { useEffect, useReducer, useState } from 'react';
+
 
 const SET_REPLY_TO = 'SET_REPLY_TO';
 const ADD_COMMENT = 'ADD_COMMENT';
@@ -45,7 +47,7 @@ const reducer = (state: StateType, action: ActionType): StateType => {
 
         case ADD_COMMENT: {
             const comment = state.comments.find(comment => comment._id === action.comment._id);
-            
+
             if (comment)
                 return state;
 
@@ -79,11 +81,11 @@ const reducer = (state: StateType, action: ActionType): StateType => {
 type CommentDialogType = {
     comments: CommentType[],
     taskId: string
+    projectId: string
 };
 
-export const CommentDialog: React.FC<CommentDialogType> = ({ comments, taskId }) => {
+export const CommentDialog: React.FC<CommentDialogType> = ({ comments, taskId, projectId }) => {
     const [state, dispatch] = useReducer(reducer, { ...initialState, comments: comments as CommentType[] });
-
 
     useEffect(() => {
         if (!state.highlightCommentId) return;
@@ -98,7 +100,7 @@ export const CommentDialog: React.FC<CommentDialogType> = ({ comments, taskId })
 
     const onSendComment = async (text: string) => {
         const response = await sendComment(taskId, text, state.replyTo.commentId);
-        if (typeof response.data === 'object') {
+        if (typeof response?.data === 'object') {
             dispatch({ type: ADD_COMMENT, comment: response.data });
         }
     };
@@ -112,7 +114,7 @@ export const CommentDialog: React.FC<CommentDialogType> = ({ comments, taskId })
     };
 
     const onDeleteComment = async (commentId: string) => {
-        const response = await deleteComment(taskId, commentId);
+        const response = await deleteComment(commentId);
         if (response?.code === 200) {
             dispatch({ type: DELETE_COMMENT, commentId });
         }
@@ -139,8 +141,8 @@ export const CommentDialog: React.FC<CommentDialogType> = ({ comments, taskId })
     };
 
     return (
-        <>
-            <PusherComponent addComment={addComment} removeComment={removeComment} />
+        <div>
+            <PusherComponent addComment={addComment} removeComment={removeComment} projectId={projectId} />
             <Stack spacing={2}>
                 <TransitionGroup>
                     {
@@ -164,6 +166,6 @@ export const CommentDialog: React.FC<CommentDialogType> = ({ comments, taskId })
                     onCancelReply={onCancelReply}
                     onSend={onSendComment} />
             </Stack>
-        </>
+        </div>
     );
 };

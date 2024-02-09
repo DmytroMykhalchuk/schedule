@@ -27,7 +27,7 @@ export const UserActions = {
     async login(user: StoreUser) {
         await connectDB();
         const targetUser = await User.findOne({ google_id: user.google_id })
-        // const targetUser = await User.findOne({ name:'dgd' });
+
         let uuid = uniqid();
         if (targetUser) {
             await User.findOneAndUpdate({ _id: targetUser._id }, { ...user, sessions: [...targetUser.sessions, uuid] }).exec()
@@ -52,6 +52,7 @@ export const UserActions = {
             };
         }
     },
+
     async logout(sessionId: string) {
         await connectDB();
         const person = await User.findOneAndUpdate({
@@ -62,13 +63,32 @@ export const UserActions = {
             { $pull: { sessions: sessionId } });
     },
 
-    async getUserBySessionId(sessionId: string): Promise<UserDB> {
+    async updateSessionId(sessionId: string): Promise<{ sessionId: string }> {
+        await connectDB();
+        //todo ceheck update is still member in some project
+        console.log(sessionId)
+        let uuid = uniqid();
+
+        const response = await User.findOneAndUpdate({
+            sessions: {
+                $in: sessionId,
+            },
+        }, {
+            $set: { "sessions.$": uuid },
+        });
+
+        console.log({ response }, 'update sessionId');
+        return { sessionId: uuid };
+    },
+
+    async getUserBySessionId(sessionId: string, selectMask = {}): Promise<UserDB> {
         await connectDB();
         const person = await User.findOne({
             sessions: {
-                $in: [sessionId],
+                $in: sessionId,
             },
-        });
+        }, selectMask);
+        
         return person;
     },
 
@@ -78,6 +98,7 @@ export const UserActions = {
 
         return users;
     },
+
     async randomGenerate(count = 10): Promise<void> {
         await connectDB();
 

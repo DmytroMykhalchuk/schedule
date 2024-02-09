@@ -1,3 +1,4 @@
+import { StoreCommentType, CommentDB, AuthType, StoreCommentRequestType } from './types';
 import connectDB from '../connectDB';
 import mongoose from 'mongoose';
 import Pusher from 'pusher';
@@ -5,6 +6,8 @@ import { ObjectId } from 'mongodb';
 import { ProjectActions } from './ProjectActions';
 import { UserActions } from './UserActions';
 import { channelPrefixName, newCommentEventName, removedCommentEventName } from '../constants';
+import Comment from '../models/Comment';
+import { TaskActions } from './TaskActions';
 
 const pusher = new Pusher({
     appId: "1752490",
@@ -30,77 +33,80 @@ export type CommentType = {
     isOwner: boolean
     replyId: string
 };
-export type CommentDB = Omit<CommentType, 'isOwner' | '_id'> & { _id: mongoose.Types.ObjectId };
+
 
 export const CommentActions = {
-    async storeComment(auth: { projectId: string, sessionId: string }, requestComment: { taskId: string, commentText: string, replyId: string }) {
+    async storeComment(auth: AuthType, requestComment: StoreCommentRequestType) {
         await connectDB();
 
         const user = await UserActions.getUserBySessionId(auth.sessionId);
-        const project = await ProjectActions.getProjectByFilters(auth, { tasks: 1 });
+        const project = await ProjectActions.getProjectById(auth.projectId, { _id: 1 }, user._id);
 
-        let createComment = null as null | CommentDB;
-
-        project.tasks = project.tasks.map((task: { _id: string, comments: CommentDB[] }) => {
-            if (task._id.toString() === requestComment.taskId) {
-                console.log(task._id.toString(), requestComment.taskId)
-                const comment: CommentDB = {
-                    _id: new ObjectId(),
-                    name: user.name,
-                    picture: user.picture,
-                    text: requestComment.commentText,
-                    userId: user._id,
-                    replyId: requestComment.replyId,
-                };
-                task.comments.push(comment);
-                createComment = comment;
-            };
-            return task;
-        });
-
-        if (!createComment) {
-            return 'Not found task or project';
+        if (!project) {
+            return;
         }
 
-        project.save();
+        const commentStore: StoreCommentType = {
+            name: user.name,
+            picture: user.picture,
+            projectId: project._id,
+            replyId: requestComment.replyId,
+            taskId: requestComment.taskId,
+            text: requestComment.commentText,
+            userId: user._id,
+            _id: new ObjectId(),
+        };
+        const comment = await this.createCommentOfTask(commentStore);
 
-        pusher.trigger(`${channelPrefixName}${project._id}`, newCommentEventName, {
-            comment: createComment
+        await TaskActions.addCommentId(requestComment.taskId, comment._id);
+
+        pusher.trigger(`${channelPrefixName}${project._id.toString()}`, newCommentEventName, {
+            comment: comment
         });
-
-        const responseComment: CommentType = { ...createComment, isOwner: true, _id: createComment._id.toString() };
+        const responseComment: CommentType = {
+            name: comment.name,
+            picture: comment.picture,
+            replyId: comment.replyId,
+            text: comment.text,
+            isOwner: true,
+            _id: comment._id.toString(),
+            userId: comment.userId.toString(),
+        };
 
         return responseComment;
     },
 
-    async removeComment(auth: { projectId: string, sessionId: string }, taskId: string, commentId: string): Promise<{ success: boolean }> {
+    async removeComment(auth: AuthType, commentId: string): Promise<{ success: boolean }> {
         await connectDB();
 
         const user = await UserActions.getUserBySessionId(auth.sessionId);
-        const project = await ProjectActions.getProjectByFilters(auth, { tasks: 1 });
 
-        let isDeleted = false;
-        project.tasks = project.tasks.map((task: { _id: mongoose.Types.ObjectId, comments: CommentDB[] }) => {
-            if (task._id.toString() === taskId) {
-                console.log(task.comments)
-                task.comments = task.comments.filter(comment => {
-                    if (
-                        comment._id.toString() === commentId && comment.userId === user._id.toString()
-                    ) {
-                        isDeleted = true;
-                        return false;
-                    }
-                    return true;
-                })
-            }
-            return task;
-        });
+        const comment = await Comment.findByIdAndDelete({ _id: commentId, userId: user._id });
+        console.log({response: comment})
 
-        project.save();
-        pusher.trigger(`${channelPrefixName}${project._id}`, removedCommentEventName, {
+        let isDeleted = comment._id;
+        
+        pusher.trigger(`${channelPrefixName}${comment.projectId}`, removedCommentEventName, {
             commentId,
         });
 
         return { success: isDeleted };
+    },
+
+    async createCommentOfTask(storeComment: StoreCommentType): Promise<CommentDB> {
+        await connectDB();
+        const commentModel = new Comment({ ...storeComment });
+
+        const comment = await commentModel.save();
+
+        return comment;
+    },
+
+    async getCommentsByIds(commentIds: string[] | mongoose.Types.ObjectId[]): Promise<CommentDB[]> {
+        await connectDB();
+
+        const comments = await Comment.find({ _id: commentIds });
+
+        return comments;
     }
 };

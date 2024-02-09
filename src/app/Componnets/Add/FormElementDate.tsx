@@ -21,21 +21,18 @@ type FormElementDateType = {
 export const FormElementDate: React.FC<FormElementDateType> = ({ defaultDueDate }) => {
 
     return (
-        <>
-        {/* {defaultDueDate&&<input hidden name="due_date_old"/>} */}
-            <Grid container spacing={2} sx={{ p: 2 }}>
-                <Grid item xs={3} justifyContent={'center'}>
-                    <Stack justifyContent={'center'} height={'100%'}>
-                        <Typography variant="body1" color={'gray'}>Due date</Typography>
-                    </Stack>
-                </Grid>
-                <Grid item xs={9}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="uk" >
-                        <MobileDatePicker defaultValue={defaultDueDate ? dayjs(defaultDueDate) : dayjs()} name="due_date"
-                        />
-                    </LocalizationProvider>
-                </Grid>
+        <Grid container spacing={2} sx={{ p: 2 }}>
+            <Grid item xs={3} justifyContent={'center'}>
+                <Stack justifyContent={'center'} height={'100%'}>
+                    <Typography variant="body1" color={'gray'}>Due date</Typography>
+                </Stack>
             </Grid>
-        </>
+            <Grid item xs={9}>
+                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="uk" >
+                    <MobileDatePicker defaultValue={defaultDueDate ? dayjs(defaultDueDate) : dayjs()} name="due_date"
+                    />
+                </LocalizationProvider>
+            </Grid>
+        </Grid>
     );
 };

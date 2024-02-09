@@ -12,8 +12,8 @@ import { FormElementProjects } from "./FormElementProjects";
 import { FormElementStatus } from "./FormElementStatus";
 import { FormElementAssignee } from "./FormElementAssignee";
 import { FormElementSutasks } from "./FormElementSutasks";
-import { CommentType } from "@/server/actions/TaskActions";
 import { ReactNode } from "react";
+import { CommentType } from "@/server/actions/CommentActions";
 
 type TaskFormType = {
     defaultValues: {
@@ -39,10 +39,24 @@ export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, 
             </Box>
             <Divider />
             <Grid container>
-                <FormElementAssignee fieldName='assignee' defaultValue={defaultValues?.assignee || ''} />
-                <FormElementStatus defaultStatus={defaultValues?.status} />
-                <FormElementProjects defaultDirectory={defaultValues?.directory} />
-                <FormElementDate defaultDueDate={defaultValues?.dueDate} />
+                <Grid item xs={12}>
+                    <div>
+                        <FormElementAssignee fieldName='assignee' defaultValue={defaultValues?.assignee || ''} />
+                    </div>
+                </Grid>
+                <Grid item xs={12}>
+                    <FormElementStatus defaultStatus={defaultValues?.status} />
+                </Grid>
+                <Grid item xs={12}>
+                    <div>
+                        <FormElementProjects defaultDirectory={defaultValues?.directory} />
+                    </div>
+                </Grid>
+                <Grid item xs={12}>
+                    <div>
+                        <FormElementDate defaultDueDate={defaultValues?.dueDate} />
+                    </div>
+                </Grid>
                 <FormElementPriority defaultPriority={defaultValues?.priority} />
             </Grid>
             <Stack px={2} spacing={2}>
