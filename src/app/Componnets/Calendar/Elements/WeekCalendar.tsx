@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import cn from 'classnames';
 import dayjs from 'dayjs';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -9,7 +10,7 @@ import { ControlPageCalendar } from './ControlPageCalendar';
 import { getWeekTasks } from '../actions';
 import { priorityStyling, workHours } from '@/server/constants';
 
-const formatedWorkHours = ['', ...workHours.map(hour => `${hour}:00`)];
+const formatedWorkHours = [...workHours.map(hour => `${hour}:00`)];
 const weekdays = [
     "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
 ]
@@ -35,68 +36,98 @@ export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date }) => {
                     numberOfDay={numberOfDay}
                     monthName={formattedName}
                 />
-            )
+            );
         }
         return days;
     };
 
-    const renderRow = (numberOfLines: number): JSX.Element[] => {
+    const renderColumnContent = (numberOfLine: number): JSX.Element[] => {
         const items = [] as JSX.Element[];
-        for (let index = 1; index < 6; index++) {
-            const dayTasks = tasks.filter(item => item.dueDate === dayjs().day(index).format('DD.MM.YYYY'));
+        const dayTasks = tasks.filter(item => item.dueDate === dayjs().day(numberOfLine - 1).format('DD.MM.YYYY'));
 
+        for (let index = 0; index < formatedWorkHours.length; index++) {
             items.push(
-                <Grid className={styles.tableRow__td} item key={index} xs={2}
-                    sx={{
-                        px: 1,
-                    }}
+                <Stack
+                    key={index}
+                    className={cn(
+                        styles.innerColumn__item,
+                        styles.border
+                    )}
                 >
-                    {
-                        index === 0
-                            ? <>{formatedWorkHours[numberOfLines]}</>
-                            : formatedWorkHours[numberOfLines] && numberOfLines !== formatedWorkHours.length - 1 && <>
-                                {
-                                    dayTasks.map(task => (
-                                        <TaskItem
-                                            task={task.name}
-                                            primaryColor={priorityStyling[task.priority].primaryColor}
-                                            secondaryColor={priorityStyling[task.priority].secondaryColor}
-                                        />
-                                    ))
-                                }
-                            </>
-                    }
-                </Grid>
-            );
+
+                </Stack>
+            )
         }
         return items;
     };
 
+    const renderColumn = (numberOfLine: number): JSX.Element => {
+        const dayTasks = tasks.filter(item => item.dueDate === dayjs().day(numberOfLine + 1).format('DD.MM.YYYY'));
+
+        return (
+            <Grid
+                className={styles.tableRow__td}
+                item xs={2}
+                sx={{}}
+            >
+                <Stack sx={{ py: 4 }}>
+                    <Box className={styles.innerColumn}>
+                        {renderColumnContent(numberOfLine)}
+                        {dayTasks.map((task, index) => (
+                            <TaskItem
+                                key={index}
+                                task={task.name}
+                                fromHour={task.fromHour}
+                                toHour={task.toHour}
+                                primaryColor={priorityStyling[task.priority].primaryColor}
+                                secondaryColor={priorityStyling[task.priority].secondaryColor}
+                            />
+                        ))}
+                        {/* <Box position={'absolute'} top={0}>
+                        </Box> */}
+                        <Typography variant="subtitle2" sx={{
+                            borderRadius: 2,
+                            px: 1,
+                            mb: 0.5,
+                            position: 'absolute',
+                            top: 0,
+                        }}>
+                        </Typography>
+                    </Box>
+                </Stack>
+            </Grid>
+        );
+    };
+
     const renderTable = () => {
         const rows = [] as JSX.Element[];
-        for (let index = 0; index < formatedWorkHours.length; index++) {
+        for (let index = 0; index < 5; index++) {
             rows.push(
-                <Grid container key={index} className={styles.tableRow + ' ' + styles.weekCalendar} data-time={formatedWorkHours[index]} columns={10}>
-                    {renderRow(index)}
-                </Grid>)
+                renderColumn(index)
+            );
         }
-        return rows;
-    }
+        return (
+            <Grid container columns={10} height={'100%'}>
+                {rows}
+            </Grid>
+        );
+    };
+
     return (
         <>
-            <Grid container columns={10}
-                sx={{
-                    //calculated from data-time left attribute
-                    marginLeft: '50px',
-                }}
-            >
+            <Grid container columns={10}>
                 {renderHeader()}
-                <Paper sx={{
-                    width: '100%',
-                    borderRadius: 8,
-                }}>
-                    {renderTable()}
-                </Paper>
+                <Grid item xs={10}>
+                    <Stack direction={'row'}>
+                        <HoursColumn />
+                        <Paper sx={{
+                            width: '100%',
+                            borderRadius: 8,
+                        }}>
+                            {renderTable()}
+                        </Paper>
+                    </Stack>
+                </Grid>
             </Grid>
             <Box pt={2}>
                 <ControlPageCalendar
@@ -106,6 +137,35 @@ export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date }) => {
                 />
             </Box>
         </>
+    );
+};
+
+type HoursColumnType = {
+};
+
+export const HoursColumn: React.FC<HoursColumnType> = ({ }) => {
+
+    return (
+        <Box sx={{}}>
+            <Stack sx={{ py: 4 }}>
+                <Box className={styles.innerColumn}
+                    sx={{ borderTop: 'none' }}
+                >
+                    {
+                        formatedWorkHours.map((hour, index) => (
+                            <Stack
+                                key={index}
+                                className={cn(styles.innerColumn__item)}
+                            >
+                                <Typography variant="body1" sx={{ marginTop: -1.5, pr: 0.5 }}>
+                                    {hour}
+                                </Typography>
+                            </Stack>
+                        ))
+                    }
+                </Box>
+            </Stack>
+        </Box>
     );
 };
 
@@ -127,22 +187,39 @@ export const HeaderDayItem: React.FC<HeaderDayItemType> = ({ numberOfDay, monthN
 };
 
 type TaskItemType = {
-    primaryColor: string
-    secondaryColor: string
-    task: string
+    primaryColor: string,
+    secondaryColor: string,
+    task: string,
+    fromHour: number,
+    toHour: number,
 };
 
-export const TaskItem: React.FC<TaskItemType> = ({ primaryColor, secondaryColor, task }) => {
-
+export const TaskItem: React.FC<TaskItemType> = ({ primaryColor, secondaryColor, task, fromHour, toHour }) => {
+    console.log(fromHour, toHour)
     return (
-        <Typography variant="subtitle2" sx={{
-            backgroundColor: secondaryColor,
-            color: primaryColor,
-            borderRadius: 2,
-            px: 1,
-            mb: 0.5,
-        }}>
-            {task}
-        </Typography>
+        <Box
+            sx={{
+
+                mb: 0.5,
+                position: 'absolute',
+                top: ((fromHour - workHours[0]) * 90) - 8,
+                height: ((toHour - fromHour) * 90) + 8 + 'px',
+                width: '100%',
+                px: 1,
+            }}
+        >
+            <Typography variant="subtitle2" sx={{
+                backgroundColor: secondaryColor,
+                color: primaryColor,
+                p: 1,
+                height: '100%',
+                borderColor: '#F6EFA7',
+                borderRadius: 4,
+                borderWidth: 1,
+                borderStyle: 'solid',
+            }}>
+                {task}
+            </Typography >
+        </Box>
     );
 };

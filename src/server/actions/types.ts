@@ -87,6 +87,8 @@ export type TaskShortType = {
     status: StatusType,
     directory: string,
     priority: PriorityType,
+    fromHour: number,
+    toHour: number,
 };
 
 export type ViewTaskType = {

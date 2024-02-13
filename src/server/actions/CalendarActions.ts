@@ -47,6 +47,8 @@ export const CalendarActions = {
                 dueDate: task.dueDate,
                 status: task.status,
                 directory: task.directory,
+                fromHour: task.fromHour,
+                toHour: task.toHour,
                 priority: task.priority,
                 _id: task._id.toString(),
             }));

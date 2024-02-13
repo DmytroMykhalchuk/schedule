@@ -56,7 +56,6 @@
 
     &__td:not(:last-child) {
         border-right: 1px solid #989898;
-
     }
 
     &:not(:last-child) {
@@ -65,8 +64,39 @@
 
 }
 
-.linkArrowWrapper{
-    a{
+.linkArrowWrapper {
+    a {
         padding: 8px;
+    }
+}
+
+.tableColumn {}
+
+.innerColumn {
+    border-top: 1px solid #989898;
+    position: relative;
+
+    &__item {
+        &:not(:last-child) {
+            min-height: 90px;
+        }
+    }
+
+    &__item.border {
+        &:not(:last-child) {
+            border-bottom: 1px solid #989898;
+        }
+    }
+
+    &__dateMark {
+        position: relative;
+        width: 0;
+
+        &::before {
+            content: attr(data-time);
+            position: absolute;
+            left: -50px;
+            top: -12px;
+        }
     }
 }
