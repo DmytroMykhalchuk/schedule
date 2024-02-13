@@ -7,9 +7,9 @@ import styles from './../styles.module.scss';
 import Typography from '@mui/material/Typography';
 import { ControlPageCalendar } from './ControlPageCalendar';
 import { getWeekTasks } from '../actions';
-import { priorityStyling } from '@/server/constants';
+import { priorityStyling, workHours } from '@/server/constants';
 
-const workHours = ['', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+const formatedWorkHours = ['', ...workHours.map(hour => `${hour}:00`)];
 const weekdays = [
     "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
 ]
@@ -53,8 +53,8 @@ export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date }) => {
                 >
                     {
                         index === 0
-                            ? <>{workHours[numberOfLines]}</>
-                            : workHours[numberOfLines] && numberOfLines !== workHours.length - 1 && <>
+                            ? <>{formatedWorkHours[numberOfLines]}</>
+                            : formatedWorkHours[numberOfLines] && numberOfLines !== formatedWorkHours.length - 1 && <>
                                 {
                                     dayTasks.map(task => (
                                         <TaskItem
@@ -74,9 +74,9 @@ export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date }) => {
 
     const renderTable = () => {
         const rows = [] as JSX.Element[];
-        for (let index = 0; index < workHours.length; index++) {
+        for (let index = 0; index < formatedWorkHours.length; index++) {
             rows.push(
-                <Grid container key={index} className={styles.tableRow + ' ' + styles.weekCalendar} data-time={workHours[index]} columns={10}>
+                <Grid container key={index} className={styles.tableRow + ' ' + styles.weekCalendar} data-time={formatedWorkHours[index]} columns={10}>
                     {renderRow(index)}
                 </Grid>)
         }

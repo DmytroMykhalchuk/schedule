@@ -93,3 +93,4 @@ export const authCookieKey = 'session_id';
 export const projectIdCookieKey = 'project_id';
 
 export const sessionLifeTimeInHours = 2;
+export const workHours = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18];

@@ -12,6 +12,8 @@ const taskSchema = new Schema({
     status: { type: String, required: true, },
     directory: { type: String, default: '', },
     dueDate: { type: String, default: '', },
+    fromHour: { type: Number, required: true, },
+    toHour: { type: Number, required: true },
     priority: { type: String, required: true, },
     description: { type: String, default: '', },
     subtasks: { type: [String], default: [], },

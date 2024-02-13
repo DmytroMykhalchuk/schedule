@@ -3,7 +3,10 @@ import { TeamActions } from "@/server/actions/TeamActions";
 import { cookies } from "next/headers"
 import { RedirectType, redirect } from "next/navigation";
 import { getAuthParams } from "../actions";
-import { projectIdCookieKey } from "@/server/constants";
+import { authCookieKey, projectIdCookieKey } from "@/server/constants";
+import { Dayjs } from "dayjs";
+import { getCookieValue } from "@/utlis/getCookieValue";
+import axios from "axios";
 
 export const defaultFirstDirectory = 'choose_directory'
 export const defaultFirstUserId = '0'
@@ -34,7 +37,7 @@ export const getProjectDirectories = async (): Promise<string[] | void> => {
 export const deleteTeamMember = async (formData: FormData) => {
     'use server'
 
-    const { projectId, sessionId } =  await getAuthParams();
+    const { projectId, sessionId } = await getAuthParams();
 
     const userId = formData.get('user_id') as string;
 
@@ -43,4 +46,3 @@ export const deleteTeamMember = async (formData: FormData) => {
         redirect('/app/add/team');
     }
 };
-

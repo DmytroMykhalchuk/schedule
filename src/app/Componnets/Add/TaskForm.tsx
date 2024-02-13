@@ -5,18 +5,19 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
 import styles from '@/app/Componnets/Add/styles.module.scss';
-import { FormElementDescription } from "./FormElementDescription";
-import { FormElementPriority } from "./FormElementPriority";
-import { FormElementDate } from "./FormElementDate";
-import { FormElementProjects } from "./FormElementProjects";
-import { FormElementStatus } from "./FormElementStatus";
-import { FormElementAssignee } from "./FormElementAssignee";
-import { FormElementSutasks } from "./FormElementSutasks";
+import { FormElementDescription } from "./Elements/FormElementDescription";
+import { FormElementPriority } from "./Elements/FormElementPriority";
+import { FormElementDate } from "./Elements/FormElementDate";
+import { FormElementProjects } from "./Elements/FormElementProjects";
+import { FormElementStatus } from "./Elements/FormElementStatus";
+import { FormElementAssignee } from "./Elements/FormElementAssignee";
+import { FormElementSutasks } from "./Elements/FormElementSutasks";
 import { ReactNode } from "react";
 import { CommentType } from "@/server/actions/CommentActions";
 
 type TaskFormType = {
     defaultValues: {
+        taskId?: string,
         assignee?: string | null
         status?: string
         directory?: string
@@ -26,6 +27,8 @@ type TaskFormType = {
         title?: string
         subtasks?: string[] | null
         comments?: CommentType[]
+        fromHour?: number
+        toHour?: number
     },
     labelConfirm: string
     UnderFormSlot?: ReactNode
@@ -54,7 +57,7 @@ export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, 
                 </Grid>
                 <Grid item xs={12}>
                     <div>
-                        <FormElementDate defaultDueDate={defaultValues?.dueDate} />
+                        <FormElementDate defaultDueDate={defaultValues?.dueDate} fromHour={defaultValues?.fromHour} toHour={defaultValues?.toHour} taskId={defaultValues?.taskId} />
                     </div>
                 </Grid>
                 <FormElementPriority defaultPriority={defaultValues?.priority} />

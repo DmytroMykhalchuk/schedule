@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import ShareIcon from '@mui/icons-material/Share';
-import { defaultFirstDirectory, getProjectDirectories } from "./actions";
+import { defaultFirstDirectory, getProjectDirectories } from "../actions";
 
 type FormElementProjectsType = {
     defaultDirectory?: string
