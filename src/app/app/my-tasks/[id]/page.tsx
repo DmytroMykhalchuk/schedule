@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Link from 'next/link';
 import Stack from '@mui/material/Stack';
-import { CommentContainer } from '@/app/Componnets/Add/CommentsBox';
+import { CommentContainer } from '@/app/Componnets/Add/Elements/CommentsBox';
 import { CommentDialog } from '@/app/Componnets/Comment/CommentDialog';
 import { cookies } from 'next/headers';
 import { getTask, updateTask } from './actions';
@@ -63,6 +63,7 @@ const Page: React.FC<PageType> = async ({ params }) => {
                     <form action={updateTask}>
                         <TaskForm
                             defaultValues={{
+                                taskId: task?._id.toString(),
                                 title: task.name,
                                 assignee: task.assignee,
                                 description: task.description,
@@ -71,6 +72,8 @@ const Page: React.FC<PageType> = async ({ params }) => {
                                 priority: task.priority,
                                 status: task.status,
                                 subtasks: task.subtasks,
+                                fromHour: task.fromHour,
+                                toHour: task.toHour,
                             }}
                             labelConfirm='Update'
                         />

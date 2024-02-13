@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 
 export const createTask = async (formDate: FormData) => {
     'use server';
-    const { projectId, sessionId } =  await getAuthParams();
+    const { projectId, sessionId } = await getAuthParams();
 
     const assignee = formDate.get('assignee') as string;
     const directory = formDate.get('directory') as string;
@@ -22,6 +22,8 @@ export const createTask = async (formDate: FormData) => {
         description: formDate.get('description') as string,
         subtasks: formDate.getAll('subtasks') as string[] | null,
         comment: formDate.get('comment') as string | null,
+        fromHour: parseInt(formDate.get('from_hour') as string),
+        toHour: parseInt(formDate.get('to_hour') as string),
     };
     const result = await TaskActions.storeTask({ projectId, sessionId }, newTask);
 

@@ -2,7 +2,7 @@ import connectDB from '../connectDB';
 import mongoose from 'mongoose';
 import Project from '../models/Project';
 import User from '../models/User';
-import { AuthType, StoreTaskType } from './types';
+import { AuthType, StoreTaskType, ProjectUsers } from './types';
 import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
 import { ObjectId } from 'mongodb';
 import { priorities, statuses } from '../constants';
@@ -10,13 +10,6 @@ import { UserActions, UserTeamItemType } from './UserActions';
 
 type StoreProjectType = {
     name: string,
-};
-
-type ProjectUsers = {
-    name: string,
-    _id: string,
-    picture: string,
-    email: string
 };
 
 export const ProjectActions = {

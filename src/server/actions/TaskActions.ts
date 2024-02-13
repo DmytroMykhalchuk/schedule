@@ -8,11 +8,12 @@ import { CommentActions, CommentType } from './CommentActions';
 import { ObjectId } from 'mongodb';
 import { ProjectActions } from './ProjectActions';
 import { UserActions } from './UserActions';
+import { workHours } from '../constants';
 
 export const TaskActions = {
     async storeTask(auth: AuthType, storeTask: StoreTaskType): Promise<{ projectId?: string }> {
         await connectDB();
-
+        //todo validation for hours
         const user = await UserActions.getUserBySessionId(auth.sessionId);
 
         const taskModel = new Task({
@@ -25,6 +26,8 @@ export const TaskActions = {
             description: storeTask.description,
             subtasks: storeTask.subtasks,
             projectId: auth.projectId,
+            fromHour: storeTask.fromHour,
+            toHour: storeTask.toHour,
         });
 
         const task = await taskModel.save();
@@ -163,5 +166,33 @@ export const TaskActions = {
         console.log({ result });
 
         return result;
+    },
+
+    async getAllowedHours(auth: AuthType, date: string, userId: string | null, taskId?: string): Promise<number[]> {
+        await connectDB();
+        const allowedHours = workHours;
+
+        if (!userId) {
+            return allowedHours;
+        }
+
+        const user = await UserActions.getUserBySessionId(userId)
+        const project = await ProjectActions.getProjectById(auth.projectId, {}, user._id);
+
+        if (!project) {
+            return [];
+        };
+
+        const tasks = await Task.find({ projectId: project._id, assignee: user._id, dueDate: date }, { fromHour: 1, toHour: 1, dueDate: 1 });
+
+        tasks.forEach((task: { _id: mongoose.Types.ObjectId, fromHour: number, toHour: number }, index) => {
+            if (task._id.toString() === taskId) return;
+
+            const start = allowedHours.indexOf(task.fromHour) + +(task.fromHour !== workHours[0]);
+            const deleteCount = allowedHours.indexOf(task.toHour) - allowedHours.indexOf(task.fromHour) - +(task.fromHour !== workHours[0] && task.toHour !== workHours[workHours.length - 1]);
+            allowedHours.splice(start, deleteCount)
+        });
+
+        return allowedHours;
     }
 };

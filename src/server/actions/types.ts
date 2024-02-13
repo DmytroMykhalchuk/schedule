@@ -34,6 +34,8 @@ export type StoreTaskType = {
     description: string,
     subtasks: string[] | null,
     comment?: string | null
+    fromHour: number,
+    toHour: number,
 };
 
 export type StoreCommentType = {
@@ -73,6 +75,8 @@ export type TaskDB = {
     description: string,
     subtasks: string[],
     comments: mongoose.Types.ObjectId[],
+    fromHour: number,
+    toHour: number,
 };
 
 export type TaskShortType = {
@@ -83,6 +87,8 @@ export type TaskShortType = {
     status: StatusType,
     directory: string,
     priority: PriorityType,
+    fromHour: number,
+    toHour: number,
 };
 
 export type ViewTaskType = {
@@ -92,9 +98,11 @@ export type ViewTaskType = {
     dueDate: string,
     status: StatusType,
     priority: PriorityType,
-    assignee: string
-    directory: string
-    subtasks: string[]
+    assignee: string,
+    directory: string,
+    subtasks: string[],
+    fromHour: number,
+    toHour: number,
 };
 
 export type TaskUpdateType = {
@@ -107,10 +115,19 @@ export type TaskUpdateType = {
     priority: PriorityType,
     description: string,
     subtasks: string[] | null,
+    fromHour: number,
+    toHour: number,
 };
 
 export type StoreCommentRequestType = {
     taskId: string,
     commentText: string,
     replyId: string,
+};
+
+export type ProjectUsers = {
+    name: string,
+    _id: string,
+    picture: string,
+    email: string
 };
