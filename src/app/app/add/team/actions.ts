@@ -1,5 +1,4 @@
 'use server';
-
 import { getAuthParams } from "@/app/Componnets/actions";
 import { TeamActions } from "@/server/actions/TeamActions";
 import { cookies } from "next/headers";
@@ -40,5 +39,11 @@ export const updateMember = async (formDate: FormData) => {
 
     if(response.success)
     redirect('/app/add/team');
+};
 
-}
+export const getTeam = async () => {
+    const { projectId, sessionId } = await getAuthParams();
+
+    const team = await TeamActions.getTeam(projectId, sessionId);
+    return team;
+};

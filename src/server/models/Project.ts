@@ -13,10 +13,9 @@ const projectSchema = new Schema<DBProjectType>({
         required: true,
         ref: 'User',
     },
-    directories: {
-        type: [String],
-        default: [],
-    },
+    directories: [
+        { type: mongoose.Types.ObjectId, required: true, ref: "Directory", default: [], },
+    ],
     users: [{
         type: mongoose.Types.ObjectId, ref: 'User', default: [],
     }],

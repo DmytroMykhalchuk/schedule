@@ -13,7 +13,7 @@ import { FormElementStatus } from "./Elements/FormElementStatus";
 import { FormElementAssignee } from "./Elements/FormElementAssignee";
 import { FormElementSutasks } from "./Elements/FormElementSutasks";
 import { ReactNode } from "react";
-import { CommentType } from "@/server/actions/CommentActions";
+import { CommentType } from "@/server/actions/types";
 
 type TaskFormType = {
     defaultValues: {

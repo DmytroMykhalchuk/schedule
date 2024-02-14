@@ -33,6 +33,7 @@ const Page: React.FC<PageType> = async ({ params }) => {
             isOwner: item.isOwner,
             text: item.text,
             replyId: item.replyId,
+            createdAt:item.createdAt,
         };
     });
 

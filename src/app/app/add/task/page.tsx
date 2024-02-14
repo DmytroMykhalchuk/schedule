@@ -25,6 +25,7 @@ import { createTask } from './actions';
 import { FormElementDescription } from '@/app/Componnets/Add/Elements/FormElementDescription';
 import { TaskForm } from '@/app/Componnets/Add/TaskForm';
 import { CommentField } from '@/app/Componnets/Add/Elements/CommentField';
+import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
 
 
 
@@ -36,33 +37,27 @@ const Page: React.FC<PageType> = ({ }) => {
 
     return (
         <Stack alignItems={'center'}>
-            <Paper sx={{
-                borderRadius: 4,
-                minWidth: { xs: 320, sm: '100%', md: 600 },
-            }}
-                component={'form'}
-                action={createTask}
+            <MiddlePaperWrapper
+                title='New task'
+                pathBack='/app/add'
             >
-                <Stack direction={'row'} sx={{ p: 2 }}>
-                    <Box sx={{ flexGrow: 1 }}>
-                        {/* <IconButton aria-label="delete" href='#'>
+                <form action={createTask} >
+                    <Stack direction={'row'} sx={{ p: 2, pt: 0 }}>
+                        <Box sx={{ flexGrow: 1 }}>
+                            {/* <IconButton aria-label="delete" href='#'>
                             <DeleteIcon />
                         </IconButton>
                         <IconButton aria-label="edit" href='#'>
                             <EditIcon />
                         </IconButton> */}
-                    </Box>
-                    <Link href={'/app/add'}>
-                        <IconButton aria-label="edit">
-                            <CloseIcon />
-                        </IconButton>
-                    </Link>
-                </Stack>
-                <TaskForm defaultValues={{}}
-                    labelConfirm='Confirm'
-                    UnderFormSlot={<CommentField />}
-                />
-            </Paper>
+                        </Box>
+                    </Stack>
+                    <TaskForm defaultValues={{}}
+                        labelConfirm='Confirm'
+                        UnderFormSlot={<CommentField />}
+                    />
+                </form>
+            </MiddlePaperWrapper>
         </Stack>
     );
 };

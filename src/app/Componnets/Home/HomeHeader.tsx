@@ -15,7 +15,7 @@ export const HomeHeader: React.FC<HomeHeaderType> = ({ }) => {
     return (
         <Grid container pb={2}>
             <Grid item xs={12} md={4}>
-                <Typography variant="h6">
+                <Typography variant="h5" fontWeight={600}>
                     Welcome {authUser?.name && `, ${authUser?.name}!`}
                 </Typography>
                 <Typography variant="h6">

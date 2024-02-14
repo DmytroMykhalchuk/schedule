@@ -1,17 +1,18 @@
 'use client';
 import Stack from '@mui/material/Stack';
 import styles from './styles.module.scss';
-import TextField from '@mui/material/TextField';
 import { Collapse } from '@mui/material';
 import { CommentItem } from './Elements/CommentItem';
-import { CommentType } from '@/server/actions/CommentActions';
 import { deleteComment, sendComment } from './actions';
-import { getCookieValue } from '@/utlis/getCookieValue';
 import { NewCommentForm } from './Elements/NewCommentForm';
-import { projectIdCookieKey } from '@/server/constants';
 import { PusherComponent } from './Elements/PusherComponent';
 import { TransitionGroup } from 'react-transition-group';
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer } from 'react';
+import dayjs from 'dayjs';
+import relativeTimePlugin from 'dayjs/plugin/relativeTime';
+import { CommentType } from '@/server/actions/types';
+dayjs.locale('uk');
+dayjs.extend(relativeTimePlugin);
 
 
 const SET_REPLY_TO = 'SET_REPLY_TO';
@@ -85,6 +86,8 @@ type CommentDialogType = {
 };
 
 export const CommentDialog: React.FC<CommentDialogType> = ({ comments, taskId, projectId }) => {
+    const now = dayjs();
+
     const [state, dispatch] = useReducer(reducer, { ...initialState, comments: comments as CommentType[] });
 
     useEffect(() => {
@@ -146,19 +149,24 @@ export const CommentDialog: React.FC<CommentDialogType> = ({ comments, taskId, p
             <Stack spacing={2}>
                 <TransitionGroup>
                     {
-                        state.comments.map((item) => (
-                            <Collapse key={item._id} id={item._id} >
-                                <div className={state.highlightCommentId === item._id ? styles.highlight : ''}>
-                                    <CommentItem
-                                        comment={item}
-                                        onReply={() => { onReplyTo(item) }}
-                                        onDelete={() => onDeleteComment(item._id)}
-                                        replyComment={getReplyTargetComment(item.replyId)}
-                                        onShowReplyComment={onHiglightReplyTargetComment}
-                                    />
-                                </div>
-                            </Collapse>
-                        ))
+                        state.comments.map((item) => {
+                            const createdAt = dayjs(item.createdAt);
+                            const timeDiff = createdAt ? now.to(createdAt) : undefined;
+                            return (
+                                <Collapse key={item._id} id={item._id} >
+                                    <div className={state.highlightCommentId === item._id ? styles.highlight : ''}>
+                                        <CommentItem
+                                            comment={item}
+                                            onReply={() => { onReplyTo(item) }}
+                                            onDelete={() => onDeleteComment(item._id)}
+                                            replyComment={getReplyTargetComment(item.replyId)}
+                                            onShowReplyComment={onHiglightReplyTargetComment}
+                                            time={timeDiff}
+                                        />
+                                    </div>
+                                </Collapse>
+                            )
+                        })
                     }
                 </TransitionGroup>
                 <NewCommentForm

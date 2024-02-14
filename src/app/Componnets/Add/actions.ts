@@ -1,12 +1,13 @@
+import { getAuthParams } from './../actions';
 import { ProjectActions } from "@/server/actions/ProjectActions";
 import { TeamActions } from "@/server/actions/TeamActions";
 import { cookies } from "next/headers"
 import { RedirectType, redirect } from "next/navigation";
-import { getAuthParams } from "../actions";
 import { authCookieKey, projectIdCookieKey } from "@/server/constants";
 import { Dayjs } from "dayjs";
 import { getCookieValue } from "@/utlis/getCookieValue";
 import axios from "axios";
+import { DirectoryActions } from "@/server/actions/DirectoryActions";
 
 export const defaultFirstDirectory = 'choose_directory'
 export const defaultFirstUserId = '0'
@@ -23,14 +24,10 @@ export const getProjectUsers = async () => {
     return users;
 };
 
-export const getProjectDirectories = async (): Promise<string[] | void> => {
-    const targetProjectId = cookies().get(projectIdCookieKey)?.value || '';
+export const getProjectDirectories = async () => {
+    const authParams = await getAuthParams();
 
-    if (!targetProjectId) {
-        return;
-    }
-
-    const directories = await ProjectActions.getProjectDirectories(targetProjectId);
+    const directories = await DirectoryActions.getDirectories(authParams);
     return directories;
 };
 

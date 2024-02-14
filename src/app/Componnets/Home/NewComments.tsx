@@ -37,7 +37,7 @@ export const NewComments: React.FC<NewCommentsType> = ({ }) => {
                 <Comments />
             </Paper>
             <Paper elevation={4} sx={{ p: 2 }}>
-                <Stack direction={'row'} spacing={2}>
+                {/* <Stack direction={'row'} spacing={2}>
                     {
                         tags.map((item, index) => (
                             <TagItem
@@ -49,7 +49,7 @@ export const NewComments: React.FC<NewCommentsType> = ({ }) => {
                             />
                         ))
                     }
-                </Stack>
+                </Stack> */}
             </Paper>
         </>
     );

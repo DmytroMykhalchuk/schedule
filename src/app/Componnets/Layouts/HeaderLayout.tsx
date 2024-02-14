@@ -1,11 +1,9 @@
-import Stack from "@mui/material/Stack";
-import Grid from "@mui/material/Grid";
-import { cookies } from "next/headers";
-import styles from './styles.module.scss';
-import Image from "next/image";
-import Typography from '@mui/material/Typography'
-import { ReactNode } from "react";
-import Avatar from "@mui/material/Avatar";
+import Avatar from '@mui/material/Avatar';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { cookies } from 'next/headers';
+import { ReactNode } from 'react';
 
 type HeaderLayoutType = {
     title: string
@@ -30,7 +28,7 @@ export const HeaderLayout: React.FC<HeaderLayoutType> = ({ title, subtitle, slot
             <Grid item xs={12} md={8}>
                 <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} spacing={2}>
                     {slot}
-                    <Avatar src={authUser.picture} alt={authUser.name} sx={{ width: 80, height: 80 }} />
+                    <Avatar src={authUser.picture} alt={authUser.name} sx={{ width: 60, height: 60 }} />
                 </Stack>
             </Grid>
         </Grid>

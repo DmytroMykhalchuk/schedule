@@ -49,7 +49,6 @@ export const TeamActions = {
             return userId;
         });
 
-
         const users = await UserActions.getUsersByIds(userIds);
 
         const result = [] as TeamItemType[];
@@ -62,7 +61,7 @@ export const TeamActions = {
                 _id: user._id,
                 email: user.email,
                 picture: user.picture,
-                isAdmin: project.admin_id === user._id.toString(),
+                isAdmin: project.admin_id.toString() === user._id.toString(),
                 role,
             })
         });

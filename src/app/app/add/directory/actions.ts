@@ -1,5 +1,6 @@
 'use server';
-
+import { getAuthParams } from "@/app/Componnets/actions";
+import { DirectoryActions } from "@/server/actions/DirectoryActions";
 import { ProjectActions } from "@/server/actions/ProjectActions";
 import { projectIdCookieKey } from "@/server/constants";
 import { cookies } from "next/headers";
@@ -16,6 +17,13 @@ export const createDirectory = async (formData: FormData) => {
         return;
     }
 
-    await ProjectActions.storeDirectory(directoryName, targetProjectId);
+    await DirectoryActions.storeDirectory(directoryName, targetProjectId);
     redirect('/app');
-}
+};
+
+export const getDirectories = async () => {
+    const authParams = await getAuthParams();
+    const directories = await DirectoryActions.getDirectories(authParams);
+
+    return directories;
+};

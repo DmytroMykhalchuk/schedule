@@ -1,0 +1,62 @@
+import { ProccessStatusType, AuthType, DirectoryType, UpdateDirectoryType } from './types';
+import connectDB from "../connectDB";
+import Project from "../models/Project";
+import { ProjectActions } from './ProjectActions';
+import { ObjectId } from 'mongodb';
+import User from '../models/User';
+import { UserActions } from './UserActions';
+import Directory from '../models/Directory';
+
+export const DirectoryActions = {
+    async storeDirectory(directoryName: string, projectId: string): Promise<ProccessStatusType> {
+        await connectDB();
+
+        const directoryModel = new Directory({
+            _id: new ObjectId(),
+            name: directoryName,
+        });
+
+        const directory = await directoryModel.save();
+
+        ProjectActions.addDirectoryId(projectId, directory._id);
+
+        return { success: true };
+    },
+
+    async getDirectories(auth: AuthType): Promise<DirectoryType[]> {
+        await connectDB();
+
+        const user = await UserActions.getUserBySessionId(auth.sessionId);
+
+        const project = await Project.findOne({ _id: auth.projectId, users: user._id }).populate('directories');
+
+        return project?.directories
+    },
+
+    async getDirectory(directoryId: string): Promise<DirectoryType> {
+        await connectDB();
+
+        const directory = await Directory.findOne({ _id: directoryId });
+
+        return directory;
+    },
+
+    async updateDirectory(updateDirectory: UpdateDirectoryType): Promise<ProccessStatusType> {
+        await connectDB();
+
+        const directory = await Directory.findOneAndUpdate({ _id: updateDirectory.directoryId }, {
+            name: updateDirectory.directoryName,
+        });
+
+        return { success: Boolean(directory) };
+    },
+
+    async deleteDirectory(directoryId: string): Promise<ProccessStatusType> {
+        await connectDB();
+
+        const directory = await Directory.findOneAndDelete({ _id: directoryId });
+
+        return { success: Boolean(directory) };
+    },
+
+};

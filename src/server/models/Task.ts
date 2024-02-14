@@ -3,14 +3,12 @@ import { Schema, Model } from "mongoose";
 
 mongoose.Promise = global.Promise;
 
-
-
 const taskSchema = new Schema({
     projectId: { type: Schema.Types.ObjectId, required: true, ref: 'Project' },
     name: { type: String, required: true, },
     assignee: { type: String, default: '', },
     status: { type: String, required: true, },
-    directory: { type: String, default: '', },
+    directory: { type: mongoose.Types.ObjectId, ref: 'Directory', },
     dueDate: { type: String, default: '', },
     fromHour: { type: Number, required: true, },
     toHour: { type: Number, required: true },

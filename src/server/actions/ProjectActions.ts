@@ -29,17 +29,6 @@ export const ProjectActions = {
         return result._id.toString();
     },
 
-    async storeDirectory(directoryName: string, projectId: string) {
-        await connectDB();
-
-        const result = await Project.findOneAndUpdate({ _id: projectId },
-            {
-                $push: {
-                    directories: directoryName
-                },
-            });
-    },
-
     async getProjectUsers(projectId: string): Promise<ProjectUsers[]> {
         await connectDB();
 
@@ -50,20 +39,6 @@ export const ProjectActions = {
         const users = await UserActions.getUsersByIds(usersIds, { _id: true, name: true, picture: true, email: true });
 
         return users;
-    },
-
-    async getProjectDirectories(projectId: string): Promise<string[]> {
-        await connectDB();
-
-        const project = await Project.findOne({ _id: projectId }, { directories: true });
-
-        return project.directories;
-    },
-
-    async getDirectories(projectId: string): Promise<string[]> {
-        await connectDB();
-        const project = await Project.findOne({ _id: projectId });
-        return project.directories
     },
 
     async generateDirectories(projectId: string, count = 12): Promise<string[]> {
@@ -89,7 +64,7 @@ export const ProjectActions = {
         for (let index = 0; index < count; index++) {
             const randomDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * getRandomInt(1, maxDayCount)));
             const randomUserId = users[Math.floor(Math.random() * users.length)]._id;
-
+            //@ts-ignore
             const newTask: StoreTaskType & { _id: mongoose.Types.ObjectId } = {
                 _id: new ObjectId(),
                 assignee: randomUserId,
@@ -113,7 +88,7 @@ export const ProjectActions = {
 
         const user = await UserActions.getUserBySessionId(auth.sessionId);
         const project = await Project.findOne({ _id: auth.projectId, users: user._id }, { team: 1 });
-        
+
 
         if (!project?._id) {
             return [];
@@ -168,6 +143,16 @@ export const ProjectActions = {
         const project = Project.findOne(filter, selector)
 
         return project;
+    },
+
+    async addDirectoryId(projectId: string, directoryId: mongoose.Types.ObjectId) {
+        await connectDB();
+
+        const result = await Project.findOneAndUpdate({ _id: projectId }, {
+            $push: {
+                directories: directoryId,
+            }
+        });
     },
 };
 

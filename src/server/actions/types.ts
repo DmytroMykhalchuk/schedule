@@ -58,7 +58,9 @@ export type CommentDB = {
     replyId: string,
     taskId: mongoose.Types.ObjectId,
     projectId: mongoose.Types.ObjectId,
+    createdAt: Date
 };
+export type LatestCommentType = Omit<CommentDB, 'taskId'> & { taskId: { _id: mongoose.Types.ObjectId, name: string } }
 
 export type StatusType = 'not_started' | 'in_progress' | 'done';
 export type PriorityType = 'low_priority' | 'medium_priority' | 'critical_prority';
@@ -125,9 +127,34 @@ export type StoreCommentRequestType = {
     replyId: string,
 };
 
+export type CommentType = {
+    _id: string,
+    userId: string
+    name: string,
+    picture: string,
+    text: string
+    isOwner: boolean
+    replyId: string
+    createdAt: Date
+};
+
 export type ProjectUsers = {
     name: string,
     _id: string,
     picture: string,
     email: string
+};
+
+export type ProccessStatusType = {
+    success: boolean
+};
+
+export type DirectoryType = {
+    _id: mongoose.Types.ObjectId,
+    name: string,
+};
+
+export type UpdateDirectoryType = {
+    directoryId: string,
+    directoryName: string,
 };

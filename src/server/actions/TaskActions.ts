@@ -3,8 +3,8 @@ import dayjs from 'dayjs';
 import mongoose from 'mongoose';
 import Project from '../models/Project';
 import Task from '../models/Task';
-import { AuthType, StoreCommentType, StoreTaskType, TaskDB, TaskShortType, TaskUpdateType, UrgentTask, ViewTaskType } from './types';
-import { CommentActions, CommentType } from './CommentActions';
+import { AuthType, CommentType, StoreCommentType, StoreTaskType, TaskDB, TaskShortType, TaskUpdateType, UrgentTask, ViewTaskType } from './types';
+import { CommentActions } from './CommentActions';
 import { ObjectId } from 'mongodb';
 import { ProjectActions } from './ProjectActions';
 import { UserActions } from './UserActions';
@@ -100,12 +100,13 @@ export const TaskActions = {
         const comments = await CommentActions.getCommentsByIds(task.comments);
         const preparedCommnets: CommentType[] = comments.map((item) => {
             return {
+                _id: item._id.toString(),
                 name: item.name,
                 picture: item.picture,
                 replyId: item.replyId,
                 text: item.text,
                 userId: item.userId.toString(),
-                _id: item._id.toString(),
+                createdAt: item.createdAt,
                 isOwner: item.userId.toString() === user._id.toString(),
             };
         });
@@ -116,22 +117,28 @@ export const TaskActions = {
     async updateTask(auth: AuthType, updateTask: TaskUpdateType): Promise<{ success: boolean }> {
         await connectDB();
 
-        const project = await ProjectActions.getProjectByFilters(auth, { tasks: 1 });
+        const project = await ProjectActions.getProjectByFilters(auth, { _id: 1 });
 
-        project.tasks = project?.tasks.map((task: ViewTaskType) => {
-            if (task._id.toString() === updateTask.taskId) {
-                task.name = updateTask.name;
-                task.assignee = updateTask.assignee as string;
-                task.status = updateTask.status;
-                task.priority = updateTask.priority;
-                task.dueDate = updateTask.dueDate;
-                task.description = updateTask.description;
-                task.subtasks = updateTask.subtasks || [];
-            }
-            return task;
-        });
+        if (!project) {
+            return { success: false };
+        }
 
-        project.save();
+        const task = await Task.findOne({ _id: updateTask.taskId });
+
+        if (!task) {
+            return { success: false };
+        }
+        task.name = updateTask.name;
+        task.assignee = updateTask.assignee as string;
+        task.status = updateTask.status;
+        task.priority = updateTask.priority;
+        task.dueDate = updateTask.dueDate;
+        task.description = updateTask.description;
+        task.fromHour = updateTask.fromHour;
+        task.toHour = updateTask.toHour;
+        task.subtasks = updateTask.subtasks || [];
+
+        task.save();
 
         return { success: true };
     },
