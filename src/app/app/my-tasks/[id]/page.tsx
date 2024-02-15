@@ -1,9 +1,8 @@
 import Box from '@mui/material/Box';
-import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
-import Link from 'next/link';
 import Stack from '@mui/material/Stack';
-import { CommentContainer } from '@/app/Componnets/Add/Elements/CommentsBox';
+import Tooltip from '@mui/material/Tooltip';
 import { CommentDialog } from '@/app/Componnets/Comment/CommentDialog';
 import { cookies } from 'next/headers';
 import { getTask, updateTask } from './actions';
@@ -11,6 +10,7 @@ import { HeaderLayout } from '@/app/Componnets/Layouts/HeaderLayout';
 import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
 import { projectIdCookieKey } from '@/server/constants';
 import { TaskForm } from '@/app/Componnets/Add/TaskForm';
+import Link from 'next/link';
 
 type PageType = {
     params: {
@@ -33,7 +33,7 @@ const Page: React.FC<PageType> = async ({ params }) => {
             isOwner: item.isOwner,
             text: item.text,
             replyId: item.replyId,
-            createdAt:item.createdAt,
+            createdAt: item.createdAt,
         };
     });
 
@@ -46,21 +46,17 @@ const Page: React.FC<PageType> = async ({ params }) => {
             />
             <Stack alignItems={'centre'} justifyContent={'center'}>
                 <MiddlePaperWrapper>
-                    <Stack direction={'row'} sx={{ p: 2 }}>
-                        <Box sx={{ flexGrow: 1 }}>
-                            {/* <IconButton aria-label="delete" href='#'>
-                            <DeleteIcon />
-                        </IconButton>
-                        <IconButton aria-label="edit" href='#'>
-                            <EditIcon />
-                        </IconButton> */}
-                        </Box>
-                        {/* <Link href={'/app/add'}>
-                            <IconButton aria-label="edit">
-                                <CloseIcon />
-                            </IconButton>
-                        </Link> */}
-                    </Stack>
+                    <form>
+                        <Stack direction={'row'} sx={{ p: 2, pt: 0, width: '100%', }} justifyContent={'end'}>
+                            <Link href={'delete'}>
+                                <Tooltip title="Delete">
+                                    <IconButton aria-label="edit" color='warning'>
+                                        <DeleteIcon sx={{ fontSize: '1.2em' }} />
+                                    </IconButton>
+                                </Tooltip>
+                            </Link>
+                        </Stack>
+                    </form>
                     <form action={updateTask}>
                         <TaskForm
                             defaultValues={{

@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import mongoose from 'mongoose';
 import Project from '../models/Project';
 import Task from '../models/Task';
-import { AuthType, CommentType, StoreCommentType, StoreTaskType, TaskDB, TaskShortType, TaskUpdateType, UrgentTask, ViewTaskType } from './types';
+import { AuthType, CommentType, StoreCommentType, StoreTaskType, TaskDB, TaskShortType, TaskUpdateType, UrgentTask, ViewTaskType, ProccessStatusType } from './types';
 import { CommentActions } from './CommentActions';
 import { ObjectId } from 'mongodb';
 import { ProjectActions } from './ProjectActions';
@@ -201,5 +201,20 @@ export const TaskActions = {
         });
 
         return allowedHours;
-    }
+    },
+
+    async deleteTask(authParams: AuthType, taskId: string): Promise<ProccessStatusType> {
+        await connectDB();
+
+        const project = await ProjectActions.getProjectByFilters(authParams, { _id: 1 });
+
+        if (!project) {
+            return { success: false };
+        }
+
+        const task = await Task.findOneAndDelete({ _id: taskId, projectId: project._id });
+
+        return { success: Boolean(task) };
+    },
+
 };

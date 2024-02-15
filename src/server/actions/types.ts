@@ -1,4 +1,3 @@
-import { UrgentTasks } from './../../app/Componnets/Home/Elements/UrgentTasks';
 import mongoose from "mongoose"
 
 export type DBProjectType = {
@@ -11,7 +10,7 @@ export type DBProjectType = {
     invitations: string[],
 }
 
-export type ProjectTeamItem = { id: string, role: string }
+export type ProjectTeamItem = { userId: mongoose.Types.ObjectId, role: string }
 
 export type UrgentTask = {
     _id: string,
@@ -158,3 +157,24 @@ export type UpdateDirectoryType = {
     directoryId: string,
     directoryName: string,
 };
+
+export type StoreUser = {
+    name: string
+    email: string
+    google_id: string
+    picture: string
+};
+
+export type UserDB = {
+    sessions: string[],
+    google_id: number,
+    name: string,
+    picture: string,
+    email: string
+    _id: string,
+};
+
+export type UserTeamItemType = Pick<UserDB, '_id' | 'email' | 'name' | 'picture'> & { role: string }
+
+export type PopulatedProjectTeamItem = { userId: UserTeamItemType, role: string, _id: mongoose.Types.ObjectId }
+export type TeamItemType = { user: UserTeamItemType, isAdmin: boolean, role: string };

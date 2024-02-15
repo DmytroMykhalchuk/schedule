@@ -20,7 +20,7 @@ const projectSchema = new Schema<DBProjectType>({
         type: mongoose.Types.ObjectId, ref: 'User', default: [],
     }],
     team: {
-        type: [{ id: { type: Schema.Types.ObjectId, ref: 'User' }, role: String }],
+        type: [{ userId: { type: Schema.Types.ObjectId, ref: 'User' }, role: String }],
         default: [],
     },
     invitations: {

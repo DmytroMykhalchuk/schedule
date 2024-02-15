@@ -1,3 +1,4 @@
+import { StoreUser, UserDB } from './types';
 import { getMaxListeners } from "events";
 import connectDB from "../connectDB";
 import User from "../models/User";
@@ -5,23 +6,6 @@ import User from "../models/User";
 import uniqid from 'uniqid';
 import { getRandomNumber, getRandomPictureUrl } from "../utils/utils";
 
-export type StoreUser = {
-    name: string
-    email: string
-    google_id: string
-    picture: string
-};
-
-export type UserDB = {
-    sessions: string[],
-    google_id: number,
-    name: string,
-    picture: string,
-    email: string
-    _id: string,
-};
-
-export type UserTeamItemType = Pick<UserDB, '_id' | 'email' | 'name' | 'picture'> & { role: string }
 
 export const UserActions = {
     async login(user: StoreUser) {

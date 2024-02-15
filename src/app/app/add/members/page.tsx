@@ -14,9 +14,7 @@ const Page: React.FC<PageType> = async ({ }) => {
     const users = await getMembers();
     return (
         <Stack alignItems={'center'} justifyContent={'center'}>
-            <MiddlePaperWrapper pathBacck="/app/add">
-                <Typography variant="h5" textAlign={'center'}>Project Members</Typography>
-
+            <MiddlePaperWrapper pathBack="/app/add" title="Members">
                 <Stack spacing={2}>
                     {users.map(user => (
                         <Stack key={user._id.toString()} direction={'row'} spacing={1} alignItems={'center'}>

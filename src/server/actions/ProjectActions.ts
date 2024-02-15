@@ -2,11 +2,11 @@ import connectDB from '../connectDB';
 import mongoose from 'mongoose';
 import Project from '../models/Project';
 import User from '../models/User';
-import { AuthType, StoreTaskType, ProjectUsers } from './types';
+import { AuthType, StoreTaskType, ProjectUsers, ProjectTeamItem, UserTeamItemType } from './types';
 import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
 import { ObjectId } from 'mongodb';
 import { priorities, statuses } from '../constants';
-import { UserActions, UserTeamItemType } from './UserActions';
+import { UserActions } from './UserActions';
 
 type StoreProjectType = {
     name: string,
@@ -21,7 +21,7 @@ export const ProjectActions = {
             name: project.name,
             admin_id: user._id,
             users: [user._id],
-            team: [{ role: 'boss', id: user._id }]
+            team: [{ role: 'boss', userId: user._id }]
         });
 
         const result = await modelProject.save();
@@ -29,14 +29,18 @@ export const ProjectActions = {
         return result._id.toString();
     },
 
-    async getProjectUsers(projectId: string): Promise<ProjectUsers[]> {
+    async getProjectUsers(projectId: string, isRequiredRolelessUsers = false): Promise<ProjectUsers[]> {
         await connectDB();
+        const project = await Project.findOne({ _id: projectId }, { admin_id: 1, users: 1, team: 1 });
 
-        const project = await Project.findOne({ _id: projectId }, { admin_id: true, users: true });
-        const usersIds = project.users || [];
-        usersIds.push(project.admin_id);
+        let userIds = project.users || [];
 
-        const users = await UserActions.getUsersByIds(usersIds, { _id: true, name: true, picture: true, email: true });
+        if (isRequiredRolelessUsers) {
+            const withRoleUserIds = project.team.map((teamMember: ProjectTeamItem) => teamMember.userId.toString());
+            userIds = userIds.filter((id: mongoose.Types.ObjectId) => !withRoleUserIds.includes(id.toString()))
+        }
+
+        const users = await UserActions.getUsersByIds(userIds, { name: 1, picture: 1, email: 1 });
 
         return users;
     },

@@ -23,8 +23,8 @@ export const MiddlePaperWrapper: React.FC<MiddlePaperWrapperType> = ({ children,
             <Box mb={2}>
                 {(pathBack && title)
                     ? <Stack alignItems={'center'} direction={'row'}>
-                        <Link href={pathBack}><ArrowBackIosIcon sx={{ fontSize: '2em' }} /></Link>
-                        <Typography variant="h4" textAlign={'center'}>{title}</Typography>
+                        <Link href={pathBack}><ArrowBackIosIcon sx={{ fontSize: '1.5em' }} /></Link>
+                        <Typography variant="h5" textAlign={'center'}>{title}</Typography>
 
                     </Stack>
                     : title && <Typography variant="h4" textAlign={'center'}>{title}</Typography>

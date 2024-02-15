@@ -20,7 +20,7 @@ export const removeInvite = async (formData: FormData) => {
     const result = await InvitingsActions.removeInvitations(projectId, sessionId, invite);
 
     if (result.success) {
-        redirect('/app/add/members');
+        redirect('/app/add/invitations');
     }
 };
 
@@ -31,6 +31,6 @@ export const generateInvite = async () => {
     const result = await InvitingsActions.generateInvite(projectId, sessionId);
 
     if (result.success) {
-        redirect('/app/add/members');
+        redirect('/app/add/invitations');
     }
 };

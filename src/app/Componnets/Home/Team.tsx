@@ -13,7 +13,7 @@ import { TeamItem } from './Elements/TeamItem';
 
 const getTeam = async () => {
     const { projectId, sessionId } = await getAuthParams();
-    const users = await ProjectActions.getTeam({ projectId, sessionId });
+    const users = await ProjectActions.getProjectUsers(projectId);
     return users;
 }
 
@@ -22,6 +22,7 @@ type TeamType = {
 
 export const Team: React.FC<TeamType> = async ({ }) => {
     const team = await getTeam();
+    console.log(team)
 
     return (
         <Paper elevation={4} sx={{ p: 2 }}>

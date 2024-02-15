@@ -10,8 +10,10 @@ type PageType = {
 const Page: React.FC<PageType> = ({ }) => {
     return (
         <Stack alignItems={'center'} justifyContent={'center'} spacing={2}>
-            <MiddlePaperWrapper title='Add member' pathBack='/app/add'>
-                <MemberForm action={addMember} />
+            <MiddlePaperWrapper title='Add team member' pathBack='/app/add'>
+                <div>
+                    <MemberForm action={addMember} requiredUniqueUsers />
+                </div>
             </MiddlePaperWrapper>
             <div>
                 <TeamList />

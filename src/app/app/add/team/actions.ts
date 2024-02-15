@@ -1,4 +1,5 @@
 'use server';
+import { defaultFirstUserId } from "@/app/Componnets/Add/actions";
 import { getAuthParams } from "@/app/Componnets/actions";
 import { TeamActions } from "@/server/actions/TeamActions";
 import { cookies } from "next/headers";
@@ -6,10 +7,14 @@ import { redirect } from "next/navigation";
 
 export const addMember = async (formDate: FormData) => {
     'use server';
-    const { projectId, sessionId } =  await getAuthParams();
+    const { projectId, sessionId } = await getAuthParams();
 
     const role = formDate.get('role') as string;
     const user = formDate.get('user') as string;
+
+    if (user === defaultFirstUserId) {
+        return;
+    }
 
     if (!role || !user) {
         return;
@@ -23,22 +28,22 @@ export const addMember = async (formDate: FormData) => {
             role,
         });
     if (result.success) {
-        redirect('/app')
+        redirect('/app/add/team');
     }
 };
 
 export const updateMember = async (formDate: FormData) => {
     'use server';
 
-    const { projectId, sessionId } =  await getAuthParams();
+    const { projectId, sessionId } = await getAuthParams();
 
     const role = formDate.get('role') as string;
     const userId = formDate.get('user') as string;
 
     const response = await TeamActions.updateTeamMember(projectId, sessionId, { role, userId });
 
-    if(response.success)
-    redirect('/app/add/team');
+    if (response.success)
+        redirect('/app/add/team');
 };
 
 export const getTeam = async () => {

@@ -40,4 +40,17 @@ export const updateTask = async (formData: FormData) => {
         //todo add to params is-updated and change style button
         redirect('/app/my-tasks/' + taskId);
     }
-}
+};
+
+export const deleteTask = async (formData: FormData) => {
+    'use server';
+    const authParams = await getAuthParams();
+
+    const taskId = formData.get('task_id') as string;
+
+    const result = await TaskActions.deleteTask(authParams, taskId);
+
+    if (result.success) {
+        redirect('/app/my-tasks');
+    }
+};

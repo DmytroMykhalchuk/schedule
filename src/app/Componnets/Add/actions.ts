@@ -1,25 +1,22 @@
+import { projectIdCookieKey } from '@/server/constants';
+import { cookies } from 'next/headers';
+import { DirectoryActions } from '@/server/actions/DirectoryActions';
 import { getAuthParams } from './../actions';
-import { ProjectActions } from "@/server/actions/ProjectActions";
-import { TeamActions } from "@/server/actions/TeamActions";
-import { cookies } from "next/headers"
-import { RedirectType, redirect } from "next/navigation";
-import { authCookieKey, projectIdCookieKey } from "@/server/constants";
-import { Dayjs } from "dayjs";
-import { getCookieValue } from "@/utlis/getCookieValue";
-import axios from "axios";
-import { DirectoryActions } from "@/server/actions/DirectoryActions";
+import { ProjectActions } from '@/server/actions/ProjectActions';
+import { redirect } from 'next/navigation';
+import { TeamActions } from '@/server/actions/TeamActions';
 
 export const defaultFirstDirectory = 'choose_directory'
 export const defaultFirstUserId = '0'
 
-export const getProjectUsers = async () => {
+export const getProjectUsers = async (isRequiredRolelessUsers: boolean) => {
     const targetProjectId = cookies().get(projectIdCookieKey)?.value || '';
 
     if (!targetProjectId) {
         return;
     }
 
-    const users = await ProjectActions.getProjectUsers(targetProjectId);
+    const users = await ProjectActions.getProjectUsers(targetProjectId, isRequiredRolelessUsers);
 
     return users;
 };
@@ -34,7 +31,7 @@ export const getProjectDirectories = async () => {
 export const deleteTeamMember = async (formData: FormData) => {
     'use server'
 
-    const { projectId, sessionId } = await getAuthParams();
+    const { projectId, sessionId } = await getAuthParams(); 9
 
     const userId = formData.get('user_id') as string;
 

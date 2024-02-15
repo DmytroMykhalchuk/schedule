@@ -16,17 +16,17 @@ export const TeamList: React.FC<TeamListType> = async ({ }) => {
             <Stack spacing={2}>
                 {
                     team.map(member => (
-                        <Stack direction={'row'} key={member._id} spacing={1} alignItems={'center'}>
-                            <Avatar src={member.picture} alt={member.name} />
+                        <Stack direction={'row'} key={member.user._id.toString()} spacing={1} alignItems={'center'}>
+                            <Avatar src={member.user.picture} alt={member.user.name} />
                             <Stack flex={1}>
-                                <Typography variant="body1">{member.name}</Typography>
+                                <Typography variant="body1">{member.user.name}</Typography>
                                 <Typography variant="body2">{member.role}</Typography>
-                                <Typography variant="caption">{member.email}</Typography>
+                                <Typography variant="caption">{member.user.email}</Typography>
                             </Stack>
                             <Stack direction={'row'} spacing={1}>
                                 <RecordActions
-                                    editPath={member._id.toString()}
-                                    deletePath={member.isAdmin ? '' : `${member._id}/delete`}
+                                    editPath={member.user._id.toString()}
+                                    deletePath={member.isAdmin ? '' : `${member.user._id}/delete`}
                                 />
                             </Stack>
                         </Stack>
