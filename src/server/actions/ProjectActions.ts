@@ -2,7 +2,7 @@ import connectDB from '../connectDB';
 import mongoose from 'mongoose';
 import Project from '../models/Project';
 import User from '../models/User';
-import { AuthType, StoreTaskType, ProjectUsers, ProjectTeamItem, UserTeamItemType } from './types';
+import { AuthType, StoreTaskType, ProjectUsers, ProjectTeamItem, UserTeamItemType, PopulatedProjectTeamItem, TeamItemType } from './types';
 import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
 import { ObjectId } from 'mongodb';
 import { priorities, statuses } from '../constants';
@@ -87,38 +87,24 @@ export const ProjectActions = {
         const result = await Project.findOneAndUpdate({ _id: projectId }, { $push: { tasks: tasks, users: userIds } })
     },
 
-    async getTeam(auth: AuthType): Promise<UserTeamItemType[]> {
+    async getTeam(auth: AuthType): Promise<TeamItemType[]> {
         await connectDB();
 
         const user = await UserActions.getUserBySessionId(auth.sessionId);
-        const project = await Project.findOne({ _id: auth.projectId, users: user._id }, { team: 1 });
-
+        const project = await Project.findOne({ _id: auth.projectId, users: user._id }, { team: 1 }).populate('team.userId');
 
         if (!project?._id) {
             return [];
         }
 
-        const userIdRoleMap = {} as any;
-        const userIds = project.team.map((user: { _id: mongoose.Types.ObjectId, role: string }) => {
-            const userId = user._id.toString();
-            userIdRoleMap[userId] = user.role
-            return userId;
-        });
+        const result: TeamItemType[] = project.team.map((user: PopulatedProjectTeamItem): TeamItemType => ({
+            user: user.userId,
+            role: user.role,
+            isAdmin: false,
 
-        const users = await UserActions.getUsersByIds(userIds);
-        const result = [] as UserTeamItemType[];
+        }));
 
-        users.forEach((user) => {
-            const role = userIdRoleMap[user._id];
-
-            role && result.push({
-                name: user.name,
-                _id: user._id,
-                email: user.email,
-                picture: user.picture,
-                role,
-            })
-        });
+        console.log(project)
 
         return result;
     },

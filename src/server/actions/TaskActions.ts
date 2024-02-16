@@ -28,6 +28,7 @@ export const TaskActions = {
             projectId: auth.projectId,
             fromHour: storeTask.fromHour,
             toHour: storeTask.toHour,
+            categoryId: storeTask.categoryId,
         });
 
         const task = await taskModel.save();
@@ -81,6 +82,8 @@ export const TaskActions = {
             dueDate: task.dueDate,
             directory: task.directory,
             priority: task.priority,
+            fromHour: task.fromHour,
+            toHour: task.toHour,
         }));
 
         return preparedTasks;
@@ -97,21 +100,25 @@ export const TaskActions = {
         }
 
         const task = await Task.findOne({ _id: taskId });
+
         const comments = await CommentActions.getCommentsByIds(task.comments);
         const preparedCommnets: CommentType[] = comments.map((item) => {
             return {
+                ...item.toObject(),
                 _id: item._id.toString(),
-                name: item.name,
-                picture: item.picture,
-                replyId: item.replyId,
-                text: item.text,
                 userId: item.userId.toString(),
-                createdAt: item.createdAt,
                 isOwner: item.userId.toString() === user._id.toString(),
             };
         });
 
-        return { task, comments: preparedCommnets };
+        const handledTask: ViewTaskType = {
+            ...task.toObject(),
+            assignee: task.assignee.toString(),
+            _id: task._id.toString(),
+            categoryId: task?.categoryId?.toString() || ''
+        };
+
+        return { task: handledTask, comments: preparedCommnets };
     },
 
     async updateTask(auth: AuthType, updateTask: TaskUpdateType): Promise<{ success: boolean }> {
@@ -123,24 +130,20 @@ export const TaskActions = {
             return { success: false };
         }
 
-        const task = await Task.findOne({ _id: updateTask.taskId });
+        const task = await Task.findOneAndUpdate({ _id: updateTask.taskId }, {
+            name: updateTask.name,
+            assignee: updateTask.assignee,
+            status: updateTask.status,
+            priority: updateTask.priority,
+            dueDate: updateTask.dueDate,
+            description: updateTask.description,
+            fromHour: updateTask.fromHour,
+            toHour: updateTask.toHour,
+            subtasks: updateTask.subtasks || [],
+            categoryId: updateTask.categoryId,
+        });
 
-        if (!task) {
-            return { success: false };
-        }
-        task.name = updateTask.name;
-        task.assignee = updateTask.assignee as string;
-        task.status = updateTask.status;
-        task.priority = updateTask.priority;
-        task.dueDate = updateTask.dueDate;
-        task.description = updateTask.description;
-        task.fromHour = updateTask.fromHour;
-        task.toHour = updateTask.toHour;
-        task.subtasks = updateTask.subtasks || [];
-
-        task.save();
-
-        return { success: true };
+        return { success: Boolean(task) };
     },
 
     async getUrgentTasks(projectId: string, sessionId: string): Promise<UrgentTask[]> {
@@ -170,7 +173,6 @@ export const TaskActions = {
         await connectDB();
 
         const result = Task.findByIdAndUpdate(taskId, { $push: { comments: commentId } });
-        console.log({ result });
 
         return result;
     },

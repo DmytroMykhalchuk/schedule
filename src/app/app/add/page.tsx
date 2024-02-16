@@ -22,9 +22,14 @@ const urls = [
     {
         title: 'Invitations',
         href: '/app/add/invitations',
-    }, {
+    }, 
+    {
         title: 'Members',
         href: '/app/add/members',
+    }, 
+    {
+        title: 'Category',
+        href: '/app/add/categories',
     }
 ];
 

@@ -50,7 +50,7 @@ export const UserActions = {
     async updateSessionId(sessionId: string): Promise<{ sessionId: string }> {
         await connectDB();
         //todo ceheck update is still member in some project
-        console.log(sessionId)
+        console.warn(sessionId)
         let uuid = uniqid();
 
         const response = await User.findOneAndUpdate({
@@ -61,7 +61,7 @@ export const UserActions = {
             $set: { "sessions.$": uuid },
         });
 
-        console.log({ response }, 'update sessionId');
+        console.warn({ response }, 'update sessionId');
         return { sessionId: uuid };
     },
 

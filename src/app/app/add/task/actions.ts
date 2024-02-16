@@ -24,6 +24,7 @@ export const createTask = async (formDate: FormData) => {
         comment: formDate.get('comment') as string | null,
         fromHour: parseInt(formDate.get('from_hour') as string),
         toHour: parseInt(formDate.get('to_hour') as string),
+        categoryId: formDate.get('categoryId') as string,
     };
     const result = await TaskActions.storeTask({ projectId, sessionId }, newTask);
 

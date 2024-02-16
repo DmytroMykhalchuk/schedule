@@ -26,7 +26,11 @@ const projectSchema = new Schema<DBProjectType>({
     invitations: {
         type: [String],
         default: [],
-    }
+    },
+    categories: {
+        type: [{ _id: mongoose.Types.ObjectId, name: String, color: String, textColor: String }],
+        default: [],
+    },
 });
 
 export default mongoose.models.Project || mongoose.model<DBProjectType>('Project', projectSchema);

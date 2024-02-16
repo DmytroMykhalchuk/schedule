@@ -14,7 +14,9 @@ export const generateDB = async () => {
         return;
     }
 
-    // await UserActions.randomGenerate();
+    console.log(1)
+    return ;
+    await UserActions.randomGenerate();
 
     await ProjectActions.genearateRandomTasks(projectId);
 

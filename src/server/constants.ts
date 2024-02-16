@@ -1,3 +1,5 @@
+import { CategoryRecord } from "./actions/types";
+
 export const priorities = [
     {
         statusName: 'low_priority',
@@ -94,3 +96,11 @@ export const projectIdCookieKey = 'project_id';
 
 export const sessionLifeTimeInHours = 2;
 export const workHours = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+
+export const categoryColors = ['#FFD7A8', '#F6EFA7', '#ABF4BB', '#DBBFFE', '#A2E6FF', '#FFABAB', '#FFD6A5', '#FDFFB6', '#CAFFBF', '#9BF6FF', '#BDB2FF', '#FFC6FF', '#FF9191', '#FFE08C', '#FAFF8B', '#B4FFA3', '#87CEEB', '#D8BFD8', '#B0E0E6', '#FF7F50'];
+export const defaultCategory: CategoryRecord = {
+    _id: 'undefined',
+    color: categoryColors[0],
+    name: 'No category',
+    textColor: '#000000',
+};

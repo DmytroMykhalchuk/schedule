@@ -45,6 +45,7 @@ export const CommentActions = {
         pusher.trigger(`${channelPrefixName}${project._id.toString()}`, newCommentEventName, {
             comment: comment
         });
+
         const responseComment: CommentType = {
             name: comment.name,
             picture: comment.picture,
@@ -53,6 +54,7 @@ export const CommentActions = {
             isOwner: true,
             _id: comment._id.toString(),
             userId: comment.userId.toString(),
+            createdAt: comment.createdAt,
         };
 
         return responseComment;
@@ -64,7 +66,6 @@ export const CommentActions = {
         const user = await UserActions.getUserBySessionId(auth.sessionId);
 
         const comment = await Comment.findByIdAndDelete({ _id: commentId, userId: user._id });
-        console.log({ response: comment })
 
         let isDeleted = comment._id;
 
@@ -84,7 +85,7 @@ export const CommentActions = {
         return comment;
     },
 
-    async getCommentsByIds(commentIds: string[] | mongoose.Types.ObjectId[]): Promise<CommentDB[]> {
+    async getCommentsByIds(commentIds: string[] | mongoose.Types.ObjectId[]): Promise<(CommentDB & { toObject: Function })[]> {
         await connectDB();
 
         const comments = await Comment.find({ _id: commentIds });

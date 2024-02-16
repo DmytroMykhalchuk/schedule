@@ -1,3 +1,4 @@
+import { CategoryActions } from './../../../server/actions/CategoryActions';
 import { projectIdCookieKey } from '@/server/constants';
 import { cookies } from 'next/headers';
 import { DirectoryActions } from '@/server/actions/DirectoryActions';
@@ -39,4 +40,12 @@ export const deleteTeamMember = async (formData: FormData) => {
     if (result.success) {
         redirect('/app/add/team');
     }
+};
+
+export const getCategoriesList = async () => {
+    const authParams = await getAuthParams();
+
+    const categories = await CategoryActions.getCategories(authParams);
+
+    return categories;
 };

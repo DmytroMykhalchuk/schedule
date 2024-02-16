@@ -15,6 +15,7 @@ const taskSchema = new Schema({
     priority: { type: String, required: true, },
     description: { type: String, default: '', },
     subtasks: { type: [String], default: [], },
+    categoryId: { type: String, default: '' },
     comments: [
         { type: mongoose.Types.ObjectId, required: true, ref: "Comment", default: [], },
     ],

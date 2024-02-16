@@ -24,19 +24,6 @@ const Page: React.FC<PageType> = async ({ params }) => {
     const response = await getTask(taskId);
     const { task, comments } = response;
 
-    const handledComments = comments.map(item => {
-        return {
-            _id: item._id.toString(),
-            name: item.name,
-            picture: item.picture,
-            userId: item.userId,
-            isOwner: item.isOwner,
-            text: item.text,
-            replyId: item.replyId,
-            createdAt: item.createdAt,
-        };
-    });
-
     return (
         <>
             <HeaderLayout
@@ -71,6 +58,7 @@ const Page: React.FC<PageType> = async ({ params }) => {
                                 subtasks: task.subtasks,
                                 fromHour: task.fromHour,
                                 toHour: task.toHour,
+                                categoryId: task.categoryId,
                             }}
                             labelConfirm='Update'
                         />
@@ -78,7 +66,7 @@ const Page: React.FC<PageType> = async ({ params }) => {
                     </form>
                     <Box px={2}>
                         <CommentDialog
-                            comments={handledComments}
+                            comments={comments}
                             taskId={task._id.toString()}
                             projectId={cookies().get(projectIdCookieKey)?.value as string}
                         />

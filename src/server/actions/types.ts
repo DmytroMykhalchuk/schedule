@@ -1,5 +1,14 @@
 import mongoose from "mongoose"
 
+export type CategoryDB = {
+    _id: mongoose.Types.ObjectId,
+    name: string,
+    color: string,
+    textColor: string,
+};
+
+export type CategoryRecord = Omit<CategoryDB, '_id'> & { _id: string }
+
 export type DBProjectType = {
     _id: mongoose.Types.ObjectId,
     name: string
@@ -8,6 +17,7 @@ export type DBProjectType = {
     users: string[],
     team: ProjectTeamItem[],
     invitations: string[],
+    categories: CategoryDB[],
 }
 
 export type ProjectTeamItem = { userId: mongoose.Types.ObjectId, role: string }
@@ -35,6 +45,7 @@ export type StoreTaskType = {
     comment?: string | null
     fromHour: number,
     toHour: number,
+    categoryId: string
 };
 
 export type StoreCommentType = {
@@ -78,6 +89,7 @@ export type TaskDB = {
     comments: mongoose.Types.ObjectId[],
     fromHour: number,
     toHour: number,
+    categoryId: mongoose.Types.ObjectId,
 };
 
 export type TaskShortType = {
@@ -104,6 +116,7 @@ export type ViewTaskType = {
     subtasks: string[],
     fromHour: number,
     toHour: number,
+    categoryId: string,
 };
 
 export type TaskUpdateType = {
@@ -118,6 +131,7 @@ export type TaskUpdateType = {
     subtasks: string[] | null,
     fromHour: number,
     toHour: number,
+    categoryId: string
 };
 
 export type StoreCommentRequestType = {
@@ -176,5 +190,15 @@ export type UserDB = {
 
 export type UserTeamItemType = Pick<UserDB, '_id' | 'email' | 'name' | 'picture'> & { role: string }
 
-export type PopulatedProjectTeamItem = { userId: UserTeamItemType, role: string, _id: mongoose.Types.ObjectId }
-export type TeamItemType = { user: UserTeamItemType, isAdmin: boolean, role: string };
+export type PopulatedProjectTeamItem = {
+    userId: UserTeamItemType,
+    role: string,
+    _id: mongoose.Types.ObjectId,
+};
+
+export type TeamItemType = {
+    user: UserTeamItemType,
+    isAdmin: boolean,
+    role: string,
+};
+
