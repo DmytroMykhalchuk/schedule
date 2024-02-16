@@ -2,11 +2,12 @@ import connectDB from '../connectDB';
 import mongoose from 'mongoose';
 import Project from '../models/Project';
 import User from '../models/User';
-import { AuthType, StoreTaskType, ProjectUsers, ProjectTeamItem, UserTeamItemType, PopulatedProjectTeamItem, TeamItemType } from './types';
+import { AuthType, StoreTaskType, ProjectUsers, ProjectTeamItem, UserTeamItemType, PopulatedProjectTeamItem, TeamItemType, TaskDB, PriorityType, StatusType } from './types';
 import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
 import { ObjectId } from 'mongodb';
 import { priorities, statuses } from '../constants';
 import { UserActions } from './UserActions';
+import { TaskActions } from './TaskActions';
 
 type StoreProjectType = {
     name: string,
@@ -60,31 +61,11 @@ export const ProjectActions = {
 
     async genearateRandomTasks(projectId: string, count = 350, maxDayCount = 30): Promise<void> {
         await connectDB();
-        const users = await User.find();
-        const directories = await this.generateDirectories(projectId);
-        const userIds = [] as string[];
-        const tasks = [] as StoreTaskType[];
+        await this.generateDirectories(projectId);
 
-        for (let index = 0; index < count; index++) {
-            const randomDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * getRandomInt(1, maxDayCount)));
-            const randomUserId = users[Math.floor(Math.random() * users.length)]._id;
-            //@ts-ignore
-            const newTask: StoreTaskType & { _id: mongoose.Types.ObjectId } = {
-                _id: new ObjectId(),
-                assignee: randomUserId,
-                description: getRandomBoolean() ? getRandomString() : '',
-                directory: directories[Math.floor(Math.random() * users.length)],
-                dueDate: `${randomDate.getFullYear()}.${(randomDate.getMonth() + 1).toString().padStart(2, '0')}.${randomDate.getDate().toString().toString().padStart(2, '0')}`,
-                name: getRandomString(3, 20),
-                priority: priorities[Math.floor(Math.random() * priorities.length)].statusName,
-                status: statuses[Math.floor(Math.random() * statuses.length)].statusName,
-                subtasks: generateSubtasks(),
-            };
+        const { userIds, taskIds } = await TaskActions.generateTasks(projectId);
 
-            userIds.push(randomUserId);
-            tasks.push(newTask);
-        }
-        const result = await Project.findOneAndUpdate({ _id: projectId }, { $push: { tasks: tasks, users: userIds } })
+        const result = await Project.findOneAndUpdate({ _id: projectId }, { $push: { tasks: taskIds, users: userIds } })
     },
 
     async getTeam(auth: AuthType): Promise<TeamItemType[]> {
@@ -104,7 +85,6 @@ export const ProjectActions = {
 
         }));
 
-        console.log(project)
 
         return result;
     },
@@ -144,21 +124,4 @@ export const ProjectActions = {
             }
         });
     },
-};
-
-const generateSubtasks = (min = 1, max = 10): string[] => {
-    const subtasks = [] as string[];
-    const isNeedToGenerate = getRandomBoolean(0.3);
-
-    if (!isNeedToGenerate) {
-        return subtasks;
-    }
-
-    const targetCount = getRandomInt(min, max);
-
-    for (let index = 0; index < targetCount; index++) {
-        subtasks.push(getRandomString(3, 50));
-    }
-
-    return subtasks;
 };

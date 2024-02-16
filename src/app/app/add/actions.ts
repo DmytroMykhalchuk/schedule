@@ -14,11 +14,21 @@ export const generateDB = async () => {
         return;
     }
 
-    console.log(1)
-    return ;
     await UserActions.randomGenerate();
+    await ProjectActions.genearateRandomTasks(projectId);
+
+    redirect('/app');
+};
+
+export const removeGenerated = async () => {
+    'use server';
+
+    const projectId = cookies().get(projectIdCookieKey)?.value;
+    if (!projectId) {
+        return;
+    }
 
     await ProjectActions.genearateRandomTasks(projectId);
 
     redirect('/app');
-}
+};

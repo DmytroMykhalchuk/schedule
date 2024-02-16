@@ -3,6 +3,8 @@ import { AuthType, ProccessStatusType, CategoryRecord, CategoryDB } from './type
 import { getContrastColor } from '@/utlis/getContrastColor';
 import { ObjectId } from 'mongodb';
 import { ProjectActions } from './ProjectActions';
+import { categoryColors } from '../constants';
+import { getRandomString } from '../utils/utils';
 
 export type StoreCategory = {
     color: string,
@@ -94,6 +96,35 @@ export const CategoryActions = {
         project?.save();
 
         return { success: Boolean(project) };
+    },
+
+    async generateCategories(projectId: string, count = 5) {
+        await connectDB();
+        const project = await ProjectActions.getProjectById(projectId);
+
+        if (!project) {
+            return '';
+        };
+
+        const categories = [] as CategoryDB[];
+
+        for (let index = 0; index < count; index++) {
+            const randomColor = categoryColors[Math.floor(Math.random() * categoryColors.length)];
+            const textColor = getContrastColor(randomColor);
+            categories.push({
+                _id: new ObjectId(),
+                name: getRandomString(3, 10),
+                color: randomColor,
+                textColor,
+            });
+
+        };
+
+        project.categories = [...project.categories, ...categories];
+        project.save();
+
+        const categoryIds = project.categories.map((item: CategoryDB) => item._id);
+        return categoryIds;
     },
 
 };

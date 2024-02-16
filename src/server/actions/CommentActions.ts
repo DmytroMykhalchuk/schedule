@@ -8,6 +8,7 @@ import { UserActions } from './UserActions';
 import { channelPrefixName, newCommentEventName, removedCommentEventName } from '../constants';
 import Comment from '../models/Comment';
 import { TaskActions } from './TaskActions';
+import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
 
 const pusher = new Pusher({
     appId: "1752490",
@@ -105,5 +106,33 @@ export const CommentActions = {
         const comments = await Comment.find({ projectId: project._id }).populate('taskId', 'name').sort('-createdAt').limit(10);
 
         return comments as LatestCommentType[];
-    }
+    },
+
+    async generateComments(projectId: string, taskId: string, userIds: mongoose.Types.ObjectId[], maxCount = 10) {
+        await connectDB();
+
+        const randomCommentsCount = getRandomInt(1, maxCount);
+
+        const users = await UserActions.getUsersByIds(userIds.map(item => item.toString()));
+        const commentsIds = [] as mongoose.Types.ObjectId[];
+
+        for (let index = 0; index < randomCommentsCount; index++) {
+            const randomUser = users[Math.floor(Math.random() * users.length)];
+            
+            const commentStore: StoreCommentType = {
+                name: randomUser.name,
+                picture: randomUser.picture,
+                projectId: projectId,
+                replyId: getRandomBoolean(40) ? commentsIds[Math.floor(Math.random() * commentsIds.length)].toString() || '' : '',
+                taskId: taskId,
+                text: getRandomString(3, 50),
+                userId: randomUser._id,
+                _id: new ObjectId(),
+            };
+            const comment = await this.createCommentOfTask(commentStore);
+
+            commentsIds.push(comment._id);
+        }
+        return commentsIds;
+    },
 };

@@ -18,7 +18,6 @@ type TeamType = {
 
 export const Team: React.FC<TeamType> = async ({ }) => {
     const team = await getTeam();
-    console.log(team)
 
     return (
         <Paper elevation={4} sx={{ p: 2 }}>

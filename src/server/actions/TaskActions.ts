@@ -3,12 +3,16 @@ import dayjs from 'dayjs';
 import mongoose from 'mongoose';
 import Project from '../models/Project';
 import Task from '../models/Task';
-import { AuthType, CommentType, StoreCommentType, StoreTaskType, TaskDB, TaskShortType, TaskUpdateType, UrgentTask, ViewTaskType, ProccessStatusType } from './types';
+import { AuthType, CommentType, StoreCommentType, StoreTaskType, TaskDB, TaskShortType, TaskUpdateType, UrgentTask, ViewTaskType, ProccessStatusType, PriorityType, StatusType } from './types';
 import { CommentActions } from './CommentActions';
 import { ObjectId } from 'mongodb';
 import { ProjectActions } from './ProjectActions';
 import { UserActions } from './UserActions';
-import { workHours } from '../constants';
+import { priorities, statuses, workHours } from '../constants';
+import { CategoryActions } from './CategoryActions';
+import User from '../models/User';
+import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
+import { getRandomWeekdayDate } from '@/utlis/getRandomWeekdayDate';
 
 export const TaskActions = {
     async storeTask(auth: AuthType, storeTask: StoreTaskType): Promise<{ projectId?: string }> {
@@ -218,5 +222,90 @@ export const TaskActions = {
 
         return { success: Boolean(task) };
     },
+
+    async generateTasks(projectId: string, count = 350) {
+        await connectDB();
+        const project = await ProjectActions.getProjectById(projectId);
+
+        const categoryIds = await CategoryActions.generateCategories(projectId);
+        const directories = project.directories as string[];
+
+        const users = await User.find();
+        const shuffledUsers = users.sort(() => 0.5 - Math.random());
+        let targetUsers = shuffledUsers.slice(0, 5);
+
+        const taskIds = [] as mongoose.Types.ObjectId[];
+        const userIds = targetUsers.map(item => item._id);
+
+        for (let index = 0; index < count; index++) {
+            const randomDate = getRandomWeekdayDate();
+            const randomUserId = targetUsers[Math.floor(Math.random() * targetUsers.length)]._id;
+
+            const fromHour = getRandomInt(workHours[0], workHours[workHours.length - 2]);
+            const toHour = getRandomInt(fromHour + 1, workHours[workHours.length - 1]);
+
+            if (fromHour === toHour) {
+                continue;
+            }
+
+            const newTask = new Task({
+                assignee: randomUserId,
+                description: getRandomBoolean() ? getRandomString() : '',
+                directory: directories[Math.floor(Math.random() * directories.length)],
+                dueDate: `${randomDate.getFullYear()}.${(randomDate.getMonth() + 1).toString().padStart(2, '0')}.${randomDate.getDate().toString().toString().padStart(2, '0')}`,
+                name: getRandomString(3, 20),
+                priority: priorities[Math.floor(Math.random() * priorities.length)].statusName as PriorityType,
+                status: statuses[Math.floor(Math.random() * statuses.length)].statusName as StatusType,
+                subtasks: this.generateSubtasks(),
+                categoryId: categoryIds[Math.floor(Math.random() * categoryIds.length)],
+                comments: [],
+                fromHour,
+                toHour,
+                projectId: new ObjectId(projectId),
+            });
+
+            const checkTask = await Task.findOne({
+                fromHour: { $gte: fromHour },
+                toHour: { $lte: toHour },
+                dueDate: newTask.dueDate,
+                assignee: newTask.assignee,
+            });
+
+            if (checkTask) {
+                continue;
+            }
+
+            const task = await newTask.save();
+            if (task) {
+                const taskId = task._id.toString();
+                const commentIds = await CommentActions.generateComments(projectId, taskId, userIds);
+                task.comments = commentIds;
+                task.save();
+            }
+
+            taskIds.push(task._id);
+        }
+
+
+        return { userIds, taskIds };
+    },
+
+    generateSubtasks(min = 1, max = 10): string[] {
+        const subtasks = [] as string[];
+        const isNeedToGenerate = getRandomBoolean(0.3);
+
+        if (!isNeedToGenerate) {
+            return subtasks;
+        }
+
+        const targetCount = getRandomInt(min, max);
+
+        for (let index = 0; index < targetCount; index++) {
+            subtasks.push(getRandomString(3, 50));
+        }
+
+        return subtasks;
+    },
+
 
 };
