@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <StoreProvider>
       <html lang="en">
-        <body style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <body style={{ display: 'flex', flexDirection: 'column' }}>
           {/* <TheHeader /> */}
           <ThemeRegistry options={{ key: 'mui' }}>{children}</ThemeRegistry>
           {/* <TheFooter /> */}

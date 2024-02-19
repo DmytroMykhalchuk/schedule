@@ -150,12 +150,13 @@ export const TaskActions = {
         return { success: Boolean(task) };
     },
 
-    async getUrgentTasks(projectId: string, sessionId: string): Promise<UrgentTask[]> {
+    async getUrgentTasks(authParams: AuthType): Promise<UrgentTask[]> {
         await connectDB();
-        const user = await UserActions.getUserBySessionId(sessionId);
-        const project = await Project.findOne({ _id: projectId, users: user._id }, { name: 1 });
+        const user = await UserActions.getUserBySessionId(authParams.sessionId);
+        const project = await ProjectActions.getProjectByFilters(authParams, { _id: true });
 
-        if (!project?._id) {
+
+        if (!project?._id || !user?._id) {
             return [];
         }
 
@@ -165,7 +166,7 @@ export const TaskActions = {
             dayjs().add(2, 'day').format('DD.MM.YYYY'),
         ];
 
-        const tasks = await Task.find({ projectId, dueDate: { $in: requiredDates } }, { name: 1, dueDate: 1 });
+        const tasks = await Task.find({ projectId: authParams.projectId, dueDate: { $in: requiredDates }, assignee: user._id }, { name: 1, dueDate: 1 });
 
         const urgentsTasks = tasks.sort((a: { dueDate: string }, b: { dueDate: string }) => a.dueDate.localeCompare(b.dueDate))
             || [];
@@ -232,10 +233,12 @@ export const TaskActions = {
 
         const users = await User.find();
         const shuffledUsers = users.sort(() => 0.5 - Math.random());
-        let targetUsers = shuffledUsers.slice(0, 5);
+        let targetUsers = [...shuffledUsers.slice(0, 5), project.admin_id];
 
         const taskIds = [] as mongoose.Types.ObjectId[];
         const userIds = targetUsers.map(item => item._id);
+
+        const dateMarkHours = {} as any;
 
         for (let index = 0; index < count; index++) {
             const randomDate = getRandomWeekdayDate();
@@ -243,9 +246,33 @@ export const TaskActions = {
 
             const fromHour = getRandomInt(workHours[0], workHours[workHours.length - 2]);
             const toHour = getRandomInt(fromHour + 1, workHours[workHours.length - 1]);
+            const dueDate = `${randomDate.getDate().toString().toString().padStart(2, '0')}.${(randomDate.getMonth() + 1).toString().padStart(2, '0')}.${randomDate.getFullYear()}`;
 
             if (fromHour === toHour) {
                 continue;
+            } else {
+                if (dateMarkHours.hasOwnProperty(dueDate)) {
+                    const hours = dateMarkHours[dueDate] as number[];
+                    let isForbidden = false;
+                    for (let index = fromHour; index < toHour; index++) {
+                        if (hours.includes(index)) {
+                            isForbidden = true;
+                            break;
+                        }
+                    }
+                    if (isForbidden) {
+                        continue;
+
+                    } else {
+                        dateMarkHours[dueDate] = [
+                            ...Array.from({ length: (toHour - fromHour + 1) }).map((_, index) => fromHour + index),
+                            ...dateMarkHours[dueDate],
+                        ];
+
+                    }
+                } else {
+                    dateMarkHours[dueDate] = Array.from({ length: (toHour - fromHour + 1) }).map((_, index) => fromHour + index);
+                }
             }
 
             const newTask = new Task({
@@ -272,6 +299,7 @@ export const TaskActions = {
             });
 
             if (checkTask) {
+                console.log(checkTask)
                 continue;
             }
 

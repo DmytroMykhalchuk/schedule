@@ -2,15 +2,17 @@ import dayjs from "dayjs";
 import { getLastComments } from "../actions";
 import { CommentItem } from "./CommentItem";
 import relativeTimePlugin from 'dayjs/plugin/relativeTime';
+
 dayjs.extend(relativeTimePlugin);
 dayjs.locale('uk');
+
 type CommentsType = {
 };
-
 
 export const Comments: React.FC<CommentsType> = async ({ }) => {
     const comments = await getLastComments();
     const now = dayjs();
+
     return (
         <>
             {comments.map((item, index) => {

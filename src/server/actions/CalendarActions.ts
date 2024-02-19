@@ -38,7 +38,8 @@ export const CalendarActions = {
             dateMark.day(5).format('DD.MM.YYYY'),
         ];
 
-        const tasks = await Task.find({ dueDate: { $in: requiredDates } });
+        const users = await UserActions.getUserBySessionId(auth.sessionId);
+        const tasks = await Task.find({ dueDate: requiredDates, assignee: users._id });
 
         const targetTasks: TaskShortType[] = tasks
             .map((task: TaskDB) => ({

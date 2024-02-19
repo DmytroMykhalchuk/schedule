@@ -58,7 +58,7 @@ export default function ThemeRegistry(props: any) {
         <CacheProvider value={cache}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                <div style={{flex:"1 0 auto"}}>
+                <div style={{height:'100vh',overflow:'auto'}}>
                     {children}
                 </div>
             </ThemeProvider>
