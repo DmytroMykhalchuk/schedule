@@ -252,7 +252,7 @@ export const TaskActions = {
                 assignee: randomUserId,
                 description: getRandomBoolean() ? getRandomString() : '',
                 directory: directories[Math.floor(Math.random() * directories.length)],
-                dueDate: `${randomDate.getFullYear()}.${(randomDate.getMonth() + 1).toString().padStart(2, '0')}.${randomDate.getDate().toString().toString().padStart(2, '0')}`,
+                dueDate: `${randomDate.getDate().toString().toString().padStart(2, '0')}.${(randomDate.getMonth() + 1).toString().padStart(2, '0')}.${randomDate.getFullYear()}`,
                 name: getRandomString(3, 20),
                 priority: priorities[Math.floor(Math.random() * priorities.length)].statusName as PriorityType,
                 status: statuses[Math.floor(Math.random() * statuses.length)].statusName as StatusType,
@@ -305,6 +305,12 @@ export const TaskActions = {
         }
 
         return subtasks;
+    },
+
+    async deleteGeneratedTasks(projectId: string) {
+        await connectDB();
+
+        const result = await Task.deleteMany({ projectId: projectId });
     },
 
 

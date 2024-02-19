@@ -4,7 +4,7 @@ import Link from "next/link";
 import Typography from '@mui/material/Typography'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Button from '@mui/material/Button'
-import { generateDB } from '@/app/app/add/actions'
+import { generateDB, removeGenerated } from '@/app/app/add/actions'
 
 const urls = [
     {
@@ -22,11 +22,11 @@ const urls = [
     {
         title: 'Invitations',
         href: '/app/add/invitations',
-    }, 
+    },
     {
         title: 'Members',
         href: '/app/add/members',
-    }, 
+    },
     {
         title: 'Category',
         href: '/app/add/categories',
@@ -55,6 +55,11 @@ const Page: React.FC<PageType> = ({ }) => {
                 ))
             }
             <Stack direction={'row'} justifyContent={'end'}>
+                <form action={removeGenerated}>
+                    <Button variant="text" color="inherit" sx={{ textTransform: 'none' }} type="submit">
+                        <Typography variant="body2" color={'grey'}>Clean project</Typography>
+                    </Button>
+                </form>
                 <form action={generateDB}>
                     <Button variant="text" color="inherit" sx={{ textTransform: 'none' }} type="submit">
                         <Typography variant="body2" color={'grey'}>Generate</Typography>

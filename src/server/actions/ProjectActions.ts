@@ -2,12 +2,14 @@ import connectDB from '../connectDB';
 import mongoose from 'mongoose';
 import Project from '../models/Project';
 import User from '../models/User';
-import { AuthType, StoreTaskType, ProjectUsers, ProjectTeamItem, UserTeamItemType, PopulatedProjectTeamItem, TeamItemType, TaskDB, PriorityType, StatusType } from './types';
+import { AuthType, StoreTaskType, ProjectUsers, ProjectTeamItem, UserTeamItemType, PopulatedProjectTeamItem, TeamItemType, TaskDB, PriorityType, StatusType, ProccessStatusType } from './types';
 import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
 import { ObjectId } from 'mongodb';
 import { priorities, statuses } from '../constants';
 import { UserActions } from './UserActions';
 import { TaskActions } from './TaskActions';
+import { DirectoryActions } from './DirectoryActions';
+import { CommentActions } from './CommentActions';
 
 type StoreProjectType = {
     name: string,
@@ -44,28 +46,6 @@ export const ProjectActions = {
         const users = await UserActions.getUsersByIds(userIds, { name: 1, picture: 1, email: 1 });
 
         return users;
-    },
-
-    async generateDirectories(projectId: string, count = 12): Promise<string[]> {
-        await connectDB();
-        const generatedDirectories = [] as string[];
-        for (let index = 0; index < count; index++) {
-            generatedDirectories.push(getRandomString(3, 15));
-        }
-
-        const result = await Project.findOneAndUpdate({ _id: projectId, }, { $push: { directories: generatedDirectories } });
-
-        return generatedDirectories;
-
-    },
-
-    async genearateRandomTasks(projectId: string, count = 350, maxDayCount = 30): Promise<void> {
-        await connectDB();
-        await this.generateDirectories(projectId);
-
-        const { userIds, taskIds } = await TaskActions.generateTasks(projectId);
-
-        const result = await Project.findOneAndUpdate({ _id: projectId }, { $push: { tasks: taskIds, users: userIds } })
     },
 
     async getTeam(auth: AuthType): Promise<TeamItemType[]> {
@@ -123,5 +103,36 @@ export const ProjectActions = {
                 directories: directoryId,
             }
         });
+    },
+
+    async genearateRandomTasks(projectId: string, count = 350, maxDayCount = 30): Promise<void> {
+        await connectDB();
+        await DirectoryActions.generateDirectories(projectId);
+
+        const { userIds, taskIds } = await TaskActions.generateTasks(projectId);
+
+        const result = await Project.findOneAndUpdate({ _id: projectId }, { $push: { tasks: taskIds, users: userIds } })
+    },
+
+    async removeGenerated(projectId: string): Promise<ProccessStatusType> {
+        await connectDB();
+
+        const project = await Project.findOne({ _id: projectId });
+        if (!project) {
+            return { success: false };
+        }
+
+        await DirectoryActions.deleteDirectories(project.directories);
+        await TaskActions.deleteGeneratedTasks(projectId);
+        await CommentActions.deleteGeneratedComments(projectId);
+
+        project.directories = [];
+        project.categories = [];
+
+        project.users = project.users.filter((user: mongoose.Types.ObjectId) => user.toString() === project.admin_id.toString());
+
+        project.save();
+
+        return { success: false };
     },
 };

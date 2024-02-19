@@ -118,21 +118,28 @@ export const CommentActions = {
 
         for (let index = 0; index < randomCommentsCount; index++) {
             const randomUser = users[Math.floor(Math.random() * users.length)];
-            
+
             const commentStore: StoreCommentType = {
                 name: randomUser.name,
                 picture: randomUser.picture,
                 projectId: projectId,
-                replyId: getRandomBoolean(40) ? commentsIds[Math.floor(Math.random() * commentsIds.length)].toString() || '' : '',
+                replyId: getRandomBoolean(0.4) ? commentsIds[Math.floor(Math.random() * commentsIds.length)]?.toString() || '' : '',
                 taskId: taskId,
                 text: getRandomString(3, 50),
                 userId: randomUser._id,
                 _id: new ObjectId(),
             };
+
             const comment = await this.createCommentOfTask(commentStore);
 
             commentsIds.push(comment._id);
         }
         return commentsIds;
     },
+
+    async deleteGeneratedComments(projectId: string) {
+        await connectDB();
+
+        await Comment.deleteMany({ projectId });
+    }
 };

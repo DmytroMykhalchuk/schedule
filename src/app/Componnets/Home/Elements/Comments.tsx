@@ -21,9 +21,9 @@ export const Comments: React.FC<CommentsType> = async ({ }) => {
                         key={index}
                         message={item.text}
                         personName={item.name}
-                        projectName={item.taskId.name}
+                        projectName={item?.taskId?.name}
                         avatar={item.picture}
-                        taskId={item.taskId._id.toString()}
+                        taskId={item.taskId?._id.toString()}
                         timeDiff={timeDiff}
                     />
                 )

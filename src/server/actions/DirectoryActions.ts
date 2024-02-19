@@ -6,6 +6,7 @@ import { ObjectId } from 'mongodb';
 import User from '../models/User';
 import { UserActions } from './UserActions';
 import Directory from '../models/Directory';
+import { getRandomString } from '../utils/utils';
 
 export const DirectoryActions = {
     async storeDirectory(directoryName: string, projectId: string): Promise<ProccessStatusType> {
@@ -30,7 +31,7 @@ export const DirectoryActions = {
 
         const project = await Project.findOne({ _id: auth.projectId, users: user._id }).populate('directories');
 
-        return project?.directories
+        return project?.directories || []
     },
 
     async getDirectory(directoryId: string): Promise<DirectoryType> {
@@ -58,5 +59,32 @@ export const DirectoryActions = {
 
         return { success: Boolean(directory) };
     },
+
+    async generateDirectories(projectId: string, count = 12): Promise<string[]> {
+        await connectDB();
+        const generatedDirectories = [] as string[];
+        for (let index = 0; index < count; index++) {
+            const directoryName = getRandomString(3, 15);
+
+            const directoryModel = new Directory({
+                _id: new ObjectId(),
+                name: directoryName,
+            });
+    
+            const directory = await directoryModel.save();
+            generatedDirectories.push(directory._id);
+        }
+
+        const result = await Project.findOneAndUpdate({ _id: projectId, }, { $push: { directories: generatedDirectories } });
+
+        return generatedDirectories;
+
+    },
+
+    async deleteDirectories(directoryIds: string[]) {
+        await connectDB();
+
+        await Directory.deleteMany({ _id: directoryIds });
+    }
 
 };

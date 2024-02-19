@@ -17,7 +17,7 @@ const taskSchema = new Schema({
     subtasks: { type: [String], default: [], },
     categoryId: { type: String, default: '' },
     comments: [
-        { type: mongoose.Types.ObjectId, required: true, ref: "Comment", default: [], },
+        { type: mongoose.Types.ObjectId, required: true, ref: "Comment", default: [], onDelete: 'cascade' },
     ],
 },
 );

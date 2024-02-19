@@ -14,10 +14,10 @@ export const generateDB = async () => {
         return;
     }
 
-    await UserActions.randomGenerate();
+    // await UserActions.randomGenerate();
     await ProjectActions.genearateRandomTasks(projectId);
 
-    redirect('/app');
+    // redirect('/app');
 };
 
 export const removeGenerated = async () => {
@@ -28,7 +28,6 @@ export const removeGenerated = async () => {
         return;
     }
 
-    await ProjectActions.genearateRandomTasks(projectId);
-
-    redirect('/app');
+    const result = await ProjectActions.removeGenerated(projectId);
+    result.success && redirect('/app');
 };

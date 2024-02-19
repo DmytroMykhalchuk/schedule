@@ -26,6 +26,7 @@ export const createTask = async (formDate: FormData) => {
         toHour: parseInt(formDate.get('to_hour') as string),
         categoryId: formDate.get('categoryId') as string,
     };
+
     const result = await TaskActions.storeTask({ projectId, sessionId }, newTask);
 
     //todo message notify about success
