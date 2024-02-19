@@ -13,7 +13,8 @@ import { FormElementStatus } from "./Elements/FormElementStatus";
 import { FormElementAssignee } from "./Elements/FormElementAssignee";
 import { FormElementSutasks } from "./Elements/FormElementSutasks";
 import { ReactNode } from "react";
-import { CommentType } from "@/server/actions/CommentActions";
+import { CommentType } from "@/server/actions/types";
+import { FormElementCategory } from "./Elements/FormElementCategory";
 
 type TaskFormType = {
     defaultValues: {
@@ -29,6 +30,7 @@ type TaskFormType = {
         comments?: CommentType[]
         fromHour?: number
         toHour?: number
+        categoryId?: string
     },
     labelConfirm: string
     UnderFormSlot?: ReactNode
@@ -61,6 +63,7 @@ export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, 
                     </div>
                 </Grid>
                 <FormElementPriority defaultPriority={defaultValues?.priority} />
+                <FormElementCategory defaultCategoryId={defaultValues.categoryId} />
             </Grid>
             <Stack px={2} spacing={2}>
                 <FormElementDescription defaultDescription={defaultValues?.description} />

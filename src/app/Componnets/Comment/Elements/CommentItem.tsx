@@ -8,15 +8,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ReplyIcon from '@mui/icons-material/Reply';
 
 
+
 type CommentItemType = {
     comment: CommentType
     onReply: () => void,
     onDelete: () => void,
     replyComment?: { name: string, text: string, _id: string }
     onShowReplyComment: (commentId: string) => void
+    time?: string
 };
 
-export const CommentItem: React.FC<CommentItemType> = ({ comment, replyComment, onReply, onDelete, onShowReplyComment }) => {
+export const CommentItem: React.FC<CommentItemType> = ({ comment, replyComment, time, onReply, onDelete, onShowReplyComment }) => {
 
     return (
         <Box>
@@ -36,6 +38,7 @@ export const CommentItem: React.FC<CommentItemType> = ({ comment, replyComment, 
                 <Box flex={1}>
                     <Typography variant="h6" fontWeight={600}>{comment.name}</Typography>
                     <Typography variant="body1">{comment.text}</Typography>
+                    <Typography variant="caption">{time}</Typography>
                 </Box>
                 <Box sx={{
                     // opacity: 0,

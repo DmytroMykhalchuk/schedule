@@ -13,21 +13,24 @@ const projectSchema = new Schema<DBProjectType>({
         required: true,
         ref: 'User',
     },
-    directories: {
-        type: [String],
-        default: [],
-    },
+    directories: [
+        { type: mongoose.Types.ObjectId, required: true, ref: "Directory", default: [], },
+    ],
     users: [{
         type: mongoose.Types.ObjectId, ref: 'User', default: [],
     }],
     team: {
-        type: [{ id: { type: Schema.Types.ObjectId, ref: 'User' }, role: String }],
+        type: [{ userId: { type: Schema.Types.ObjectId, ref: 'User' }, role: String }],
         default: [],
     },
     invitations: {
         type: [String],
         default: [],
-    }
+    },
+    categories: {
+        type: [{ _id: mongoose.Types.ObjectId, name: String, color: String, textColor: String }],
+        default: [],
+    },
 });
 
 export default mongoose.models.Project || mongoose.model<DBProjectType>('Project', projectSchema);

@@ -10,12 +10,35 @@ $purple: #8a45fa;
 $peachy-light: #ffe6d1;
 $peachy-dark: #ffcda3;
 
-.unstyledButton{
+.unstyledButton {
     background-color: transparent;
-    border:none;
+    border: none;
     width: 100%;
     cursor: pointer;
-    &:hover{
 
-    }
+    &:hover {}
+}
+
+.truncate {
+    text-overflow: ellipsis;
+    /* Needed to make it work */
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.elipsis_1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+}
+
+.elipsis div {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

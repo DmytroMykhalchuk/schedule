@@ -4,16 +4,14 @@ import Typography from "@mui/material/Typography";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import ShareIcon from '@mui/icons-material/Share';
-import { defaultFirstDirectory, getProjectDirectories } from "../actions";
+import { getProjectDirectories } from "../actions";
 
 type FormElementProjectsType = {
     defaultDirectory?: string
 };
 
 export const FormElementProjects: React.FC<FormElementProjectsType> = async ({ defaultDirectory }) => {
-
-    const directories = await getProjectDirectories() || [] as string[];
-    directories.unshift(defaultFirstDirectory)
+    const directories = await getProjectDirectories() || [];
 
     return (
         <Grid container spacing={2} sx={{ p: 2 }}>
@@ -37,15 +35,15 @@ export const FormElementProjects: React.FC<FormElementProjectsType> = async ({ d
                             border: 'none',
                         }
                     }}
-                    defaultValue={defaultDirectory || directories[0]}
+                    defaultValue={defaultDirectory || directories[0]._id.toString()}
                     required
                     name="directory"
                 >
                     {
                         directories.map((directory, index) => (
-                            <MenuItem value={directory} key={index}>
+                            <MenuItem value={directory._id.toString()} key={index}>
                                 <Stack direction={'row'} spacing={1}>
-                                    <Typography variant="body1" component={'span'}>{directory}</Typography>
+                                    <Typography variant="body1" component={'span'}>{directory.name}</Typography>
                                     {index === 0 && <ShareIcon />}
                                 </Stack>
                             </MenuItem>

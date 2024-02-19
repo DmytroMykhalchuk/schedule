@@ -1,5 +1,13 @@
-import { UrgentTasks } from './../../app/Componnets/Home/Elements/UrgentTasks';
 import mongoose from "mongoose"
+
+export type CategoryDB = {
+    _id: mongoose.Types.ObjectId,
+    name: string,
+    color: string,
+    textColor: string,
+};
+
+export type CategoryRecord = Omit<CategoryDB, '_id'> & { _id: string }
 
 export type DBProjectType = {
     _id: mongoose.Types.ObjectId,
@@ -9,9 +17,10 @@ export type DBProjectType = {
     users: string[],
     team: ProjectTeamItem[],
     invitations: string[],
+    categories: CategoryDB[],
 }
 
-export type ProjectTeamItem = { id: string, role: string }
+export type ProjectTeamItem = { userId: mongoose.Types.ObjectId, role: string }
 
 export type UrgentTask = {
     _id: string,
@@ -36,6 +45,7 @@ export type StoreTaskType = {
     comment?: string | null
     fromHour: number,
     toHour: number,
+    categoryId: string
 };
 
 export type StoreCommentType = {
@@ -58,7 +68,9 @@ export type CommentDB = {
     replyId: string,
     taskId: mongoose.Types.ObjectId,
     projectId: mongoose.Types.ObjectId,
+    createdAt: Date
 };
+export type LatestCommentType = Omit<CommentDB, 'taskId'> & { taskId: { _id: mongoose.Types.ObjectId, name: string } }
 
 export type StatusType = 'not_started' | 'in_progress' | 'done';
 export type PriorityType = 'low_priority' | 'medium_priority' | 'critical_prority';
@@ -77,6 +89,7 @@ export type TaskDB = {
     comments: mongoose.Types.ObjectId[],
     fromHour: number,
     toHour: number,
+    categoryId: mongoose.Types.ObjectId,
 };
 
 export type TaskShortType = {
@@ -103,6 +116,7 @@ export type ViewTaskType = {
     subtasks: string[],
     fromHour: number,
     toHour: number,
+    categoryId: string,
 };
 
 export type TaskUpdateType = {
@@ -117,6 +131,7 @@ export type TaskUpdateType = {
     subtasks: string[] | null,
     fromHour: number,
     toHour: number,
+    categoryId: string
 };
 
 export type StoreCommentRequestType = {
@@ -125,9 +140,65 @@ export type StoreCommentRequestType = {
     replyId: string,
 };
 
+export type CommentType = {
+    _id: string,
+    userId: string
+    name: string,
+    picture: string,
+    text: string
+    isOwner: boolean
+    replyId: string
+    createdAt: Date
+};
+
 export type ProjectUsers = {
     name: string,
     _id: string,
     picture: string,
     email: string
 };
+
+export type ProccessStatusType = {
+    success: boolean
+};
+
+export type DirectoryType = {
+    _id: mongoose.Types.ObjectId,
+    name: string,
+};
+
+export type UpdateDirectoryType = {
+    directoryId: string,
+    directoryName: string,
+};
+
+export type StoreUser = {
+    name: string
+    email: string
+    google_id: string
+    picture: string
+};
+
+export type UserDB = {
+    sessions: string[],
+    google_id: number,
+    name: string,
+    picture: string,
+    email: string
+    _id: string,
+};
+
+export type UserTeamItemType = Pick<UserDB, '_id' | 'email' | 'name' | 'picture'> & { role: string }
+
+export type PopulatedProjectTeamItem = {
+    userId: UserTeamItemType,
+    role: string,
+    _id: mongoose.Types.ObjectId,
+};
+
+export type TeamItemType = {
+    user: UserTeamItemType,
+    isAdmin: boolean,
+    role: string,
+};
+

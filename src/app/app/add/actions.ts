@@ -15,8 +15,19 @@ export const generateDB = async () => {
     }
 
     // await UserActions.randomGenerate();
-
     await ProjectActions.genearateRandomTasks(projectId);
 
-    redirect('/app');
-}
+    // redirect('/app');
+};
+
+export const removeGenerated = async () => {
+    'use server';
+
+    const projectId = cookies().get(projectIdCookieKey)?.value;
+    if (!projectId) {
+        return;
+    }
+
+    const result = await ProjectActions.removeGenerated(projectId);
+    result.success && redirect('/app');
+};

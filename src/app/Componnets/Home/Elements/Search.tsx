@@ -23,7 +23,7 @@ export const Search: React.FC<SearchType> = ({ }) => {
         if (!targetSearch.length) return;
         
         //todo send request
-        console.log('todo send request');
+        console.warn('todo send request');
     }, [targetSearch]);
 
 

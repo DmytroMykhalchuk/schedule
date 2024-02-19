@@ -5,12 +5,25 @@ import { menuList } from "@/app/constants";
 import { usePathname } from 'next/navigation'
 import { MenuItem } from "./Elements/MenuItem";
 import { SideBarFooter } from "./SideBarFooter";
-
 type AppSideBarType = {
 };
 
 export const AppSideBar: React.FC<AppSideBarType> = ({ }) => {
     const router = usePathname();
+
+    const isActive = (links: string[], url: string): Boolean => {
+        let isActive = false;
+
+        links.forEach(link => {
+            if(link===url){
+                isActive = true;
+            }else if (link.includes(url)&&url!=='/app/') {
+                isActive = true;
+            }
+        });
+
+        return isActive;
+    }
 
     return (
         <Stack className={styles.sideBarWrapper} sx={{ pb: 2 }}>
@@ -19,7 +32,7 @@ export const AppSideBar: React.FC<AppSideBarType> = ({ }) => {
                     menuList.map((item, index) => (
                         <MenuItem
                             key={index}
-                            Icon={<item.Icon className={`${styles.menuIcon} ${router === item.path && styles.active}`}></item.Icon>}
+                            Icon={<item.Icon className={`${styles.menuIcon} ${isActive(item.activeChecks, router) && styles.active}`}></item.Icon>}
                             path={item.path}
                         />
                     ))

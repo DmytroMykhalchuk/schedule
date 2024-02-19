@@ -8,9 +8,9 @@ const commentSchema = new Schema({
     name: { type: String, required: true },
     picture: { type: String, required: true },
     text: { type: String, required: true },
-    replyId: { type: String, default: '',},
+    replyId: { type: String, default: '', },
     taskId: { type: Schema.Types.ObjectId, ref: 'Task', required: true },
     projectId: { type: Schema.Types.ObjectId, ref: 'Project', required: true },
-});
+}, { timestamps: true });
 
 export default mongoose.models.Comment || mongoose.model('Comment', commentSchema);

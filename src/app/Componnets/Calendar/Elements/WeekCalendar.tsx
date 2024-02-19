@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import { ControlPageCalendar } from './ControlPageCalendar';
 import { getWeekTasks } from '../actions';
 import { priorityStyling, workHours } from '@/server/constants';
+import Link from 'next/link';
 
 const formatedWorkHours = [...workHours.map(hour => `${hour}:00`)];
 const weekdays = [
@@ -81,6 +82,7 @@ export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date }) => {
                                 toHour={task.toHour}
                                 primaryColor={priorityStyling[task.priority].primaryColor}
                                 secondaryColor={priorityStyling[task.priority].secondaryColor}
+                                taskId={task._id.toString()}
                             />
                         ))}
                         {/* <Box position={'absolute'} top={0}>
@@ -192,10 +194,10 @@ type TaskItemType = {
     task: string,
     fromHour: number,
     toHour: number,
+    taskId: string
 };
 
-export const TaskItem: React.FC<TaskItemType> = ({ primaryColor, secondaryColor, task, fromHour, toHour }) => {
-    console.log(fromHour, toHour)
+export const TaskItem: React.FC<TaskItemType> = ({ primaryColor, secondaryColor, task, taskId, fromHour, toHour }) => {
     return (
         <Box
             sx={{
@@ -207,19 +209,20 @@ export const TaskItem: React.FC<TaskItemType> = ({ primaryColor, secondaryColor,
                 width: '100%',
                 px: 1,
             }}
-        >
-            <Typography variant="subtitle2" sx={{
-                backgroundColor: secondaryColor,
-                color: primaryColor,
-                p: 1,
-                height: '100%',
-                borderColor: '#F6EFA7',
-                borderRadius: 4,
-                borderWidth: 1,
-                borderStyle: 'solid',
-            }}>
-                {task}
-            </Typography >
+        ><Link href={'/app/my-tasks/' + taskId}>
+                <Typography variant="subtitle2" sx={{
+                    backgroundColor: secondaryColor,
+                    color: primaryColor,
+                    p: 1,
+                    height: '100%',
+                    borderColor: '#F6EFA7',
+                    borderRadius: 4,
+                    borderWidth: 1,
+                    borderStyle: 'solid',
+                }}>
+                    {task}
+                </Typography >
+            </Link>
         </Box>
     );
 };

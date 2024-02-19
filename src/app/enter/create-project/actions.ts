@@ -16,7 +16,7 @@ export const createProject = async (formData: FormData) => {
         name: projectName,
     }, sessionId);
 
-    console.log(responseProjectId);
+
     cookies().set(projectIdCookieKey, responseProjectId);
     redirect('/app');
 }

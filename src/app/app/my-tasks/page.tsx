@@ -2,9 +2,9 @@ import { HeaderLayout } from "@/app/Componnets/Layouts/HeaderLayout";
 import { getMyTasks } from "./actions";
 import dayjs from "dayjs";
 import { PaperWrapper } from "@/app/Componnets/MyTasks/PaperWrapper";
-import { TaskShortType } from "@/server/actions/TaskActions";
 import Stack from "@mui/material/Stack";
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { TaskShortType } from "@/server/actions/types";
 
 dayjs.extend(customParseFormat)
 
@@ -45,7 +45,6 @@ const Page: React.FC<PageType> = async ({ }) => {
             taskFiltered.tomorrow.tasks.push(task);
         } else if (taskFiltered.previous.dateStamp.diff(dueDate) > 0) {
             //prev
-            console.log(taskFiltered.previous.dateStamp.diff(dueDate))
             taskFiltered.previous.tasks.push(task);
         } else {
             //next

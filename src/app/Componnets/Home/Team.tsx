@@ -1,19 +1,15 @@
 import Grid from '@mui/material/Grid';
 import Link from 'next/link';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Comments } from './Elements/Comments';
-import { cookies } from 'next/headers';
 import { getAuthParams } from '../actions';
 import { ProjectActions } from '@/server/actions/ProjectActions';
-import { TagItem } from './Elements/TagItem';
 import { TeamItem } from './Elements/TeamItem';
 
 
 const getTeam = async () => {
-    const { projectId, sessionId } = await getAuthParams();
-    const users = await ProjectActions.getTeam({ projectId, sessionId });
+    const authParams = await getAuthParams();
+    const users = await ProjectActions.getTeam(authParams);
     return users;
 }
 
@@ -28,13 +24,13 @@ export const Team: React.FC<TeamType> = async ({ }) => {
             <Typography variant="h6">Team Directory</Typography>
             <Grid container spacing={2} alignItems={'stretch'}>
                 {
-                    team.map(person => (
-                        <Grid key={person._id} item xs={12} sm={6}>
+                    team.map((person, index) => (
+                        <Grid key={index} item xs={12} sm={6}>
                             <TeamItem
-                                avatar={person.picture}
-                                name={person.name}
+                                avatar={person.user.picture}
+                                name={person.user.name}
+                                email={person.user.email}
                                 role={person.role}
-                                email={person.email}
                             />
                         </Grid>
                     ))

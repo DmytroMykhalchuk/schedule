@@ -1,3 +1,4 @@
+import { StoreUser, UserDB } from './types';
 import { getMaxListeners } from "events";
 import connectDB from "../connectDB";
 import User from "../models/User";
@@ -5,23 +6,6 @@ import User from "../models/User";
 import uniqid from 'uniqid';
 import { getRandomNumber, getRandomPictureUrl } from "../utils/utils";
 
-export type StoreUser = {
-    name: string
-    email: string
-    google_id: string
-    picture: string
-};
-
-export type UserDB = {
-    sessions: string[],
-    google_id: number,
-    name: string,
-    picture: string,
-    email: string
-    _id: string,
-};
-
-export type UserTeamItemType = Pick<UserDB, '_id' | 'email' | 'name' | 'picture'> & { role: string }
 
 export const UserActions = {
     async login(user: StoreUser) {
@@ -66,7 +50,7 @@ export const UserActions = {
     async updateSessionId(sessionId: string): Promise<{ sessionId: string }> {
         await connectDB();
         //todo ceheck update is still member in some project
-        console.log(sessionId)
+        console.warn(sessionId)
         let uuid = uniqid();
 
         const response = await User.findOneAndUpdate({
@@ -77,7 +61,7 @@ export const UserActions = {
             $set: { "sessions.$": uuid },
         });
 
-        console.log({ response }, 'update sessionId');
+        console.warn({ response }, 'update sessionId');
         return { sessionId: uuid };
     },
 

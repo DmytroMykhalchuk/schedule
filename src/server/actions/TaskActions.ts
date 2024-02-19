@@ -3,12 +3,16 @@ import dayjs from 'dayjs';
 import mongoose from 'mongoose';
 import Project from '../models/Project';
 import Task from '../models/Task';
-import { AuthType, StoreCommentType, StoreTaskType, TaskDB, TaskShortType, TaskUpdateType, UrgentTask, ViewTaskType } from './types';
-import { CommentActions, CommentType } from './CommentActions';
+import { AuthType, CommentType, StoreCommentType, StoreTaskType, TaskDB, TaskShortType, TaskUpdateType, UrgentTask, ViewTaskType, ProccessStatusType, PriorityType, StatusType } from './types';
+import { CommentActions } from './CommentActions';
 import { ObjectId } from 'mongodb';
 import { ProjectActions } from './ProjectActions';
 import { UserActions } from './UserActions';
-import { workHours } from '../constants';
+import { priorities, statuses, workHours } from '../constants';
+import { CategoryActions } from './CategoryActions';
+import User from '../models/User';
+import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
+import { getRandomWeekdayDate } from '@/utlis/getRandomWeekdayDate';
 
 export const TaskActions = {
     async storeTask(auth: AuthType, storeTask: StoreTaskType): Promise<{ projectId?: string }> {
@@ -28,6 +32,7 @@ export const TaskActions = {
             projectId: auth.projectId,
             fromHour: storeTask.fromHour,
             toHour: storeTask.toHour,
+            categoryId: storeTask.categoryId,
         });
 
         const task = await taskModel.save();
@@ -81,6 +86,8 @@ export const TaskActions = {
             dueDate: task.dueDate,
             directory: task.directory,
             priority: task.priority,
+            fromHour: task.fromHour,
+            toHour: task.toHour,
         }));
 
         return preparedTasks;
@@ -97,51 +104,59 @@ export const TaskActions = {
         }
 
         const task = await Task.findOne({ _id: taskId });
+
         const comments = await CommentActions.getCommentsByIds(task.comments);
         const preparedCommnets: CommentType[] = comments.map((item) => {
             return {
-                name: item.name,
-                picture: item.picture,
-                replyId: item.replyId,
-                text: item.text,
-                userId: item.userId.toString(),
+                ...item.toObject(),
                 _id: item._id.toString(),
+                userId: item.userId.toString(),
                 isOwner: item.userId.toString() === user._id.toString(),
             };
         });
 
-        return { task, comments: preparedCommnets };
+        const handledTask: ViewTaskType = {
+            ...task.toObject(),
+            assignee: task.assignee.toString(),
+            _id: task._id.toString(),
+            categoryId: task?.categoryId?.toString() || ''
+        };
+
+        return { task: handledTask, comments: preparedCommnets };
     },
 
     async updateTask(auth: AuthType, updateTask: TaskUpdateType): Promise<{ success: boolean }> {
         await connectDB();
 
-        const project = await ProjectActions.getProjectByFilters(auth, { tasks: 1 });
+        const project = await ProjectActions.getProjectByFilters(auth, { _id: 1 });
 
-        project.tasks = project?.tasks.map((task: ViewTaskType) => {
-            if (task._id.toString() === updateTask.taskId) {
-                task.name = updateTask.name;
-                task.assignee = updateTask.assignee as string;
-                task.status = updateTask.status;
-                task.priority = updateTask.priority;
-                task.dueDate = updateTask.dueDate;
-                task.description = updateTask.description;
-                task.subtasks = updateTask.subtasks || [];
-            }
-            return task;
+        if (!project) {
+            return { success: false };
+        }
+
+        const task = await Task.findOneAndUpdate({ _id: updateTask.taskId }, {
+            name: updateTask.name,
+            assignee: updateTask.assignee,
+            status: updateTask.status,
+            priority: updateTask.priority,
+            dueDate: updateTask.dueDate,
+            description: updateTask.description,
+            fromHour: updateTask.fromHour,
+            toHour: updateTask.toHour,
+            subtasks: updateTask.subtasks || [],
+            categoryId: updateTask.categoryId,
         });
 
-        project.save();
-
-        return { success: true };
+        return { success: Boolean(task) };
     },
 
-    async getUrgentTasks(projectId: string, sessionId: string): Promise<UrgentTask[]> {
+    async getUrgentTasks(authParams: AuthType): Promise<UrgentTask[]> {
         await connectDB();
-        const user = await UserActions.getUserBySessionId(sessionId);
-        const project = await Project.findOne({ _id: projectId, users: user._id }, { name: 1 });
+        const user = await UserActions.getUserBySessionId(authParams.sessionId);
+        const project = await ProjectActions.getProjectByFilters(authParams, { _id: true });
 
-        if (!project?._id) {
+
+        if (!project?._id || !user?._id) {
             return [];
         }
 
@@ -151,7 +166,7 @@ export const TaskActions = {
             dayjs().add(2, 'day').format('DD.MM.YYYY'),
         ];
 
-        const tasks = await Task.find({ projectId, dueDate: { $in: requiredDates } }, { name: 1, dueDate: 1 });
+        const tasks = await Task.find({ projectId: authParams.projectId, dueDate: { $in: requiredDates }, assignee: user._id }, { name: 1, dueDate: 1 });
 
         const urgentsTasks = tasks.sort((a: { dueDate: string }, b: { dueDate: string }) => a.dueDate.localeCompare(b.dueDate))
             || [];
@@ -163,7 +178,6 @@ export const TaskActions = {
         await connectDB();
 
         const result = Task.findByIdAndUpdate(taskId, { $push: { comments: commentId } });
-        console.log({ result });
 
         return result;
     },
@@ -194,5 +208,138 @@ export const TaskActions = {
         });
 
         return allowedHours;
-    }
+    },
+
+    async deleteTask(authParams: AuthType, taskId: string): Promise<ProccessStatusType> {
+        await connectDB();
+
+        const project = await ProjectActions.getProjectByFilters(authParams, { _id: 1 });
+
+        if (!project) {
+            return { success: false };
+        }
+
+        const task = await Task.findOneAndDelete({ _id: taskId, projectId: project._id });
+
+        return { success: Boolean(task) };
+    },
+
+    async generateTasks(projectId: string, count = 350) {
+        await connectDB();
+        const project = await ProjectActions.getProjectById(projectId);
+
+        const categoryIds = await CategoryActions.generateCategories(projectId);
+        const directories = project.directories as string[];
+
+        const users = await User.find();
+        const shuffledUsers = users.sort(() => 0.5 - Math.random());
+        let targetUsers = [...shuffledUsers.slice(0, 5), project.admin_id];
+
+        const taskIds = [] as mongoose.Types.ObjectId[];
+        const userIds = targetUsers.map(item => item._id);
+
+        const dateMarkHours = {} as any;
+
+        for (let index = 0; index < count; index++) {
+            const randomDate = getRandomWeekdayDate();
+            const randomUserId = targetUsers[Math.floor(Math.random() * targetUsers.length)]._id;
+
+            const fromHour = getRandomInt(workHours[0], workHours[workHours.length - 2]);
+            const toHour = getRandomInt(fromHour + 1, workHours[workHours.length - 1]);
+            const dueDate = `${randomDate.getDate().toString().toString().padStart(2, '0')}.${(randomDate.getMonth() + 1).toString().padStart(2, '0')}.${randomDate.getFullYear()}`;
+
+            if (fromHour === toHour) {
+                continue;
+            } else {
+                if (dateMarkHours.hasOwnProperty(dueDate)) {
+                    const hours = dateMarkHours[dueDate] as number[];
+                    let isForbidden = false;
+                    for (let index = fromHour; index < toHour; index++) {
+                        if (hours.includes(index)) {
+                            isForbidden = true;
+                            break;
+                        }
+                    }
+                    if (isForbidden) {
+                        continue;
+
+                    } else {
+                        dateMarkHours[dueDate] = [
+                            ...Array.from({ length: (toHour - fromHour + 1) }).map((_, index) => fromHour + index),
+                            ...dateMarkHours[dueDate],
+                        ];
+
+                    }
+                } else {
+                    dateMarkHours[dueDate] = Array.from({ length: (toHour - fromHour + 1) }).map((_, index) => fromHour + index);
+                }
+            }
+
+            const newTask = new Task({
+                assignee: randomUserId,
+                description: getRandomBoolean() ? getRandomString() : '',
+                directory: directories[Math.floor(Math.random() * directories.length)],
+                dueDate: `${randomDate.getDate().toString().toString().padStart(2, '0')}.${(randomDate.getMonth() + 1).toString().padStart(2, '0')}.${randomDate.getFullYear()}`,
+                name: getRandomString(3, 20),
+                priority: priorities[Math.floor(Math.random() * priorities.length)].statusName as PriorityType,
+                status: statuses[Math.floor(Math.random() * statuses.length)].statusName as StatusType,
+                subtasks: this.generateSubtasks(),
+                categoryId: categoryIds[Math.floor(Math.random() * categoryIds.length)],
+                comments: [],
+                fromHour,
+                toHour,
+                projectId: new ObjectId(projectId),
+            });
+
+            const checkTask = await Task.findOne({
+                fromHour: { $gte: fromHour },
+                toHour: { $lte: toHour },
+                dueDate: newTask.dueDate,
+                assignee: newTask.assignee,
+            });
+
+            if (checkTask) {
+                console.log(checkTask)
+                continue;
+            }
+
+            const task = await newTask.save();
+            if (task) {
+                const taskId = task._id.toString();
+                const commentIds = await CommentActions.generateComments(projectId, taskId, userIds);
+                task.comments = commentIds;
+                task.save();
+            }
+
+            taskIds.push(task._id);
+        }
+
+
+        return { userIds, taskIds };
+    },
+
+    generateSubtasks(min = 1, max = 10): string[] {
+        const subtasks = [] as string[];
+        const isNeedToGenerate = getRandomBoolean(0.3);
+
+        if (!isNeedToGenerate) {
+            return subtasks;
+        }
+
+        const targetCount = getRandomInt(min, max);
+
+        for (let index = 0; index < targetCount; index++) {
+            subtasks.push(getRandomString(3, 50));
+        }
+
+        return subtasks;
+    },
+
+    async deleteGeneratedTasks(projectId: string) {
+        await connectDB();
+
+        const result = await Task.deleteMany({ projectId: projectId });
+    },
+
+
 };

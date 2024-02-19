@@ -17,7 +17,7 @@ export const sendComment = async (taskId: string, comment: string, replyToCommen
     }).then(response => {
         return response.data;
     }).catch(err => {
-        console.log(err)
+        console.error(err)
     });
 };
 

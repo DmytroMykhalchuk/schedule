@@ -1,4 +1,4 @@
-import { StoreCommentType, CommentDB, AuthType, StoreCommentRequestType } from './types';
+import { StoreCommentType, CommentDB, AuthType, StoreCommentRequestType, CommentType, LatestCommentType } from './types';
 import connectDB from '../connectDB';
 import mongoose from 'mongoose';
 import Pusher from 'pusher';
@@ -8,6 +8,7 @@ import { UserActions } from './UserActions';
 import { channelPrefixName, newCommentEventName, removedCommentEventName } from '../constants';
 import Comment from '../models/Comment';
 import { TaskActions } from './TaskActions';
+import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
 
 const pusher = new Pusher({
     appId: "1752490",
@@ -16,24 +17,6 @@ const pusher = new Pusher({
     cluster: "eu",
     useTLS: true
 });
-
-
-// const pushfer = new Pusher({
-//     key: "90149ab3e623050894c1",
-//     secret: "9a5bc84db603fc34ddaa",
-//     cluster: "eu",
-//     useTLS: true
-// });
-export type CommentType = {
-    _id: string,
-    userId: string
-    name: string,
-    picture: string,
-    text: string
-    isOwner: boolean
-    replyId: string
-};
-
 
 export const CommentActions = {
     async storeComment(auth: AuthType, requestComment: StoreCommentRequestType) {
@@ -63,6 +46,7 @@ export const CommentActions = {
         pusher.trigger(`${channelPrefixName}${project._id.toString()}`, newCommentEventName, {
             comment: comment
         });
+
         const responseComment: CommentType = {
             name: comment.name,
             picture: comment.picture,
@@ -71,6 +55,7 @@ export const CommentActions = {
             isOwner: true,
             _id: comment._id.toString(),
             userId: comment.userId.toString(),
+            createdAt: comment.createdAt,
         };
 
         return responseComment;
@@ -82,10 +67,9 @@ export const CommentActions = {
         const user = await UserActions.getUserBySessionId(auth.sessionId);
 
         const comment = await Comment.findByIdAndDelete({ _id: commentId, userId: user._id });
-        console.log({response: comment})
 
         let isDeleted = comment._id;
-        
+
         pusher.trigger(`${channelPrefixName}${comment.projectId}`, removedCommentEventName, {
             commentId,
         });
@@ -102,11 +86,60 @@ export const CommentActions = {
         return comment;
     },
 
-    async getCommentsByIds(commentIds: string[] | mongoose.Types.ObjectId[]): Promise<CommentDB[]> {
+    async getCommentsByIds(commentIds: string[] | mongoose.Types.ObjectId[]): Promise<(CommentDB & { toObject: Function })[]> {
         await connectDB();
 
         const comments = await Comment.find({ _id: commentIds });
 
         return comments;
+    },
+
+    async getLastComments(auth: AuthType): Promise<LatestCommentType[]> {
+        await connectDB();
+
+        const project = await ProjectActions.getProjectByFilters(auth, { _id: 1 });
+
+        if (!project) {
+            return [];
+        }
+
+        const comments = await Comment.find({ projectId: project._id }).populate('taskId', 'name').sort('-createdAt').limit(10);
+
+        return comments as LatestCommentType[];
+    },
+
+    async generateComments(projectId: string, taskId: string, userIds: mongoose.Types.ObjectId[], maxCount = 10) {
+        await connectDB();
+
+        const randomCommentsCount = getRandomInt(1, maxCount);
+
+        const users = await UserActions.getUsersByIds(userIds.map(item => item.toString()));
+        const commentsIds = [] as mongoose.Types.ObjectId[];
+
+        for (let index = 0; index < randomCommentsCount; index++) {
+            const randomUser = users[Math.floor(Math.random() * users.length)];
+
+            const commentStore: StoreCommentType = {
+                name: randomUser.name,
+                picture: randomUser.picture,
+                projectId: projectId,
+                replyId: getRandomBoolean(0.4) ? commentsIds[Math.floor(Math.random() * commentsIds.length)]?.toString() || '' : '',
+                taskId: taskId,
+                text: getRandomString(3, 50),
+                userId: randomUser._id,
+                _id: new ObjectId(),
+            };
+
+            const comment = await this.createCommentOfTask(commentStore);
+
+            commentsIds.push(comment._id);
+        }
+        return commentsIds;
+    },
+
+    async deleteGeneratedComments(projectId: string) {
+        await connectDB();
+
+        await Comment.deleteMany({ projectId });
     }
 };

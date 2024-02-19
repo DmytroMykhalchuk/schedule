@@ -14,9 +14,9 @@ const dateMap = {
 };
 
 const getUrgantTasks = async () => {
-    const { projectId, sessionId } =  await getAuthParams();
+    const authParams =  await getAuthParams();
 
-    const tasks = await TaskActions.getUrgentTasks(projectId, sessionId)
+    const tasks = await TaskActions.getUrgentTasks(authParams)
     return tasks;
 }
 

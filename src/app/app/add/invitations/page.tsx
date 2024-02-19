@@ -15,20 +15,21 @@ const Page: React.FC<PageType> = async ({ }) => {
     const ivitiations = await getInvitations();
 
     return (
-        <Stack justifyContent={'center'} alignItems={'center'}>
-            <MiddlePaperWrapper pathBacck="/app/add">
-                <Typography variant="h5" textAlign={'center'}>Invitings</Typography>
-                <Stack justifyContent={'end'} alignItems={'end'} mb={2}>
+        <Stack justifyContent={'center'} alignItems={'center'} spacing={2}>
+            <MiddlePaperWrapper pathBack="/app/add" title="Invitings">
+                <Stack alignItems={'center'} mb={2}>
                     <form className={styles.formCreating} action={generateInvite}>
                         <Button variant="contained" color="warning" sx={{ textTransform: 'none' }} type='submit'>
                             Genereate
                         </Button>
                     </form>
                 </Stack>
+            </MiddlePaperWrapper>
+            <MiddlePaperWrapper>
                 <Stack>
                     {
                         ivitiations.map((item, index) => (
-                            <Stack direction={'row'} key={index}>
+                            <Stack direction={'row'} key={index} alignItems={'center'}>
                                 <Typography variant="body1" fontWeight={600} flex={1}>{item}</Typography>
                                 <form action={removeInvite}>
                                     <input type="hidden" name={'invite'} value={item} />
