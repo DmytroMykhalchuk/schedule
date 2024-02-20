@@ -72,7 +72,7 @@ export const UserActions = {
                 $in: sessionId,
             },
         }, selectMask);
-        
+
         return person;
     },
 
@@ -80,7 +80,7 @@ export const UserActions = {
         await connectDB();
         const users = await User.find({ _id: { $in: ids } }, mask);
 
-        return users;
+        return users.map(user => user.toObject());
     },
 
     async randomGenerate(count = 10): Promise<void> {

@@ -38,7 +38,7 @@ const Page: React.FC<PageType> = ({ }) => {
                             </Grid>
                             <Grid item xs={12} md={6}>
                                 <div>
-                                    <Team />
+                                    <Team limit={4} />
                                 </div>
                             </Grid>
                         </Grid>

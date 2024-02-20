@@ -104,6 +104,16 @@ export type TaskShortType = {
     toHour: number,
 };
 
+export type TaskByUserDB = {
+    _id: mongoose.Types.ObjectId
+    name: string,
+    assignee: string,
+    status: StatusType,
+    dueDate: string,
+    priority: PriorityType,
+};
+export type TaskByUserRecord = Omit<TaskByUserDB, '_id'> & { _id: string }
+
 export type ViewTaskType = {
     _id: string,
     name: string,
@@ -152,8 +162,8 @@ export type CommentType = {
 };
 
 export type ProjectUsers = {
-    name: string,
     _id: string,
+    name: string,
     picture: string,
     email: string
 };
@@ -202,3 +212,8 @@ export type TeamItemType = {
     role: string,
 };
 
+export type TaskByUserUser = {
+    _id: string,
+    name: string,
+    picture: string,
+};

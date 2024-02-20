@@ -14,11 +14,16 @@ const getTeam = async () => {
 }
 
 type TeamType = {
+    limit?: number
 };
 
-export const Team: React.FC<TeamType> = async ({ }) => {
+export const Team: React.FC<TeamType> = async ({ limit }) => {
     const team = await getTeam();
 
+    if (limit && team.length > limit) {
+        team.length
+    }
+    
     return (
         <Paper elevation={4} sx={{ p: 2 }}>
             <Typography variant="h6">Team Directory</Typography>

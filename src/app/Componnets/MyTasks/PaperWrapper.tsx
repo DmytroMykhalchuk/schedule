@@ -20,7 +20,6 @@ const weekMapNames = {
     [dayjs().day(3).format('DD.MM.YYYY')]: 'wednesday',
     [dayjs().day(4).format('DD.MM.YYYY')]: 'thursday',
     [dayjs().day(5).format('DD.MM.YYYY')]: 'friday',
-
 };
 
 const relativePointNames = {
@@ -84,7 +83,7 @@ export const PaperWrapper: React.FC<PaperWrapperType> = ({ title, tasks, subtask
                                 const dateName = isGeneralTask ? weekMapNames[task.dueDate] : relativePointNames[task.dueDate];
                                 return (
                                     <TaskRowItem key={index}
-                                        taskId={task.taskId}
+                                        url={task.taskId}
                                         datePoint={{ color: dateColor, label: dateName }}
                                         name={task.name}
                                         priority={priorityProps}

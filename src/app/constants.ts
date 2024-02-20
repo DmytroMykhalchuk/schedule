@@ -23,9 +23,9 @@ export const menuList: MenuItemTyp[] = [{
     activeChecks: ['/app/calendar/','/app/calendar/month/','/app/calendar/week/'],
 },
 {
-    path: '/app/design/',
+    path: '/app/overview/',
     Icon: DesignServicesIcon,
-    activeChecks: ['/app/design/'],
+    activeChecks: ['/app/overview/'],
 },
 {
     path: '/app/charts/',

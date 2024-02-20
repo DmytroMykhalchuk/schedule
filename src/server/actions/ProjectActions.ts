@@ -45,7 +45,12 @@ export const ProjectActions = {
 
         const users = await UserActions.getUsersByIds(userIds, { name: 1, picture: 1, email: 1 });
 
-        return users;
+        const projectUsers=users.map(user=>({
+            ...user,
+            _id:user._id.toString(),
+        }));
+
+        return projectUsers;
     },
 
     async getTeam(auth: AuthType): Promise<TeamItemType[]> {
