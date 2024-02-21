@@ -217,3 +217,5 @@ export type TaskByUserUser = {
     name: string,
     picture: string,
 };
+
+export type ThemeColor = 'warning' | 'primary' | 'secondary' | 'info';

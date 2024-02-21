@@ -1,0 +1,19 @@
+@import './../../../assets/styles/global.scss';
+
+.progressProject {
+    &__row {
+        border-top: 1px solid grey;
+
+        .progressProject__td:not(:last-child) {
+            padding: 1em 0;
+            border-right: 1px solid grey;
+        }
+    }
+
+}
+
+.totalWorkHours {
+    &__td {
+        padding: 1em 0;
+    }
+}
