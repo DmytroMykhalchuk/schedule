@@ -25,33 +25,21 @@ export const ProgressChart: React.FC<ProgressChartType> = ({ progress, categorie
         [currentDate.month() + 1]: 2,
     };
 
-    const renderBars = (months: MonthProgressSubMonths, category?: CategoryRecord): JSX.Element[] => {
-        const bars = [] as JSX.Element[];
-        let counter = 0;
+    const renderBars = (range: { from: number, to: number }[], color?: string): JSX.Element[] => {
+        return range.map((item, index) => (
+            <Bar
+                key={index}
+                from={item.from}
+                to={item.to}
+                color={color}
+            />
+        ))
 
-        for (const month in months) {
-            if (Object.prototype.hasOwnProperty.call(months, month)) {
-                const element = months[month];
-
-                const position = monthPositions[month] || 0;
-
-                bars.push(
-                    <Bar
-                        key={counter}
-                        position={position}
-                        filling={getFillingMonthPrecentage(element)}
-                    />
-                );
-                counter++;
-            }
-        }
-
-        return bars;
     }
 
     const renderRows = (): JSX.Element[] => {
         const bars = [] as JSX.Element[];
-        console.log(progress)
+
         for (const categoryId in progress) {
             if (Object.prototype.hasOwnProperty.call(progress, categoryId)) {
                 const element = progress[categoryId];
@@ -59,7 +47,7 @@ export const ProgressChart: React.FC<ProgressChartType> = ({ progress, categorie
 
                 bars.push(
                     <TableRowWrapper key={categoryId}>
-                        {renderBars(element, targetCategory)}
+                        {renderBars(element, targetCategory?.color)}
                     </TableRowWrapper>
                 )
             }
@@ -98,33 +86,27 @@ const TableRowWrapper: React.FC<TableRowWrapperType> = ({ children }) => (
 )
 
 type BarType = {
-    position: number,
-    filling: MonthPercentage[],
+    from: number,
+    to: number,
+    color?: string
 };
 
-const Bar: React.FC<BarType> = ({ position, filling }) => {
+const Bar: React.FC<BarType> = ({ from, to, color }) => {
 
     return (
         <>
-            {
-                filling.map((item, index) => {
-                    const left = ((position - 1) * 33) + (33 / 100 * item.from);
-                    console.log({ left })
-                    return (
-                        <Box key={index} sx={{
-                            position: 'absolute',
-                            width: 33.3 * position + '%',
-                            left: left + '%',
-                            height: 16,
-                            borderRadius: 4,
-                            background: 'purple',
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                        }}
-                        />
-                    );
-                })
-            }
+
+            <Box sx={{
+                position: 'absolute',
+                width: to - from + '%',
+                left: from + '%',
+                height: 16,
+                borderRadius: 4,
+                background: color || 'purple',
+                top: '50%',
+                transform: 'translateY(-50%)',
+            }}
+            />
         </>
     );
 };

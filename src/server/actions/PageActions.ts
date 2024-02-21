@@ -1,12 +1,13 @@
 import { workHours } from './../constants';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import connectDB from '../connectDB';
 import { ProjectActions } from './ProjectActions';
 import { TaskActions } from './TaskActions';
 import { UserActions } from './UserActions';
-import { AuthType, TaskFilters, ReportPageInfoType, CategoryDB } from './types';
+import { AuthType, TaskFilters, ReportPageInfoType, CategoryDB, MonthProgressType } from './types';
 import { translateDateToDayjs } from '@/utlis/translateDateToDayjs';
 import Project from '../models/Project';
+import { getFillingMonthPrecentage } from '@/utlis/getFillingMonthPrecentage';
 
 export const PageActions = {
     async getChartsInfo(authParams: AuthType): Promise<ReportPageInfoType> {
@@ -28,14 +29,16 @@ export const PageActions = {
         //todo due date to timestamp
         const prevTasks = tasks.filter(task => translateDateToDayjs(task.dueDate).diff(currentDate) <= 0).map(item => ({ ...item, dueDate: translateDateToDayjs(item.dueDate) })) as TaskFilters[];
 
-        const progress = {
+        const categoriesProgress = {
         } as {
-            [categoryId: string]: { [month: number]: number[] }
+            [categoryId: string]: Dayjs[]
         };
 
         const monthWorkHours = {} as { [month: string]: number }
         const weekWorkHours = {} as { [day: string]: number }
 
+        const lastMonth = currentDate;
+        const firstMonth = currentDate.subtract(2, 'month');
         const requiredMonths = [
             +currentDate.format('M'),
             +currentDate.subtract(1, 'month').format('M'),
@@ -46,12 +49,11 @@ export const PageActions = {
             const month = task.dueDate.month() + 1;
             if (requiredMonths.includes(month)) {
                 const categoryId = task.categoryId.toString();
-                if (progress.hasOwnProperty(categoryId) && progress[categoryId].hasOwnProperty(month)) {
-                    progress[categoryId][month].push(task.dueDate.date());
+
+                if (categoriesProgress.hasOwnProperty(categoryId)) {
+                    categoriesProgress[categoryId].push(task.dueDate);
                 } else {
-                    progress[categoryId] = {
-                        [month]: [task.dueDate.date()],
-                    };
+                    categoriesProgress[categoryId] = [task.dueDate];
                 }
             };
 
@@ -71,6 +73,15 @@ export const PageActions = {
             }
 
         });
+
+        const progress = {} as MonthProgressType;
+
+        for (const categoryId in categoriesProgress) {
+            if (Object.prototype.hasOwnProperty.call(categoriesProgress, categoryId)) {
+                const element = categoriesProgress[categoryId];
+                progress[categoryId] = getFillingMonthPrecentage(element, firstMonth, lastMonth);
+            }
+        }
 
         const result = {
             projectCount: project.directories.length,

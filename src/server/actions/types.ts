@@ -232,7 +232,7 @@ export type TaskFilters = {
 
 export type MonthProgressSubMonths = { [month: number]: number[] };
 export type MonthProgressType = {
-    [categoryId: string]: MonthProgressSubMonths
+    [categoryId: string]: { from: number, to: number }[]
 };
 
 export type ReportPageInfoType = {

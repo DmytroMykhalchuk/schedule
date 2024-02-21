@@ -1,23 +1,38 @@
 import { MonthPercentage } from "@/server/actions/types";
+import { Dayjs } from "dayjs";
 
-export const getFillingMonthPrecentage = (days: number[]): MonthPercentage[] => {
+const dayDiff = 1000 * 60 * 60 * 24;
+
+export const getFillingMonthPrecentage = (days: Dayjs[], firstMonth: Dayjs, thirdMonth: Dayjs): MonthPercentage[] => {
     const percentage = [] as MonthPercentage[];
 
     if (!days.length) {
         return percentage;
     }
-    const sortedDays = days.sort((a, b) => b - a);
-    let startFrom: number;
-    let continueDay: number;
+    const firstDayOfMonth = firstMonth.startOf('month');
+    const totalDays = getDaysInMonths(firstMonth, thirdMonth);
+
+    const sortedDays = days.sort((a, b) => a.diff(b))
+
+    let startFrom: Dayjs;
+    let continueDay: Dayjs;
 
     sortedDays.forEach((dayNumber, index, days) => {
         if (index === 0) {
-            index === days.length - 1 && percentage.push(getPercentage(dayNumber, dayNumber));
+            if (index === days.length - 1) {
+                const passDaysFrom = getDiffInDays(firstDayOfMonth, dayNumber);
+                percentage.push(getPercentage(passDaysFrom, passDaysFrom, totalDays));
+            }
             startFrom = dayNumber;
         } else if (index === days.length - 1) {
-            percentage.push(getPercentage(startFrom, dayNumber));
-        } else if (continueDay && dayNumber - continueDay >= 7) {
-            percentage.push(getPercentage(startFrom, continueDay));
+            const passDaysFrom = getDiffInDays(firstDayOfMonth, startFrom);
+            const passDaysTo = getDiffInDays(firstDayOfMonth, dayNumber);
+            percentage.push(getPercentage(passDaysFrom, passDaysTo, totalDays));
+        } else if (continueDay && dayNumber.diff(continueDay) >= dayDiff) {
+            const passDaysFrom = getDiffInDays(firstDayOfMonth, startFrom);
+            const passDaysTo = getDiffInDays(firstDayOfMonth, dayNumber);
+
+            percentage.push(getPercentage(passDaysFrom, passDaysTo, totalDays));
 
             startFrom = dayNumber;
             continueDay = dayNumber;
@@ -27,13 +42,31 @@ export const getFillingMonthPrecentage = (days: number[]): MonthPercentage[] => 
 
     });
 
+    // console.log(
+    //     percentage,
+    //     days.map(item=>item.format('DD.MM.YYYY')),
+    // )
     return percentage
 
 };
 
-const getPercentage = (from: number, to: number): MonthPercentage => {
+const getPercentage = (fromDay: number, toDay: number, totalDays: number): MonthPercentage => {
     return {
-        from: from / 30 * 100 - 0.3,
-        to: to / 30 * 100 + 0.3,
+        from: fromDay / totalDays * 100 - totalDays / 100,
+        to: toDay / totalDays * 100 + totalDays / 100,
     };
+};
+
+const getDaysInMonths = (dateFrom: Dayjs, dateTo: Dayjs) => {
+    const firstDayOfMonth = dateFrom.startOf('month');
+
+    const lastDayOfMonth = dateTo.endOf('month');
+
+    const daysInMonth = lastDayOfMonth.diff(firstDayOfMonth, 'days') + 1;
+
+    return daysInMonth;
+};
+
+const getDiffInDays = (dateFrom: Dayjs, dateTo: Dayjs) => {
+    return dateTo.diff(dateFrom, 'days') + 1;
 };
