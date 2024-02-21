@@ -393,4 +393,12 @@ export const TaskActions = {
 
         return result;
     },
+
+    async getTasksByProjectId(projectId: string, mask = {}) {
+        await connectDB();
+
+        const tasks = await Task.find({ projectId }, mask).lean();
+
+        return tasks;
+    },
 };

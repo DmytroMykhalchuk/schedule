@@ -1,3 +1,4 @@
+import { Dayjs } from "dayjs";
 import mongoose from "mongoose"
 
 export type CategoryDB = {
@@ -219,3 +220,28 @@ export type TaskByUserUser = {
 };
 
 export type ThemeColor = 'warning' | 'primary' | 'secondary' | 'info';
+
+export type TaskFilters = {
+    _id: mongoose.Types.ObjectId,
+    assignee: mongoose.Types.ObjectId,
+    fromHour: number,
+    toHour: number,
+    dueDate: Dayjs,
+    categoryId: mongoose.Types.ObjectId
+};
+
+export type MonthProgressSubMonths = { [month: number]: number[] };
+export type MonthProgressType = {
+    [categoryId: string]: MonthProgressSubMonths
+};
+
+export type ReportPageInfoType = {
+    projectCount?: number,
+    userCount?: number,
+    progress?: MonthProgressType,
+    monthWorkHours?: { [month: string]: number },
+    weekWorkHours?: { [day: string]: number },
+    categories: CategoryRecord[],
+};
+
+export type MonthPercentage = { from: number, to: number };

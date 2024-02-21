@@ -5,9 +5,11 @@ import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import GroupIcon from '@mui/icons-material/Group';
 
 type CountCardsType = {
+    directoriesCount?: number,
+    usersCount?: number,
 };
 
-export const CountCards: React.FC<CountCardsType> = ({ }) => {
+export const CountCards: React.FC<CountCardsType> = ({ directoriesCount = 0, usersCount = 0 }) => {
 
     return (
         <Stack direction={'row'} justifyContent={"space-between"} spacing={2}>
@@ -15,17 +17,17 @@ export const CountCards: React.FC<CountCardsType> = ({ }) => {
                 Icon={<AccountTreeIcon color='warning' />}
                 buttonLabel="Add new project"
                 colorTheme="warning"
-                count={13}
+                count={directoriesCount}
                 createUrl="/app/add/directory"
                 title="Total projects"
             />
             <CountCard
                 Icon={<GroupIcon color='secondary' />}
-                buttonLabel="Add new project"
+                buttonLabel="Add new user"
                 colorTheme="secondary"
-                count={5}
-                createUrl="/app/add/directory"
-                title="Total projects"
+                count={usersCount}
+                createUrl="/app/add/users"
+                title="Total users"
             />
         </Stack>
     );
