@@ -109,3 +109,6 @@ export const defaultCategory: CategoryRecord = {
     name: 'No category',
     textColor: '#000000',
 };
+
+export const weekLength = 5;
+export const yearMonthLength = 12;

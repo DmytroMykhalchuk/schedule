@@ -14,7 +14,7 @@ type PageType = {
 const Page: React.FC<PageType> = async ({ }) => {
     const info = await getPageInfo();
 
-    // console.log(info.progress)
+// console.log(info)
 
     return (
         <>
@@ -24,16 +24,16 @@ const Page: React.FC<PageType> = async ({ }) => {
                 isCenter
             />
             <Grid container spacing={2}>
-                <Grid xs={12} lg={12}>
+                <Grid xs={12} lg={12} mb={2}>
                     <Stack spacing={2}>
                         <CountCards directoriesCount={info.projectCount} usersCount={info.userCount} />
                         <ProgressChart progress={info.progress} categories={info.categories} />
-                        <ProjectCategories />
+                        <ProjectCategories categories={info.categories}/>
                     </Stack>
                 </Grid>
-                <Grid xs={12} lg={12}>
+                <Grid xs={12} lg={12} mb={2}>
                     <Stack spacing={2}>
-                        <TotalWorkingHours />
+                        <TotalWorkingHours  monthWorkHours={info.monthWorkHours} weekWorkHours={info.weekWorkHours} />
                         <Revenue />
                     </Stack>
                 </Grid>

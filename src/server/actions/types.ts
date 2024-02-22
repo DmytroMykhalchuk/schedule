@@ -234,13 +234,14 @@ export type MonthProgressSubMonths = { [month: number]: number[] };
 export type MonthProgressType = {
     [categoryId: string]: { from: number, to: number }[]
 };
+export type WorkHours = { [dateItem: string]: number };
 
 export type ReportPageInfoType = {
     projectCount?: number,
     userCount?: number,
     progress?: MonthProgressType,
-    monthWorkHours?: { [month: string]: number },
-    weekWorkHours?: { [day: string]: number },
+    monthWorkHours?: WorkHours,
+    weekWorkHours?: WorkHours,
     categories: CategoryRecord[],
 };
 

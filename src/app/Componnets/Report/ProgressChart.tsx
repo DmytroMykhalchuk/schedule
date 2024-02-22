@@ -4,10 +4,9 @@ import Grid from '@mui/material/Grid';
 import styles from './styles.module.scss';
 import Typography from '@mui/material/Typography';
 import uk from 'dayjs/locale/uk';
-import { UIPaper } from '@/ui/UIPaper';
-import { CategoryRecord, MonthPercentage, MonthProgressSubMonths, MonthProgressType } from '@/server/actions/types';
+import { CategoryRecord, MonthProgressType } from '@/server/actions/types';
 import { ReactNode } from 'react';
-import { getFillingMonthPrecentage } from '@/utlis/getFillingMonthPrecentage';
+import { UIPaper } from '@/ui/UIPaper';
 
 dayjs.locale(uk);
 
@@ -18,12 +17,6 @@ type ProgressChartType = {
 
 export const ProgressChart: React.FC<ProgressChartType> = ({ progress, categories }) => {
     const currentDate = dayjs();
-
-    const monthPositions = {
-        [currentDate.subtract(2, 'month').month() + 1]: 0,
-        [currentDate.subtract(1, 'month').month() + 1]: 1,
-        [currentDate.month() + 1]: 2,
-    };
 
     const renderBars = (range: { from: number, to: number }[], color?: string): JSX.Element[] => {
         return range.map((item, index) => (
@@ -49,7 +42,7 @@ export const ProgressChart: React.FC<ProgressChartType> = ({ progress, categorie
                     <TableRowWrapper key={categoryId}>
                         {renderBars(element, targetCategory?.color)}
                     </TableRowWrapper>
-                )
+                );
             }
         }
 
@@ -75,6 +68,7 @@ export const ProgressChart: React.FC<ProgressChartType> = ({ progress, categorie
 type TableRowWrapperType = {
     children: ReactNode,
 };
+
 const TableRowWrapper: React.FC<TableRowWrapperType> = ({ children }) => (
     <Grid className={styles.progressProject__row} container sx={{ position: 'relative' }}>
         <Grid className={styles.progressProject__td} item xs={4}>
@@ -94,19 +88,16 @@ type BarType = {
 const Bar: React.FC<BarType> = ({ from, to, color }) => {
 
     return (
-        <>
-
-            <Box sx={{
-                position: 'absolute',
-                width: to - from + '%',
-                left: from + '%',
-                height: 16,
-                borderRadius: 4,
-                background: color || 'purple',
-                top: '50%',
-                transform: 'translateY(-50%)',
-            }}
-            />
-        </>
+        <Box sx={{
+            position: 'absolute',
+            width: to - from + '%',
+            left: from + '%',
+            height: 16,
+            borderRadius: 4,
+            background: color || 'purple',
+            top: '50%',
+            transform: 'translateY(-50%)',
+        }}
+        />
     );
 };

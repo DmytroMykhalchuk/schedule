@@ -1,97 +1,108 @@
-import { UIPaper } from "@/ui/UIPaper";
-import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
+'use client';
+import dayjs from 'dayjs';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import uk from 'dayjs/locale/uk';
-import dayjs from "dayjs";
-import { capitalizeFirstLetter } from "@/utlis/capitalizeFirstLetter";
+import { UIPaper } from '@/ui/UIPaper';
+import { useMemo, useRef, useState } from 'react';
+import { WorkHours } from '@/server/actions/types';
+import { WorkHoursChart } from './Elements/WorkHoursChart';
+import { weekLength, yearMonthLength } from '@/server/constants';
+
 dayjs.locale(uk);
 
-const workHours = [0, 2, 4, 6, 8];
+const currentDate = dayjs();
+const days = Array.from({ length: weekLength }).map((_, index) => currentDate.day(index + 1).format('dd'))
+const months = Array.from({ length: yearMonthLength }).map((_, index) => currentDate.subtract(index, 'month').format('MMM')).reverse()
+
+const weekAxisHours = [0, 2, 4, 6, 8];
+const monthAxisHours = [0, 40, 80, 120, 160, 200];
+
 
 type TotalWorkingHoursType = {
+    weekWorkHours?: WorkHours,
+    monthWorkHours?: WorkHours,
 };
 
-export const TotalWorkingHours: React.FC<TotalWorkingHoursType> = ({ }) => {
-    const currentDate = dayjs();
-    const data = [3, 4, 6, 7, 2];
+export const TotalWorkingHours: React.FC<TotalWorkingHoursType> = ({ weekWorkHours, monthWorkHours }) => {
+    const [length, setLength] = useState(weekLength as typeof weekLength | typeof yearMonthLength);
+    const [subtitles, setSubtitles] = useState(days as string[]);
+
+    const monthHours = useMemo(() => {
+        let total = 0;
+        let count = 0;
+
+        for (const monthNumber in monthWorkHours) {
+            if (Object.prototype.hasOwnProperty.call(monthWorkHours, monthNumber)) {
+                const element = monthWorkHours[monthNumber];
+                total += element;
+                count++;
+            }
+        }
+
+        return { total, avarage: total / count };
+    }, [monthWorkHours]);
+
+    const weekHours = useMemo(() => {
+        let total = 0;
+        let count = 0;
+        for (const numberOfDay in weekWorkHours) {
+            if (Object.prototype.hasOwnProperty.call(weekWorkHours, numberOfDay)) {
+                const element = weekWorkHours[numberOfDay];
+                total += element;
+                count++;
+            }
+        }
+        return { total, avarage: total / count };
+    }, [weekWorkHours]);
+
+    const handleChange = (event: SelectChangeEvent) => {
+        const choosedValue = +event.target.value;
+
+        if (choosedValue === weekLength) {
+            setSubtitles(days);
+            setLength(choosedValue);
+        } else if (choosedValue === yearMonthLength) {
+            setSubtitles(months);
+            setLength(choosedValue);
+        }
+    };
+
+    const renderSelect = (): JSX.Element => {
+        return (
+            <Select
+                value={length.toString()}
+                onChange={handleChange}
+                size='small'
+                color='warning'
+            >
+                <MenuItem value={weekLength}>Week</MenuItem>
+                <MenuItem value={yearMonthLength}>Year</MenuItem>
+            </Select>
+        );
+    };
+
     return (
         <>
             <UIPaper title="Total working hours"
-                titleSlot={'year'}
+                titleSlot={renderSelect()}
             >
                 <Stack direction={'row'} spacing={3}>
-                    <Typography variant="h4">37 hours</Typography>
-                    <Typography variant="caption" sx={{ p: 1, color: 'warning.main', backgroundColor: 'warning.light' }} >Avg. 148h/month</Typography>
+                    <Typography variant="h4">{length === weekLength ? weekHours.total : monthHours.total} hours</Typography>
+                    <Typography variant="caption" component={'div'} sx={{ p: 1, justifyContent: 'center', alignItems: 'center', display: 'flex', color: 'warning.main', backgroundColor: 'peachy.main', borderRadius: 4 }} >
+                        Avg. {monthHours.avarage}h/month
+                    </Typography>
                 </Stack>
-                <Grid container columns={11}>
-                    <Grid item xs={1}>
-                        <Stack>
-                            {workHours.reverse().map((item, index) => (
-                                <Box key={index} p={2} sx={{ position: 'relative', borderBottomWidth: '1px', borderBottomStyle: 'solid', borderBottomColor: 'transparent' }}>
-                                    <Typography textAlign={'center'} component={'div'} variant="caption" position={'absolute'} sx={{ bottom: '-25%', }}>{item} h</Typography>
-                                </Box>
-                            ))}
-                        </Stack>
-                    </Grid>
-                    {
-                        data.map((_, index) => (
-                            <Grid key={index} item xs={2} alignItems={'center'} sx={{ position: 'relative' }}>
-                                <Bar />
-                                <Stack alignItems={'center'} justifyContent={'center'}>
-                                    {workHours.reverse().map((item, index) => (
-                                        <Box key={index} p={2} sx={{ borderBottomStyle: 'solid', borderBottomColor: '#ccc', borderBottomWidth: '1px', width: '100%', }}>
-                                        </Box>
-                                    ))}
-                                </Stack>
-                            </Grid>
-                        ))
-                    }
-                </Grid>
-                <Grid container columns={11} pt={2}>
-                    <Grid item xs={1}></Grid>
-                    {
-                        data.map((_, index) => (
-                            <Grid key={index} item xs={2}>
-                                <Typography variant="caption" component={'div'} textAlign={'center'}>
-                                    {capitalizeFirstLetter(currentDate.day(index + 1).format('dd'))}
-                                </Typography>
-                            </Grid>
-                        ))
-                    }
-                </Grid>
+                <WorkHoursChart
+                    length={length}
+                    subtitles={subtitles}
+                    workinkgHours={(length === weekLength ? weekWorkHours : monthWorkHours) || {}}
+                    axisHours={length === weekLength ? weekAxisHours : monthAxisHours}
+                />
             </UIPaper>
         </>
     );
 };
 
-type BarType = {
-};
-
-export const Bar: React.FC<BarType> = ({ }) => {
-
-    return (
-        <Box sx={{
-            position:'absolute',
-            bottom:0,
-            top:'12%',
-            backgroundColor:'peachy.main',
-            borderRadius:4,
-            width:'1em',
-            left:'50%',
-            transform:'translateX(-50%)',
-            display:'flex',
-            flexDirection:'column',
-            justifyContent:'flex-end',
-        }}>
-            <Box sx={{
-                backgroundColor:'warning.main',
-                height:'80%',
-                bottom:0,
-                borderRadius:4,
-            }}/>
-
-        </Box>
-    );
-};
