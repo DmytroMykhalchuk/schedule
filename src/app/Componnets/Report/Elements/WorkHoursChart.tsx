@@ -59,7 +59,7 @@ export const WorkHoursChart: React.FC<WorkHoursChartType> = ({ workinkgHours, le
                     ))
                 }
             </Grid>
-            <Grid container columns={11} pt={2}>
+            <Grid container columns={columnInfo.totalColumn} pt={2}>
                 <Grid item xs={columnInfo.firstColumn}></Grid>
                 {
                     subtitles.map((item, index) => (

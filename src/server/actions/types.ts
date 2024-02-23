@@ -236,6 +236,57 @@ export type MonthProgressType = {
 };
 export type WorkHours = { [dateItem: string]: number };
 
+
+
+export type MonthPercentage = { from: number, to: number };
+
+export type RevenueStoreType = {
+    cost: number,
+    date: string,
+    note: string,
+};
+
+export type UpdateRevenueType = RevenueStoreType & { id: string };
+
+export type RevenueDBdType = {
+    _id: mongoose.Types.ObjectId,
+    projectId: mongoose.Types.ObjectId,
+    author: mongoose.Types.ObjectId,
+    cost: number,
+    targetDate: Date,
+    note: string,
+    createdAt: Date,
+};
+
+export type RevenueRecordType = {
+    _id: string,
+    projectId: string,
+    author: string,
+    cost: number,
+    targetDate: Date,
+    note: string,
+    createdAt: Date,
+};
+
+export type RevenueRecordPopulatedType = {
+    _id: string,
+    projectId: string,
+    author: {
+        _id: string,
+        name: string,
+        picture: string,
+        email: string,
+    },
+    cost: number,
+    targetDate: Date,
+    note: string,
+    createdAt: Date,
+};
+
+export type RevenueItemPopulatedDB = Omit<RevenueDBdType, 'author'> & { author: Pick<UserDB, '_id' | 'email' | 'picture' | 'name' | 'email'> };
+
+export type RevenueChartType = { [monthNumber: number]: number };
+
 export type ReportPageInfoType = {
     projectCount?: number,
     userCount?: number,
@@ -243,6 +294,5 @@ export type ReportPageInfoType = {
     monthWorkHours?: WorkHours,
     weekWorkHours?: WorkHours,
     categories: CategoryRecord[],
+    revenue: RevenueChartType,
 };
-
-export type MonthPercentage = { from: number, to: number };

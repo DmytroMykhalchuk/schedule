@@ -1,3 +1,4 @@
+import { RevenueActions } from '@/server/actions/RevenueActions';
 import { workHours } from './../constants';
 import dayjs, { Dayjs } from 'dayjs';
 import connectDB from '../connectDB';
@@ -25,7 +26,6 @@ export const PageActions = {
         };
 
         const tasks = await TaskActions.getTasksByProjectId(project._id, { assignee: 1, fromHour: 1, toHour: 1, dueDate: 1, categoryId: 1 });
-        // console.log(tasks)
         //todo due date to timestamp
         const prevTasks = tasks.filter(task => translateDateToDayjs(task.dueDate).diff(currentDate) <= 0).map(item => ({ ...item, dueDate: translateDateToDayjs(item.dueDate) })) as TaskFilters[];
 
@@ -83,6 +83,8 @@ export const PageActions = {
             }
         }
 
+        const revenue = await RevenueActions.getYearRevenue(project._id);
+
         const result = {
             projectCount: project.directories.length,
             userCount: project.users.length,
@@ -93,6 +95,7 @@ export const PageActions = {
                 ...category.toObject(),
                 _id: category._id.toString(),
             })),
+            revenue,
         };
 
         return result;

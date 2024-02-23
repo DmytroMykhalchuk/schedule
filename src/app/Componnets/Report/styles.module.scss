@@ -17,3 +17,22 @@
         padding: 1em 0;
     }
 }
+
+.record {
+    padding: 8px;
+    border-radius: 16px;
+    align-items: center;
+
+    &__action {
+        opacity: 0;
+    }
+
+
+    &:hover {
+        background-color: $peachy-light;
+
+        .record__action {
+            opacity: 1;
+        }
+    }
+}

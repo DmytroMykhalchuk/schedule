@@ -10,6 +10,7 @@ import { useMemo, useRef, useState } from 'react';
 import { WorkHours } from '@/server/actions/types';
 import { WorkHoursChart } from './Elements/WorkHoursChart';
 import { weekLength, yearMonthLength } from '@/server/constants';
+import { UIAvarageCaption } from '../UI/UIAvarageCaption';
 
 dayjs.locale(uk);
 
@@ -42,7 +43,7 @@ export const TotalWorkingHours: React.FC<TotalWorkingHoursType> = ({ weekWorkHou
             }
         }
 
-        return { total, avarage: total / count };
+        return { total, avarage: Math.round(total / count) };
     }, [monthWorkHours]);
 
     const weekHours = useMemo(() => {
@@ -55,7 +56,7 @@ export const TotalWorkingHours: React.FC<TotalWorkingHoursType> = ({ weekWorkHou
                 count++;
             }
         }
-        return { total, avarage: total / count };
+        return { total, avarage: Math.round(total / count) };
     }, [weekWorkHours]);
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -89,20 +90,37 @@ export const TotalWorkingHours: React.FC<TotalWorkingHoursType> = ({ weekWorkHou
             <UIPaper title="Total working hours"
                 titleSlot={renderSelect()}
             >
-                <Stack direction={'row'} spacing={3}>
+                <Stack direction={'row'} spacing={3} alignItems={'center'}>
                     <Typography variant="h4">{length === weekLength ? weekHours.total : monthHours.total} hours</Typography>
-                    <Typography variant="caption" component={'div'} sx={{ p: 1, justifyContent: 'center', alignItems: 'center', display: 'flex', color: 'warning.main', backgroundColor: 'peachy.main', borderRadius: 4 }} >
-                        Avg. {monthHours.avarage}h/month
-                    </Typography>
+                    <UIAvarageCaption
+                        caption={`Avg. ${monthHours.avarage}h/month`}
+                        fontColor='warning.main'
+                        backgroundColor='peachy.main'
+                    />
                 </Stack>
                 <WorkHoursChart
                     length={length}
                     subtitles={subtitles}
-                    workinkgHours={(length === weekLength ? weekWorkHours : monthWorkHours) || {}}
+                    workinkgHours={(length === weekLength ? weekWorkHours : reverseKeyMonthWorkHours(monthWorkHours)) || {}}
                     axisHours={length === weekLength ? weekAxisHours : monthAxisHours}
                 />
-            </UIPaper>
+            </UIPaper >
         </>
     );
 };
 
+const reverseKeyMonthWorkHours = (monthWorkHours?: WorkHours): WorkHours => {
+    const transformedWorkHours = {} as WorkHours;
+    if (!monthWorkHours) return transformedWorkHours;
+
+    const throttle = Array.from({ length: 12 }).map((_, index) => dayjs().subtract(index, 'month').month() + 1);
+
+    for (const monthPosition in monthWorkHours) {
+        if (Object.prototype.hasOwnProperty.call(monthWorkHours, monthPosition)) {
+            const element = monthWorkHours[monthPosition];
+            transformedWorkHours[11 - throttle.indexOf(+monthPosition)] = element;
+        }
+    }
+
+    return transformedWorkHours;
+}

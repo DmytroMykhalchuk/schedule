@@ -301,7 +301,6 @@ export const TaskActions = {
             });
 
             if (checkTask) {
-                console.log(checkTask)
                 continue;
             }
 

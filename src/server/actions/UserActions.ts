@@ -73,7 +73,7 @@ export const UserActions = {
             },
         }, selectMask);
 
-        return person;
+        return person.toObject();
     },
 
     async getUsersByIds(ids: string[], mask = {} as any): Promise<UserDB[]> {

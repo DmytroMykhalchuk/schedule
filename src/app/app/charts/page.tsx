@@ -14,8 +14,6 @@ type PageType = {
 const Page: React.FC<PageType> = async ({ }) => {
     const info = await getPageInfo();
 
-// console.log(info)
-
     return (
         <>
             <HeaderLayout
@@ -28,13 +26,13 @@ const Page: React.FC<PageType> = async ({ }) => {
                     <Stack spacing={2}>
                         <CountCards directoriesCount={info.projectCount} usersCount={info.userCount} />
                         <ProgressChart progress={info.progress} categories={info.categories} />
-                        <ProjectCategories categories={info.categories}/>
+                        <ProjectCategories categories={info.categories} />
                     </Stack>
                 </Grid>
                 <Grid xs={12} lg={12} mb={2}>
                     <Stack spacing={2}>
-                        <TotalWorkingHours  monthWorkHours={info.monthWorkHours} weekWorkHours={info.weekWorkHours} />
-                        <Revenue />
+                        <TotalWorkingHours monthWorkHours={info.monthWorkHours} weekWorkHours={info.weekWorkHours} />
+                        <Revenue chartData={info.revenue} />
                     </Stack>
                 </Grid>
             </Grid>

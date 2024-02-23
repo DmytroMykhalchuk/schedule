@@ -42,10 +42,6 @@ export const getFillingMonthPrecentage = (days: Dayjs[], firstMonth: Dayjs, thir
 
     });
 
-    // console.log(
-    //     percentage,
-    //     days.map(item=>item.format('DD.MM.YYYY')),
-    // )
     return percentage
 
 };

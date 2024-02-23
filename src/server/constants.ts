@@ -112,3 +112,5 @@ export const defaultCategory: CategoryRecord = {
 
 export const weekLength = 5;
 export const yearMonthLength = 12;
+
+export const revenuePerPage = 10;
