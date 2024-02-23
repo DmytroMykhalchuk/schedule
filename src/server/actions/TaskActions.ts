@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import mongoose from 'mongoose';
 import Project from '../models/Project';
 import Task from '../models/Task';
-import { AuthType, CommentType, StoreCommentType, StoreTaskType, TaskDB, TaskShortType, TaskUpdateType, UrgentTask, ViewTaskType, ProccessStatusType, PriorityType, StatusType } from './types';
+import { AuthType, CommentType, StoreCommentType, StoreTaskType, TaskDB, TaskShortType, TaskUpdateType, UrgentTask, ViewTaskType, ProccessStatusType, PriorityType, StatusType, TaskByUserDB, TaskByUserUser, TaskByUserRecord } from './types';
 import { CommentActions } from './CommentActions';
 import { ObjectId } from 'mongodb';
 import { ProjectActions } from './ProjectActions';
@@ -112,6 +112,8 @@ export const TaskActions = {
                 _id: item._id.toString(),
                 userId: item.userId.toString(),
                 isOwner: item.userId.toString() === user._id.toString(),
+                taskId: item.taskId.toString(),
+                projectId: item.projectId.toString(),
             };
         });
 
@@ -299,7 +301,6 @@ export const TaskActions = {
             });
 
             if (checkTask) {
-                console.log(checkTask)
                 continue;
             }
 
@@ -313,7 +314,6 @@ export const TaskActions = {
 
             taskIds.push(task._id);
         }
-
 
         return { userIds, taskIds };
     },
@@ -341,5 +341,63 @@ export const TaskActions = {
         const result = await Task.deleteMany({ projectId: projectId });
     },
 
+    async getTaskByUser(authParams: AuthType) {
+        await connectDB();
 
+        const requiredDates = [
+            dayjs().day(1).format('DD.MM.YYYY'),
+            dayjs().day(2).format('DD.MM.YYYY'),
+            dayjs().day(3).format('DD.MM.YYYY'),
+            dayjs().day(4).format('DD.MM.YYYY'),
+            dayjs().day(5).format('DD.MM.YYYY'),
+        ];
+
+        const project = await ProjectActions.getProjectByFilters(authParams, { _id: 1 });
+
+        const tasks = await Task.find({ projectId: project?._id, dueDate: { $in: requiredDates } }, { dueDate: 1, name: 1, assignee: 1, status: 1, priority: 1, });
+
+        const taskTree = {} as { [id: string]: TaskByUserDB[] };
+        const userIds = [] as string[];
+
+        tasks.forEach(task => {
+            if (taskTree.hasOwnProperty(task.assignee)) {
+                taskTree[task.assignee].push(task.toObject());
+            } else {
+                userIds.push(task.assignee);
+                taskTree[task.assignee] = [task.toObject()];
+            }
+        });
+
+        const users = await UserActions.getUsersByIds(userIds, { name: 1, picture: 1 });
+
+        const result = {} as { [id: string]: { tasks: TaskByUserRecord[], user: TaskByUserUser } };
+
+        for (const key in taskTree) {
+            if (Object.prototype.hasOwnProperty.call(taskTree, key)) {
+                const element = taskTree[key];
+                const targetUser = users.find(user => user._id.toString() === key);
+
+                if (!targetUser) { continue; }
+
+                result[key] = {
+                    tasks: element.map(task => ({ ...task, _id: task._id.toString() })),
+                    user: {
+                        _id: targetUser._id,
+                        name: targetUser.name,
+                        picture: targetUser.picture,
+                    },
+                }
+            }
+        }
+
+        return result;
+    },
+
+    async getTasksByProjectId(projectId: string, mask = {}) {
+        await connectDB();
+
+        const tasks = await Task.find({ projectId }, mask).lean();
+
+        return tasks;
+    },
 };

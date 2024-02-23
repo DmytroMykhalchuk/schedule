@@ -9,7 +9,7 @@ type PageType = {
 const Page: React.FC<PageType> = ({ params }) => {
     const { id } = params;
     return (
-        <TaskDelete taskId={id} backUrl={`/app/my-tasks/${id}`} />
+        <TaskDelete taskId={id} backUrl={`/app/add/tasks`} />
     );
 };
 

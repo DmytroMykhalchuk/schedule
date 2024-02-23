@@ -1,12 +1,12 @@
+import { RevenuePage } from '@/app/Componnets/Report/RevenuePage';
+
 type PageType = {
 };
 
 const Page: React.FC<PageType> = ({ }) => {
 
     return (
-        <>
-        design
-        </>
+        <RevenuePage />
     );
 };
 

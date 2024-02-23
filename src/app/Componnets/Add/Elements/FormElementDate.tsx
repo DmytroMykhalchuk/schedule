@@ -12,7 +12,6 @@ import { getCookieValue } from '@/utlis/getCookieValue';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { useEffect, useRef, useState } from 'react';
-import 'dayjs/locale/uk';
 import { HourSelect } from './HourSelect';
 import { CalendarActionBar } from './CalendarActionBar';
 import { CalendarToolbar } from './CalendarToolbar';

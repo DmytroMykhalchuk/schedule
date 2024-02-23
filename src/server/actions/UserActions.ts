@@ -72,15 +72,15 @@ export const UserActions = {
                 $in: sessionId,
             },
         }, selectMask);
-        
-        return person;
+
+        return person.toObject();
     },
 
     async getUsersByIds(ids: string[], mask = {} as any): Promise<UserDB[]> {
         await connectDB();
         const users = await User.find({ _id: { $in: ids } }, mask);
 
-        return users;
+        return users.map(user => user.toObject());
     },
 
     async randomGenerate(count = 10): Promise<void> {

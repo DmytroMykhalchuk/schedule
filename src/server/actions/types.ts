@@ -1,3 +1,4 @@
+import { Dayjs } from "dayjs";
 import mongoose from "mongoose"
 
 export type CategoryDB = {
@@ -104,6 +105,16 @@ export type TaskShortType = {
     toHour: number,
 };
 
+export type TaskByUserDB = {
+    _id: mongoose.Types.ObjectId
+    name: string,
+    assignee: string,
+    status: StatusType,
+    dueDate: string,
+    priority: PriorityType,
+};
+export type TaskByUserRecord = Omit<TaskByUserDB, '_id'> & { _id: string }
+
 export type ViewTaskType = {
     _id: string,
     name: string,
@@ -152,8 +163,8 @@ export type CommentType = {
 };
 
 export type ProjectUsers = {
-    name: string,
     _id: string,
+    name: string,
     picture: string,
     email: string
 };
@@ -202,3 +213,86 @@ export type TeamItemType = {
     role: string,
 };
 
+export type TaskByUserUser = {
+    _id: string,
+    name: string,
+    picture: string,
+};
+
+export type ThemeColor = 'warning' | 'primary' | 'secondary' | 'info';
+
+export type TaskFilters = {
+    _id: mongoose.Types.ObjectId,
+    assignee: mongoose.Types.ObjectId,
+    fromHour: number,
+    toHour: number,
+    dueDate: Dayjs,
+    categoryId: mongoose.Types.ObjectId
+};
+
+export type MonthProgressSubMonths = { [month: number]: number[] };
+export type MonthProgressType = {
+    [categoryId: string]: { from: number, to: number }[]
+};
+export type WorkHours = { [dateItem: string]: number };
+
+
+
+export type MonthPercentage = { from: number, to: number };
+
+export type RevenueStoreType = {
+    cost: number,
+    date: string,
+    note: string,
+};
+
+export type UpdateRevenueType = RevenueStoreType & { id: string };
+
+export type RevenueDBdType = {
+    _id: mongoose.Types.ObjectId,
+    projectId: mongoose.Types.ObjectId,
+    author: mongoose.Types.ObjectId,
+    cost: number,
+    targetDate: Date,
+    note: string,
+    createdAt: Date,
+};
+
+export type RevenueRecordType = {
+    _id: string,
+    projectId: string,
+    author: string,
+    cost: number,
+    targetDate: Date,
+    note: string,
+    createdAt: Date,
+};
+
+export type RevenueRecordPopulatedType = {
+    _id: string,
+    projectId: string,
+    author: {
+        _id: string,
+        name: string,
+        picture: string,
+        email: string,
+    },
+    cost: number,
+    targetDate: Date,
+    note: string,
+    createdAt: Date,
+};
+
+export type RevenueItemPopulatedDB = Omit<RevenueDBdType, 'author'> & { author: Pick<UserDB, '_id' | 'email' | 'picture' | 'name' | 'email'> };
+
+export type RevenueChartType = { [monthNumber: number]: number };
+
+export type ReportPageInfoType = {
+    projectCount?: number,
+    userCount?: number,
+    progress?: MonthProgressType,
+    monthWorkHours?: WorkHours,
+    weekWorkHours?: WorkHours,
+    categories: CategoryRecord[],
+    revenue: RevenueChartType,
+};

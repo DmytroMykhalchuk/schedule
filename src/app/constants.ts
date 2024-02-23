@@ -12,29 +12,30 @@ export type MenuItemTyp = {
     activeChecks: string[],
 }
 
-export const menuList: MenuItemTyp[] = [{
-    path: '/app/',
-    Icon: HomeIcon,
-    activeChecks: ['/app/my-tasks/','/app/'],
-},
-{
-    path: '/app/calendar/',
-    Icon: CalendarMonthIcon,
-    activeChecks: ['/app/calendar/','/app/calendar/month/','/app/calendar/week/'],
-},
-{
-    path: '/app/design/',
-    Icon: DesignServicesIcon,
-    activeChecks: ['/app/design/'],
-},
-{
-    path: '/app/charts/',
-    Icon: BubbleChartIcon,
-    activeChecks: ['/app/charts/'],
-},
-{
-    path: '/app/add/',
-    Icon: AddBoxIcon,
-    activeChecks: ['/app/add/','/app/add/directory/','/app/add/tasks/','/app/add/team/','/app/add/invitations/','/app/add/members/','/app/add/categories/'],
-},
-]
+export const menuList: MenuItemTyp[] = [
+    {
+        path: '/app/',
+        Icon: HomeIcon,
+        activeChecks: ['/app/my-tasks/', '/app/'],
+    },
+    {
+        path: '/app/calendar/',
+        Icon: CalendarMonthIcon,
+        activeChecks: ['/app/calendar/', '/app/calendar/month/', '/app/calendar/week/'],
+    },
+    {
+        path: '/app/overview/',
+        Icon: DesignServicesIcon,
+        activeChecks: ['/app/overview/'],
+    },
+    {
+        path: '/app/charts/',
+        Icon: BubbleChartIcon,
+        activeChecks: ['/app/charts/'],
+    },
+    {
+        path: '/app/add/',
+        Icon: AddBoxIcon,
+        activeChecks: ['/app/add/', '/app/add/directory/', '/app/add/tasks/', '/app/add/team/', '/app/add/invitations/', '/app/add/members/', '/app/add/categories/'],
+    },
+];

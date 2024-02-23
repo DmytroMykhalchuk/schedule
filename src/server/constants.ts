@@ -57,6 +57,11 @@ export const statuses = [
         statusName: 'done',
         primaryColor: '#DBB200',
         secondaryColor: '#FCFCE5',
+    },
+    {
+        statusName: 'pasued',
+        primaryColor: '#7B7F8E',
+        secondaryColor: '#F5F5F5',
     }
 ];
 
@@ -104,3 +109,8 @@ export const defaultCategory: CategoryRecord = {
     name: 'No category',
     textColor: '#000000',
 };
+
+export const weekLength = 5;
+export const yearMonthLength = 12;
+
+export const revenuePerPage = 10;
