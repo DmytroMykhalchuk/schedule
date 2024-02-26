@@ -7,6 +7,7 @@ import User from '../models/User';
 import { UserActions } from './UserActions';
 import Directory from '../models/Directory';
 import { getRandomString } from '../utils/utils';
+import { TaskActions } from './TaskActions';
 
 export const DirectoryActions = {
     async storeDirectory(directoryName: string, projectId: string): Promise<ProccessStatusType> {
@@ -70,7 +71,7 @@ export const DirectoryActions = {
                 _id: new ObjectId(),
                 name: directoryName,
             });
-    
+
             const directory = await directoryModel.save();
             generatedDirectories.push(directory._id);
         }
@@ -85,6 +86,20 @@ export const DirectoryActions = {
         await connectDB();
 
         await Directory.deleteMany({ _id: directoryIds });
-    }
+    },
+
+    async getDirectoryAndTasks(authParams: AuthType, directoryId: string) {
+        await connectDB();
+
+        const project = await ProjectActions.getProjectByFilters(authParams, { categories: 1 });
+
+        if (!project) {
+            return {};
+        }
+        const directory = await Directory.findOne({ _id: directoryId }).orFail();
+
+        const tasks = await TaskActions.getTasksByDirectory(project._id, directory._id, project.categories);
+        return { tasks, directory };
+    },
 
 };

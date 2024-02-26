@@ -6,7 +6,7 @@ mongoose.Promise = global.Promise;
 const taskSchema = new Schema({
     projectId: { type: Schema.Types.ObjectId, required: true, ref: 'Project' },
     name: { type: String, required: true, },
-    assignee: { type: String, default: '', },
+    assignee: { type: mongoose.Types.ObjectId, ref: 'User', required: false, },
     status: { type: String, required: true, },
     directory: { type: mongoose.Types.ObjectId, ref: 'Directory', },
     dueDate: { type: String, default: '', },
