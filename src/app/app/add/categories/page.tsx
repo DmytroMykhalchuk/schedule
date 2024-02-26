@@ -1,11 +1,8 @@
-import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { categoryColors } from '@/server/constants';
+import { CategoryForm } from '@/app/Componnets/Add/CategoryForm';
+import { CategoryList } from '@/app/Componnets/Add/CategoryList';
 import { createCategory } from './actions';
 import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
-import { UIInputField } from '@/app/Componnets/UI/UIInputField';
-import { CategoryList } from '@/app/Componnets/Add/CategoryList';
-import { CategoryForm } from '@/app/Componnets/Add/CategoryForm';
 
 type PageType = {
 };

@@ -18,7 +18,8 @@ export const ProjectDirectories: React.FC<ProjectDirectoriesType> = async ({ }) 
                     <ProjectDirectoryItem
                         key={index}
                         title={item.name}
-                        users={[]}
+                        users={item.users}
+                        id={item._id.toString()}
                     />
                 ))
             }

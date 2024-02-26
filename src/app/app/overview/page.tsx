@@ -29,7 +29,7 @@ const Page: React.FC<PageType> = ({ }) => {
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <Stack spacing={2}>
-                        <OverviewProgress />
+                        {/* <OverviewProgress /> */}
                         <OverviewTaskUser />
                     </Stack>
                 </Grid>

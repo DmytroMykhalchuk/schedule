@@ -3,7 +3,6 @@ import Stack from "@mui/material/Stack";
 import Box from '@mui/material/Box'
 import { HomeHeader } from "../Componnets/Home/HomeHeader";
 import { ProjectDirectories } from "../Componnets/Home/ProjectDirectories";
-import { HomeCalendar } from "../Componnets/Home/HomeCalendar";
 import { TasksWrapepr } from "../Componnets/Home/TasksWrapepr";
 import { NewComments } from "../Componnets/Home/NewComments";
 import { Team } from "../Componnets/Home/Team";
@@ -11,7 +10,7 @@ import { Team } from "../Componnets/Home/Team";
 type PageType = {
 };
 
-const Page: React.FC<PageType> = ({ }) => {
+const Page: React.FC<PageType> = () => {
 
     return (
         <>

@@ -90,7 +90,7 @@ export type TaskDB = {
     comments: mongoose.Types.ObjectId[],
     fromHour: number,
     toHour: number,
-    categoryId: mongoose.Types.ObjectId,
+    categoryId: string,
 };
 
 export type TaskShortType = {
@@ -176,6 +176,12 @@ export type ProccessStatusType = {
 export type DirectoryType = {
     _id: mongoose.Types.ObjectId,
     name: string,
+};
+
+export type DirectoryWithUsersType = {
+    _id: mongoose.Types.ObjectId,
+    name: string,
+    users: { name: string, picture: string, email: string }[],
 };
 
 export type UpdateDirectoryType = {
@@ -296,3 +302,25 @@ export type ReportPageInfoType = {
     categories: CategoryRecord[],
     revenue: RevenueChartType,
 };
+
+export type ByDirectoryIdTaskDB = Omit<TaskDB, 'assignee' | 'projectId' | 'directory' | 'dueDate' | 'description' | 'subtasks' | 'comments' | 'fromHour' | 'toHour'> & { assignee: { _id: mongoose.Types.ObjectId, name: string, email: string, picture: string }, category?: CategoryDB };
+
+export type ByDirectoryTaskRecord = {
+    assignee: {
+        _id: string;
+        name: string;
+        email: string;
+        picture: string;
+    };
+    category: CategoryDB | undefined;
+    _id: string;
+    name: string;
+    status: StatusType;
+    priority: PriorityType;
+    categoryId: string;
+}
+
+
+
+
+

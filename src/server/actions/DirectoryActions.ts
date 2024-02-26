@@ -1,4 +1,4 @@
-import { ProccessStatusType, AuthType, DirectoryType, UpdateDirectoryType } from './types';
+import { ProccessStatusType, AuthType, DirectoryType, UpdateDirectoryType, TaskDB, DirectoryWithUsersType } from './types';
 import connectDB from "../connectDB";
 import Project from "../models/Project";
 import { ProjectActions } from './ProjectActions';
@@ -7,6 +7,7 @@ import User from '../models/User';
 import { UserActions } from './UserActions';
 import Directory from '../models/Directory';
 import { getRandomString } from '../utils/utils';
+import { TaskActions } from './TaskActions';
 
 export const DirectoryActions = {
     async storeDirectory(directoryName: string, projectId: string): Promise<ProccessStatusType> {
@@ -24,14 +25,25 @@ export const DirectoryActions = {
         return { success: true };
     },
 
-    async getDirectories(auth: AuthType): Promise<DirectoryType[]> {
+    async getDirectories(auth: AuthType): Promise<DirectoryWithUsersType[]> {
         await connectDB();
 
         const user = await UserActions.getUserBySessionId(auth.sessionId);
 
-        const project = await Project.findOne({ _id: auth.projectId, users: user._id }).populate('directories');
+        const project = await Project.findOne({ _id: auth.projectId, users: user._id }, { directories: 1 }).populate('directories').orFail();
 
-        return project?.directories || []
+        const tasks = await TaskActions.getTasksByProjectId(project._id, { assignee: 1, directory: 1, }, true);
+
+        const preparedDirectories = project?.directories.map((item: DirectoryType) => ({
+            _id: item._id,
+            name: item.name,
+            users: tasks
+                .filter((task) => task.directory.toString() === item._id.toString())
+                .filter((value, index, self) => self.indexOf(value) === index) //unique
+                .map((item) => item.assignee),
+        }));
+
+        return preparedDirectories;
     },
 
     async getDirectory(directoryId: string): Promise<DirectoryType> {
@@ -70,7 +82,7 @@ export const DirectoryActions = {
                 _id: new ObjectId(),
                 name: directoryName,
             });
-    
+
             const directory = await directoryModel.save();
             generatedDirectories.push(directory._id);
         }
@@ -85,6 +97,20 @@ export const DirectoryActions = {
         await connectDB();
 
         await Directory.deleteMany({ _id: directoryIds });
-    }
+    },
+
+    async getDirectoryAndTasks(authParams: AuthType, directoryId: string) {
+        await connectDB();
+
+        const project = await ProjectActions.getProjectByFilters(authParams, { categories: 1 });
+
+        if (!project) {
+            return {};
+        }
+        const directory = await Directory.findOne({ _id: directoryId }).orFail();
+
+        const tasks = await TaskActions.getTasksByDirectory(project._id, directory._id, project.categories);
+        return { tasks, directory };
+    },
 
 };

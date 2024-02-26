@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import mongoose from 'mongoose';
 import Project from '../models/Project';
 import Task from '../models/Task';
-import { AuthType, CommentType, StoreCommentType, StoreTaskType, TaskDB, TaskShortType, TaskUpdateType, UrgentTask, ViewTaskType, ProccessStatusType, PriorityType, StatusType, TaskByUserDB, TaskByUserUser, TaskByUserRecord } from './types';
+import { AuthType, CommentType, StoreCommentType, StoreTaskType, TaskDB, TaskShortType, TaskUpdateType, UrgentTask, ViewTaskType, ProccessStatusType, PriorityType, StatusType, TaskByUserDB, TaskByUserUser, TaskByUserRecord, ByDirectoryIdTaskDB, CategoryDB } from './types';
 import { CommentActions } from './CommentActions';
 import { ObjectId } from 'mongodb';
 import { ProjectActions } from './ProjectActions';
@@ -393,11 +393,37 @@ export const TaskActions = {
         return result;
     },
 
-    async getTasksByProjectId(projectId: string, mask = {}) {
+    async getTasksByProjectId(projectId: string, mask = {}, withUser = false) {
         await connectDB();
-
-        const tasks = await Task.find({ projectId }, mask).lean();
-
+        let tasks = [] as { assignee: { name: string, email: string, picture: string }, directory: string }[];
+        if (withUser) {
+            tasks = await Task.find({ projectId }, mask).populate('assignee', 'picture email name').lean();
+        } else {
+            tasks = await Task.find({ projectId }, mask).lean();
+        }
         return tasks;
     },
+
+    async getTasksByDirectory(projectId: string, directoryId: string, categories: CategoryDB[]) {
+        await connectDB();
+
+        const tasks = await Task
+            .find({ projectId: projectId, directory: directoryId }, { name: 1, assignee: 1, status: 1, dueDate: 1, priority: 1, categoryId: 1 })
+            .populate('assignee', 'picture email name')
+            .lean() as ByDirectoryIdTaskDB[];
+
+        const preparedTasks = tasks.map((task) => {
+            const category = categories.find(item => item._id.toString() === task.categoryId)
+            return {
+                ...task,
+                assignee: {
+                    ...task.assignee,
+                    _id: task.assignee._id.toString(),
+                },
+                category: category,
+                _id: task._id.toString(),
+            }
+        });
+        return preparedTasks;
+    }
 };
