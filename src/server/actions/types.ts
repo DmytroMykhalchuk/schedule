@@ -178,6 +178,12 @@ export type DirectoryType = {
     name: string,
 };
 
+export type DirectoryWithUsersType = {
+    _id: mongoose.Types.ObjectId,
+    name: string,
+    users: { name: string, picture: string, email: string }[],
+};
+
 export type UpdateDirectoryType = {
     directoryId: string,
     directoryName: string,

@@ -16,7 +16,7 @@ export const menuList: MenuItemTyp[] = [
     {
         path: '/app/',
         Icon: HomeIcon,
-        activeChecks: ['/app/my-tasks/', '/app/'],
+        activeChecks: ['/app/my-tasks/', '/app/','/app/directories/'],
     },
     {
         path: '/app/calendar/',

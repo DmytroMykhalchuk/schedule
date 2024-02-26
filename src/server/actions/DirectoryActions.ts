@@ -1,4 +1,4 @@
-import { ProccessStatusType, AuthType, DirectoryType, UpdateDirectoryType } from './types';
+import { ProccessStatusType, AuthType, DirectoryType, UpdateDirectoryType, TaskDB, DirectoryWithUsersType } from './types';
 import connectDB from "../connectDB";
 import Project from "../models/Project";
 import { ProjectActions } from './ProjectActions';
@@ -25,14 +25,25 @@ export const DirectoryActions = {
         return { success: true };
     },
 
-    async getDirectories(auth: AuthType): Promise<DirectoryType[]> {
+    async getDirectories(auth: AuthType): Promise<DirectoryWithUsersType[]> {
         await connectDB();
 
         const user = await UserActions.getUserBySessionId(auth.sessionId);
 
-        const project = await Project.findOne({ _id: auth.projectId, users: user._id }).populate('directories');
+        const project = await Project.findOne({ _id: auth.projectId, users: user._id }, { directories: 1 }).populate('directories').orFail();
 
-        return project?.directories || []
+        const tasks = await TaskActions.getTasksByProjectId(project._id, { assignee: 1, directory: 1, }, true);
+
+        const preparedDirectories = project?.directories.map((item: DirectoryType) => ({
+            _id: item._id,
+            name: item.name,
+            users: tasks
+                .filter((task) => task.directory.toString() === item._id.toString())
+                .filter((value, index, self) => self.indexOf(value) === index) //unique
+                .map((item) => item.assignee),
+        }));
+
+        return preparedDirectories;
     },
 
     async getDirectory(directoryId: string): Promise<DirectoryType> {

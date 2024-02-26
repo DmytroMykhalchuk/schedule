@@ -1,15 +1,19 @@
-import Image from 'next/image'
-import styles from './page.module.css'
-import { cookies } from 'next/headers'
+import styles from './page.module.css';
+import { authCookieKey, categoryColors, projectIdCookieKey } from '@/server/constants';
+import Box from '@mui/material/Box';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { authCookieKey, projectIdCookieKey } from '@/server/constants';
+import Typography from '@mui/material/Typography'
 
 export const Home = () => {
-  const aithId = cookies().get(authCookieKey)?.value
-  !aithId && redirect('/auth');
+  // const aithId = cookies().get(authCookieKey)?.value
+  // !aithId && redirect('/auth');
 
-  const projectId = cookies().get(projectIdCookieKey)?.value;
-  projectId && redirect('/app');
+  // const projectId = cookies().get(projectIdCookieKey)?.value;
+  // projectId && redirect('/app');
+
+  // console.log(categoryColorsWithSecondary);
+
 
   return (
     <main className={styles.main}>
@@ -17,6 +21,5 @@ export const Home = () => {
     </main>
   );
 }
-
 export default Home;
 

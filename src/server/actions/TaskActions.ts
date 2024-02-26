@@ -393,11 +393,14 @@ export const TaskActions = {
         return result;
     },
 
-    async getTasksByProjectId(projectId: string, mask = {}) {
+    async getTasksByProjectId(projectId: string, mask = {}, withUser = false) {
         await connectDB();
-
-        const tasks = await Task.find({ projectId }, mask).lean();
-
+        let tasks = [] as { assignee: { name: string, email: string, picture: string }, directory: string }[];
+        if (withUser) {
+            tasks = await Task.find({ projectId }, mask).populate('assignee', 'picture email name').lean();
+        } else {
+            tasks = await Task.find({ projectId }, mask).lean();
+        }
         return tasks;
     },
 
