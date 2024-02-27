@@ -192,17 +192,16 @@ export type UpdateDirectoryType = {
 export type StoreUser = {
     name: string
     email: string
-    google_id: string
+    googleId: string
     picture: string
 };
 
 export type UserDB = {
-    sessions: string[],
-    google_id: number,
+    googleId: string,
     name: string,
     picture: string,
     email: string
-    _id: string,
+    _id: mongoose.Types.ObjectId,
 };
 
 export type UserTeamItemType = Pick<UserDB, '_id' | 'email' | 'name' | 'picture'> & { role: string }

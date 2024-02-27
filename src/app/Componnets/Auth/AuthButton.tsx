@@ -1,14 +1,11 @@
 'use client';
 import Button from '@mui/material/Button';
-import Cookies from 'js-cookie';
 import GoogleIcon from '@mui/icons-material/Google';
 import Typography from '@mui/material/Typography';
 import { authApi } from '@/api/authApi';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
-import { authCookieKey } from '@/server/constants';
-import dayjs from 'dayjs';
+import { signIn } from 'next-auth/react';
 
 type AuthButtonType = {
 };
@@ -28,24 +25,13 @@ type GoogleButtonType = {
 };
 
 export const GoogleButton: React.FC<GoogleButtonType> = ({ }) => {
-    const { push } = useRouter();
 
     const login = useGoogleLogin({
         onSuccess: async (credentialResponse) => {
             const user = await authApi.getGoogleUser(credentialResponse.access_token);
             const { email, locale, name, picture, sub } = user;
             //todo change locale
-
-            axios.post('/api/auth', { ...user })
-                .then((response) => {
-                    const data = response.data;
-                    Cookies.set('auth', JSON.stringify(user));
-                    Cookies.set(authCookieKey, JSON.stringify({ sessionId: data.data.sessionId as string, lastUpdatedAt: dayjs().unix() }));
-                    data.data.projectsIds
-                        ? push('/app')
-                        : push('/enter');
-                });
-
+            await signIn('credentials', { email, locale, name, picture, sub })
         },
         onError: () => {
             console.warn('Login Failed');

@@ -13,28 +13,29 @@ type NotificationInviteType = {
 };
 
 export const NotificationInvite: React.FC<NotificationInviteType> = ({ }) => {
-    const { searchParams } = new URL(window.location.href);
-    const [isOpen, setIsOpen] = useState(() => Boolean(searchParams.get('sended_inviting')));
+    // const { searchParams } = new URL(window.location.href);
+    // const [isOpen, setIsOpen] = useState(() => Boolean(searchParams.get('sended_inviting')));
 
     return (
-        <Snackbar
-            open={isOpen}
-            autoHideDuration={5000}
-            onClose={() => { setIsOpen(false) }}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-            }}
-            TransitionComponent={SlideTransition}
-        >
-            <Alert
-                onClose={() => { setIsOpen(false) }}
-                severity="success"
-                variant="filled"
-                sx={{ width: '100%' }}
-            >
-                Inviting sended to review
-            </Alert>
-        </Snackbar>
+        <></>
+        // <Snackbar
+        //     open={isOpen}
+        //     autoHideDuration={5000}
+        //     onClose={() => { setIsOpen(false) }}
+        //     anchorOrigin={{
+        //         vertical: 'top',
+        //         horizontal: 'right'
+        //     }}
+        //     TransitionComponent={SlideTransition}
+        // >
+        //     <Alert
+        //         onClose={() => { setIsOpen(false) }}
+        //         severity="success"
+        //         variant="filled"
+        //         sx={{ width: '100%' }}
+        //     >
+        //         Inviting sended to review
+        //     </Alert>
+        // </Snackbar>
     );
 };

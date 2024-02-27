@@ -1,9 +1,11 @@
-import styles from './page.module.css';
-import { authCookieKey, categoryColors, projectIdCookieKey } from '@/server/constants';
 import Box from '@mui/material/Box';
+import styles from './page.module.css';
+import Typography from '@mui/material/Typography';
+import { authCookieKey, categoryColors, projectIdCookieKey } from '@/server/constants';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Typography from '@mui/material/Typography'
+import { TestClientComponent } from './Componnets/Common/TestClientComponent';
+import { TestSessionComponent } from './Componnets/Common/TestSessionComponent';
 
 export const Home = () => {
   // const aithId = cookies().get(authCookieKey)?.value
@@ -18,6 +20,8 @@ export const Home = () => {
   return (
     <main className={styles.main}>
       Homeh
+      <TestClientComponent/>
+      <TestSessionComponent/>
     </main>
   );
 }

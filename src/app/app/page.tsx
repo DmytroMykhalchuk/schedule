@@ -15,29 +15,29 @@ const Page: React.FC<PageType> = () => {
     return (
         <>
             <Box>
-                <HomeHeader />
+                {/* <HomeHeader /> */}
             </Box>
             <Grid container spacing={2}>
                 <Grid item sm={12} md={4}>
                     <Stack spacing={2}>
                         {/* <HomeCalendar /> */}
                         <div>
-                            <ProjectDirectories />
+                            {/* <ProjectDirectories /> */}
                         </div>
                     </Stack>
                 </Grid>
                 <Grid item sm={12} md={8}>
                     <div>
                         <div>
-                            <TasksWrapepr />
+                            {/* <TasksWrapepr /> */}
                         </div>
                         <Grid container spacing={2}>
                             <Grid item xs={12} md={6}>
-                                <NewComments />
+                                {/* <NewComments /> */}
                             </Grid>
                             <Grid item xs={12} md={6}>
                                 <div>
-                                    <Team limit={4} />
+                                    {/* <Team limit={4} /> */}
                                 </div>
                             </Grid>
                         </Grid>

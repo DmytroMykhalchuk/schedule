@@ -1,8 +1,9 @@
+import { ProjectListAvailableRecord } from './../types/projectTypes';
 import connectDB from '../connectDB';
 import mongoose from 'mongoose';
 import Project from '../models/Project';
 import User from '../models/User';
-import { AuthType, StoreTaskType, ProjectUsers, ProjectTeamItem, UserTeamItemType, PopulatedProjectTeamItem, TeamItemType, TaskDB, PriorityType, StatusType, ProccessStatusType } from './types';
+import { AuthType, StoreTaskType, ProjectUsers, ProjectTeamItem, UserTeamItemType, PopulatedProjectTeamItem, TeamItemType, TaskDB, PriorityType, StatusType, ProccessStatusType, DBProjectType } from './types';
 import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
 import { ObjectId } from 'mongodb';
 import { priorities, statuses } from '../constants';
@@ -10,6 +11,7 @@ import { UserActions } from './UserActions';
 import { TaskActions } from './TaskActions';
 import { DirectoryActions } from './DirectoryActions';
 import { CommentActions } from './CommentActions';
+import { ProjectListAvailableDB } from '../types/projectTypes';
 
 type StoreProjectType = {
     name: string,
@@ -45,9 +47,9 @@ export const ProjectActions = {
 
         const users = await UserActions.getUsersByIds(userIds, { name: 1, picture: 1, email: 1 });
 
-        const projectUsers=users.map(user=>({
+        const projectUsers = users.map(user => ({
             ...user,
-            _id:user._id.toString(),
+            _id: user._id.toString(),
         }));
 
         return projectUsers;
@@ -139,5 +141,16 @@ export const ProjectActions = {
         project.save();
 
         return { success: false };
+    },
+
+    async getAvailableProjects(userId: string):Promise<ProjectListAvailableRecord[]> {
+        await connectDB();
+
+        const projects = await Project.find({ users: userId }, { name: 1 }).lean() as ProjectListAvailableDB[];
+
+        return projects.map((project) => ({
+            ...project,
+            _id: project._id.toString(),
+        }));
     },
 };

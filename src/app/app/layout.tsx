@@ -4,20 +4,26 @@ import { AppSideBar } from "../Componnets/Layouts/AppSideBar";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { authCookieKey, projectIdCookieKey } from "@/server/constants";
+import { getServerSession } from "next-auth";
+import { nextAuthConfig } from "@/configs/auth";
 
 type LayoutType = {
     children: ReactNode
 };
 
-const Layout: React.FC<LayoutType> = ({ children }) => {
+const Layout: React.FC<LayoutType> = async ({ children }) => {
+    const session = await getServerSession(nextAuthConfig);
 
-    if (!cookies().get(authCookieKey)) {
-        redirect('/auth');
+    if(!session?.user?.email){
+        if (!cookies().get(authCookieKey)) {
+            redirect('/auth');
+        }
     }
 
     if (!cookies().get(projectIdCookieKey)) {
-        redirect('/enter');
+        redirect('/sign-in');
     }
+
 
     return (
         <Stack direction={'row'}>

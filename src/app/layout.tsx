@@ -5,6 +5,7 @@ import { Inter } from 'next/font/google'
 import { StoreProvider } from '@/redux/StoreProvider';
 import ThemeRegistry from './Componnets/ThemeRegistry';
 import './globals.css';
+import { Providers } from './Componnets/Layouts/Providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -14,17 +15,20 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({
-  children,
+  children
 }: {
-  children: React.ReactNode
+  children: React.ReactNode,
 }) {
+  // console.log(pageProps)
   return (
     <StoreProvider>
       <html lang="en">
         <body style={{ display: 'flex', flexDirection: 'column' }}>
-          {/* <TheHeader /> */}
-          <ThemeRegistry options={{ key: 'mui' }}>{children}</ThemeRegistry>
-          {/* <TheFooter /> */}
+          <Providers>
+            {/* <TheHeader /> */}
+            <ThemeRegistry options={{ key: 'mui' }}>{children}</ThemeRegistry>
+            {/* <TheFooter /> */}
+          </Providers>
         </body>
       </html>
     </StoreProvider>

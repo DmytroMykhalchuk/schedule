@@ -1,3 +1,6 @@
+import { ProjectListAvailableRecord } from './../types/projectTypes';
+import { ProjectActions } from '@/server/actions/ProjectActions';
+import { UserLoginResponse } from './../types/userTypes';
 import { StoreUser, UserDB } from './types';
 import { getMaxListeners } from "events";
 import connectDB from "../connectDB";
@@ -8,31 +11,30 @@ import { getRandomNumber, getRandomPictureUrl } from "../utils/utils";
 
 
 export const UserActions = {
-    async login(user: StoreUser) {
+    async login(loginUser: StoreUser): Promise<UserLoginResponse> {
         await connectDB();
-        const targetUser = await User.findOne({ google_id: user.google_id })
+        const targetUser = await User.findOne({ googleId: loginUser.googleId });
 
-        let uuid = uniqid();
         if (targetUser) {
-            await User.findOneAndUpdate({ _id: targetUser._id }, { ...user, sessions: [...targetUser.sessions, uuid] }).exec()
+            targetUser.name = targetUser.name;
+            targetUser.picture = targetUser.picture;
+            targetUser.save();
+
             return {
-                code: 200,
-                status: 'success',
-                message: 'Success',
-                data: {
-                    sessionId: uuid,
-                },
+                id: targetUser._id.toString(),
+                image: targetUser.picture,
+                name: targetUser.name,
+                email: targetUser.email,
             };
+
         } else {
-            const person = new User({ ...user, sessions: [uuid] });
-            const result = await person.save();
+            const userModel = new User({ ...loginUser });
+            const user = await userModel.save();
             return {
-                code: 201,
-                status: 'success',
-                message: 'Successfully created',
-                data: {
-                    sessionId: uuid,
-                },
+                id: user._id.toString(),
+                image: user.picture,
+                name: user.name,
+                email: user.email,
             };
         }
     },
@@ -94,12 +96,29 @@ export const UserActions = {
             const person = new User({
                 name: nameMask + getRandomNumber(),
                 email: mailMask + getRandomNumber() + mailSufix,
-                google_id: getRandomNumber(12),
+                googleId: getRandomNumber(12),
                 picture: getRandomPictureUrl(),
                 sessions: [],
             });
             const result = await person.save();
         }
+    },
+
+    async getAvailableProjects(userEmail: string): Promise<ProjectListAvailableRecord[]> {
+        await connectDB();
+        const user = await this.getUserByEmail(userEmail, { _id: 1 });
+
+        const projects = await ProjectActions.getAvailableProjects(user._id);
+
+        return projects;
+    },
+
+    async getUserByEmail(userEmail: string, selector = {}) {
+        await connectDB();
+
+        const user = await User.findOne({ email: userEmail }, selector).orFail();
+
+        return user;
     },
 };
 
