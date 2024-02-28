@@ -1,16 +1,13 @@
-import { authCookieKey, projectIdCookieKey } from "@/server/constants";
+import { projectIdCookieKey } from "@/server/constants";
 import { getCookieValue } from "@/utlis/getCookieValue";
 import axios from "axios";
 
-export const sendComment = async (taskId: string, comment: string, replyToCommentId: string) => {
+export const sendComment = async (taskId: string, comment: string, replyToCommentId: string, email: string,) => {
     const projectId = getCookieValue(projectIdCookieKey);
-    const sessionJson = getCookieValue(authCookieKey) || '';
-    const session = JSON.parse(decodeURIComponent(sessionJson) || '{}');
-    const sessionId = session?.sessionId || '';
 
     return axios.post('/api/comments', {
         project_id: projectId,
-        session_id: sessionId,
+        email,
         comment,
         reply_id: replyToCommentId,
         task_id: taskId,
@@ -21,17 +18,14 @@ export const sendComment = async (taskId: string, comment: string, replyToCommen
     });
 };
 
-export const deleteComment = async (commentId: string) => {
+export const deleteComment = async (commentId: string, email: string) => {
     const projectId = getCookieValue(projectIdCookieKey);
-    const sessionJson = getCookieValue(authCookieKey) || '';
-    const session = JSON.parse(decodeURIComponent(sessionJson) || '{}');
-    const sessionId = session?.sessionId || '';
 
     return axios.delete('/api/comments', {
         params: {
             comment_id: commentId,
             project_id: projectId,
-            session_id: sessionId,
+            email,
         }
     }).then(response => {
         return response.data;

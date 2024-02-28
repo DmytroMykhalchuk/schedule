@@ -67,6 +67,7 @@ export const UserActions = {
         return { sessionId: uuid };
     },
 
+    //delete
     async getUserBySessionId(sessionId: string, selectMask = {}): Promise<UserDB> {
         await connectDB();
         const person = await User.findOne({
@@ -76,6 +77,14 @@ export const UserActions = {
         }, selectMask);
 
         return person.toObject();
+    },
+    
+    async getUserByEmail(email: string, selector = {}) {
+        await connectDB();
+
+        const user = await User.findOne({ email }, selector);
+
+        return user.toObject();
     },
 
     async getUsersByIds(ids: string[], mask = {} as any): Promise<UserDB[]> {

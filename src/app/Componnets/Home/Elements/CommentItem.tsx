@@ -23,9 +23,7 @@ export const CommentItem: React.FC<CommentItemType> = ({ projectName, personName
                     bgcolor: 'peachy.light',
                     p: 1,
                     borderRadius: 4,
-                    // width:'300px',
                     flex: 1,
-                    // overflow:'hidden',
                 }}
             >
                 <Avatar src={avatar} alt={personName} />

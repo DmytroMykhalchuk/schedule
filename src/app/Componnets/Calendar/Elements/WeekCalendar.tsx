@@ -17,11 +17,12 @@ const weekdays = [
 ]
 type WeekCalendarType = {
     date?: string
+    authEmail: string
 };
 
-export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date }) => {
+export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date, authEmail }) => {
     const currentDate = dayjs(date);
-    const tasks = await getWeekTasks(currentDate.format('YYYY-MM-DD'));
+    const tasks = await getWeekTasks(currentDate.format('YYYY-MM-DD'), authEmail);
 
     const renderHeader = (): JSX.Element[] => {
         const days = [] as JSX.Element[];

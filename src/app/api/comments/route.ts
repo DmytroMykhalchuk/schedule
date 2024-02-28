@@ -5,12 +5,12 @@ export const POST = async (req: Request) => {
     const params = await req.json()
 
     const projectId = params.project_id;
-    const sessionId = params.session_id;
+    const email = params.email;
     const commentText = params.comment;
     const replyId = params.reply_id;
     const taskId = params.task_id;
 
-    if (!(projectId && sessionId && commentText && taskId)) {
+    if (!(projectId && email && commentText && taskId)) {
         return NextResponse.json({
             code: 500,
             message: 'Operation not allowed',
@@ -18,7 +18,7 @@ export const POST = async (req: Request) => {
         });
     }
 
-    const response = await CommentActions.storeComment({ projectId, sessionId }, { taskId, commentText, replyId });
+    const response = await CommentActions.storeComment({ projectId, email }, { taskId, commentText, replyId });
 
     return NextResponse.json({
         code: 200,
@@ -31,10 +31,10 @@ export const DELETE = async (req: Request) => {
     const { searchParams } = new URL(req.url);
 
     const projectId = searchParams.get('project_id') as string;
-    const sessionId = searchParams.get('session_id') as string;
+    const email = searchParams.get('email') as string;
     const commentId = searchParams.get('comment_id') as string;
 
-    if (!(commentId && projectId && sessionId)) {
+    if (!(commentId && projectId && email)) {
         return NextResponse.json({
             code: 500,
             message: 'Operation not allowed',
@@ -42,7 +42,7 @@ export const DELETE = async (req: Request) => {
         });
     }
 
-    const response = await CommentActions.removeComment({ projectId, sessionId }, commentId);
+    const response = await CommentActions.removeComment({ projectId, email }, commentId);
 
     if (response?.success) {
         return NextResponse.json({

@@ -1,23 +1,22 @@
-import { getAuthParams } from "@/app/Componnets/actions";
+import { getCookieProjectId } from "@/app/Componnets/actions";
 import { MemberActions } from "@/server/actions/MemberActions";
-import { cookies } from "next/headers"
 import { redirect } from "next/navigation";
 
-export const getMembers = async () => {
-    const { projectId, sessionId } =  await getAuthParams();
+export const getMembers = async (email: string) => {
+    const projectId = getCookieProjectId();
 
-    const users = MemberActions.getMembers(projectId, sessionId);
+    const users = MemberActions.getMembers({ projectId, email });
 
     return users;
 };
 
 export const removeUser = async (formData: FormData) => {
     'use server';
-    const { projectId, sessionId } =  await getAuthParams();
-
+    const projectId = getCookieProjectId();
     const userId = formData.get('user_id') as string;
+    const email = formData.get('auth_email') as string;
 
-    const result = await MemberActions.removeMember(projectId, sessionId, userId);
+    const result = await MemberActions.removeMember({ projectId, email }, userId);
 
     if (result.success) {
         redirect('/app/add/members');

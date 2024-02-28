@@ -1,17 +1,13 @@
-import { ProjectListAvailableRecord } from './../types/projectTypes';
 import connectDB from '../connectDB';
 import mongoose from 'mongoose';
 import Project from '../models/Project';
-import User from '../models/User';
-import { AuthType, StoreTaskType, ProjectUsers, ProjectTeamItem, UserTeamItemType, PopulatedProjectTeamItem, TeamItemType, TaskDB, PriorityType, StatusType, ProccessStatusType, DBProjectType } from './types';
-import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
-import { ObjectId } from 'mongodb';
-import { priorities, statuses } from '../constants';
-import { UserActions } from './UserActions';
-import { TaskActions } from './TaskActions';
-import { DirectoryActions } from './DirectoryActions';
+import { AuthType, PopulatedProjectTeamItem, ProccessStatusType, ProjectTeamItem, ProjectUsers, TeamItemType } from './types';
 import { CommentActions } from './CommentActions';
+import { DirectoryActions } from './DirectoryActions';
 import { ProjectListAvailableDB } from '../types/projectTypes';
+import { ProjectListAvailableRecord } from './../types/projectTypes';
+import { TaskActions } from './TaskActions';
+import { UserActions } from './UserActions';
 
 type StoreProjectType = {
     name: string,
@@ -58,7 +54,7 @@ export const ProjectActions = {
     async getTeam(auth: AuthType): Promise<TeamItemType[]> {
         await connectDB();
 
-        const user = await UserActions.getUserBySessionId(auth.sessionId);
+        const user = await UserActions.getUserByEmail(auth.email);
         const project = await Project.findOne({ _id: auth.projectId, users: user._id }, { team: 1 }).populate('team.userId');
 
         if (!project?._id) {
@@ -76,11 +72,11 @@ export const ProjectActions = {
         return result;
     },
 
-    async getProjectByFilters(filter: { projectId: string, sessionId: string, otherFilters?: {} }, projectFieldMask = {} as {}) {
+    async getProjectByFilters(filter: { projectId: string, email: string, otherFilters?: {} }, projectFieldMask = {} as {}) {
         await connectDB();
 
         const preparedFilter: any = filter?.otherFilters ? { ...filter?.otherFilters } : {};
-        const user = await UserActions.getUserBySessionId(filter.sessionId);
+        const user = await UserActions.getUserByEmail(filter.email);
 
         preparedFilter._id = filter.projectId;
         preparedFilter.users = user._id;
@@ -143,7 +139,7 @@ export const ProjectActions = {
         return { success: false };
     },
 
-    async getAvailableProjects(userId: string):Promise<ProjectListAvailableRecord[]> {
+    async getAvailableProjects(userId: string): Promise<ProjectListAvailableRecord[]> {
         await connectDB();
 
         const projects = await Project.find({ users: userId }, { name: 1 }).lean() as ProjectListAvailableDB[];

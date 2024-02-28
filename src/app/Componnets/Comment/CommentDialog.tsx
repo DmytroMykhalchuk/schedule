@@ -81,11 +81,12 @@ const reducer = (state: StateType, action: ActionType): StateType => {
 
 type CommentDialogType = {
     comments: CommentType[],
-    taskId: string
-    projectId: string
+    taskId: string,
+    projectId: string,
+    authEmail: string,
 };
 
-export const CommentDialog: React.FC<CommentDialogType> = ({ comments, taskId, projectId }) => {
+export const CommentDialog: React.FC<CommentDialogType> = ({ comments, taskId, projectId, authEmail }) => {
     const now = dayjs();
 
     const [state, dispatch] = useReducer(reducer, { ...initialState, comments: comments as CommentType[] });
@@ -102,7 +103,7 @@ export const CommentDialog: React.FC<CommentDialogType> = ({ comments, taskId, p
     }, [state.highlightCommentId]);
 
     const onSendComment = async (text: string) => {
-        const response = await sendComment(taskId, text, state.replyTo.commentId);
+        const response = await sendComment(taskId, text, state.replyTo.commentId, authEmail);
         if (typeof response?.data === 'object') {
             dispatch({ type: ADD_COMMENT, comment: response.data });
         }
@@ -117,7 +118,7 @@ export const CommentDialog: React.FC<CommentDialogType> = ({ comments, taskId, p
     };
 
     const onDeleteComment = async (commentId: string) => {
-        const response = await deleteComment(commentId);
+        const response = await deleteComment(commentId, authEmail);
         if (response?.code === 200) {
             dispatch({ type: DELETE_COMMENT, commentId });
         }

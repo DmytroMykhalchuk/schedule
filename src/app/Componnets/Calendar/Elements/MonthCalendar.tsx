@@ -2,28 +2,25 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
-import Divider from '@mui/material/Divider';
 import dayjs from 'dayjs';
 import Typography from '@mui/material/Typography';
 import styles from './../styles.module.scss';
 import { getDaysWithCurrentMonth } from '../actions';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import Link from 'next/link';
 import { ControlPageCalendar } from './ControlPageCalendar';
 
 const weekdaysMin = ['', "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
 type MonthCalendarType = {
     date?: string
+    authEmail: string,
 };
 
-export const MonthCalendar: React.FC<MonthCalendarType> = async ({ date }) => {
+export const MonthCalendar: React.FC<MonthCalendarType> = async ({ date, authEmail }) => {
     const currentDate = dayjs(date);
     const dateRequested = `${currentDate.year()}-${currentDate.month() + 1}-1`
     const startMonthDay = dayjs(dateRequested).date(1).day();
     const totalDays = dayjs(dateRequested).daysInMonth();
-    const selectedDays = await getDaysWithCurrentMonth(currentDate.format('DD.MM.YYYY'));
+    const selectedDays = await getDaysWithCurrentMonth(currentDate.format('DD.MM.YYYY'), authEmail);
 
     let isBreakRendreWeeks = true;
     let rangeDay = 1;

@@ -8,10 +8,11 @@ import { getProjectDirectories } from "../actions";
 
 type FormElementProjectsType = {
     defaultDirectory?: string
+    authEmail: string,
 };
 
-export const FormElementProjects: React.FC<FormElementProjectsType> = async ({ defaultDirectory }) => {
-    const directories = await getProjectDirectories() || [];
+export const FormElementProjects: React.FC<FormElementProjectsType> = async ({ defaultDirectory, authEmail }) => {
+    const directories = await getProjectDirectories(authEmail) || [];
 
     return (
         <Grid container spacing={2} sx={{ p: 2 }}>

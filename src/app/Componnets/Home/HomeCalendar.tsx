@@ -5,16 +5,17 @@ import Typography from '@mui/material/Typography'
 import { LinkedDateCalendar } from "./LinkedDateCalendar";
 
 type HomeCalendarType = {
+    authEmail: string
 };
 
-export const HomeCalendar: React.FC<HomeCalendarType> = ({ }) => {
+export const HomeCalendar: React.FC<HomeCalendarType> = ({ authEmail }) => {
     return (
         <>
             <Paper elevation={4} sx={{ p: 2 }}>
                 <Typography variant="subtitle2">
                     Calendar
                 </Typography>
-                <LinkedDateCalendar />
+                <LinkedDateCalendar authEmail={authEmail}/>
             </Paper>
         </>
     );

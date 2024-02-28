@@ -1,18 +1,20 @@
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import { CountCards } from '@/app/Componnets/Report/CountCards';
+import { getPageInfo } from './actions';
+import { getUserSessionAndEmail } from '@/app/Componnets/actions';
 import { HeaderLayout } from '@/app/Componnets/Layouts/HeaderLayout';
 import { ProgressChart } from '@/app/Componnets/Report/ProgressChart';
 import { ProjectCategories } from '@/app/Componnets/Report/ProjectCategories';
-import { TotalWorkingHours } from '@/app/Componnets/Report/TotalWorkingHours';
 import { Revenue } from '@/app/Componnets/Report/Revenue';
-import { getPageInfo } from './actions';
+import { TotalWorkingHours } from '@/app/Componnets/Report/TotalWorkingHours';
 
 type PageType = {
 };
 
 const Page: React.FC<PageType> = async ({ }) => {
-    const info = await getPageInfo();
+    const { authEmail, session } = await getUserSessionAndEmail();
+    const info = await getPageInfo(authEmail);
 
     return (
         <>
@@ -20,6 +22,10 @@ const Page: React.FC<PageType> = async ({ }) => {
                 subtitle=""
                 title="Report"
                 isCenter
+                authUser={{
+                    name: session?.user?.name || '',
+                    image: session?.user?.image || '',
+                }}
             />
             <Grid container spacing={2}>
                 <Grid xs={12} lg={12} mb={2}>

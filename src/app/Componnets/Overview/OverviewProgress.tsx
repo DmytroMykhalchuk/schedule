@@ -6,7 +6,7 @@ import uk from 'dayjs/locale/uk';
 import { getCategoriesList } from '../Add/actions';
 import { UIPaper } from '@/ui/UIPaper';
 import Typography from '@mui/material/Typography'
-
+import { getUserSessionAndEmail } from '../actions';
 
 dayjs.locale(uk)
 
@@ -14,7 +14,9 @@ type OverviewProgressType = {
 };
 
 export const OverviewProgress: React.FC<OverviewProgressType> = async ({ }) => {
-    const categories = await getCategoriesList();
+    const { authEmail } = await getUserSessionAndEmail();
+    const categories = await getCategoriesList(authEmail);
+
     const currentDate = dayjs();
 
     const getPrevMonths = (count = 6): string[] => {

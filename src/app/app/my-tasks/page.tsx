@@ -1,10 +1,11 @@
-import { HeaderLayout } from "@/app/Componnets/Layouts/HeaderLayout";
-import { getMyTasks } from "./actions";
-import dayjs from "dayjs";
-import { PaperWrapper } from "@/app/Componnets/MyTasks/PaperWrapper";
-import Stack from "@mui/material/Stack";
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { TaskShortType } from "@/server/actions/types";
+import dayjs from 'dayjs';
+import Stack from '@mui/material/Stack';
+import { getMyTasks } from './actions';
+import { getUserSessionAndEmail } from '@/app/Componnets/actions';
+import { HeaderLayout } from '@/app/Componnets/Layouts/HeaderLayout';
+import { PaperWrapper } from '@/app/Componnets/MyTasks/PaperWrapper';
+import { TaskShortType } from '@/server/actions/types';
 
 dayjs.extend(customParseFormat)
 
@@ -12,8 +13,8 @@ type PageType = {
 };
 
 const Page: React.FC<PageType> = async ({ }) => {
-
-    const tasks = await getMyTasks();
+    const { authEmail, session } = await getUserSessionAndEmail();
+    const tasks = await getMyTasks(authEmail);
 
     const taskFiltered = {
         today: {
@@ -54,7 +55,12 @@ const Page: React.FC<PageType> = async ({ }) => {
 
     return (
         <>
-            <HeaderLayout title="My tasks" subtitle="" />
+            <HeaderLayout title="My tasks" subtitle=""
+                authUser={{
+                    name: session?.user?.name || '',
+                    image: session?.user?.image || '',
+                }}
+            />
             <Stack spacing={4}>
                 <PaperWrapper tasks={taskFiltered.today.tasks} title="Today" />
                 <PaperWrapper tasks={taskFiltered.tomorrow.tasks} title="Tommorow" />

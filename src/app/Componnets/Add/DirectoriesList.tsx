@@ -1,13 +1,13 @@
-import { getDirectories } from "@/app/app/add/directory/actions";
 import Stack from "@mui/material/Stack";
 import Typography from '@mui/material/Typography'
 import { RecordActions } from "../Common/RecordActions";
+import { DirectoryWithUsersType } from "@/server/actions/types";
 
 type DirectoriesListType = {
+    directories: DirectoryWithUsersType[]
 };
 
-export const DirectoriesList: React.FC<DirectoriesListType> = async ({ }) => {
-    const directories = await getDirectories();
+export const DirectoriesList: React.FC<DirectoriesListType> = async ({ directories }) => {
 
     return (
         <Stack spacing={2}>

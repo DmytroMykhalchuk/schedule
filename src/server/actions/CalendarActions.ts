@@ -9,7 +9,7 @@ import { TaskDB, TaskShortType, AuthType } from "./types";
 export const CalendarActions = {
     async getMonthTaskDays(auth: AuthType, findDate: string): Promise<number[]> {
         await connectDB();
-        const user = await UserActions.getUserBySessionId(auth.sessionId);
+        const user = await UserActions.getUserByEmail(auth.email);
         if (!user?._id) {
             return [];
         }
@@ -38,7 +38,7 @@ export const CalendarActions = {
             dateMark.day(5).format('DD.MM.YYYY'),
         ];
 
-        const users = await UserActions.getUserBySessionId(auth.sessionId);
+        const users = await UserActions.getUserByEmail(auth.email);
         const tasks = await Task.find({ dueDate: requiredDates, assignee: users._id });
 
         const targetTasks: TaskShortType[] = tasks

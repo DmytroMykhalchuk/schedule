@@ -1,24 +1,41 @@
 import connectDB from '../connectDB';
 import dayjs from 'dayjs';
 import mongoose from 'mongoose';
-import Project from '../models/Project';
 import Task from '../models/Task';
-import { AuthType, CommentType, StoreCommentType, StoreTaskType, TaskDB, TaskShortType, TaskUpdateType, UrgentTask, ViewTaskType, ProccessStatusType, PriorityType, StatusType, TaskByUserDB, TaskByUserUser, TaskByUserRecord, ByDirectoryIdTaskDB, CategoryDB } from './types';
-import { CommentActions } from './CommentActions';
-import { ObjectId } from 'mongodb';
-import { ProjectActions } from './ProjectActions';
-import { UserActions } from './UserActions';
-import { priorities, statuses, workHours } from '../constants';
-import { CategoryActions } from './CategoryActions';
 import User from '../models/User';
+import {
+    AuthType,
+    ByDirectoryIdTaskDB,
+    CategoryDB,
+    CommentType,
+    PriorityType,
+    ProccessStatusType,
+    StatusType,
+    StoreCommentType,
+    StoreTaskType,
+    TaskByUserDB,
+    TaskByUserRecord,
+    TaskByUserUser,
+    TaskDB,
+    TaskShortType,
+    TaskUpdateType,
+    UrgentTask,
+    ViewTaskType
+} from './types';
+import { CategoryActions } from './CategoryActions';
+import { CommentActions } from './CommentActions';
 import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
 import { getRandomWeekdayDate } from '@/utlis/getRandomWeekdayDate';
+import { ObjectId } from 'mongodb';
+import { priorities, statuses, workHours } from '../constants';
+import { ProjectActions } from './ProjectActions';
+import { UserActions } from './UserActions';
 
 export const TaskActions = {
     async storeTask(auth: AuthType, storeTask: StoreTaskType): Promise<{ projectId?: string }> {
         await connectDB();
         //todo validation for hours
-        const user = await UserActions.getUserBySessionId(auth.sessionId);
+        const user = await UserActions.getUserByEmail(auth.email);
 
         const taskModel = new Task({
             name: storeTask.name,
@@ -58,7 +75,7 @@ export const TaskActions = {
         return task;
     },
 
-    async getMyTasks(projectId: string, sessionId: string): Promise<TaskShortType[]> {
+    async getMyTasks(authParams: AuthType): Promise<TaskShortType[]> {
         await connectDB();
 
         const requiredDates = [
@@ -69,8 +86,8 @@ export const TaskActions = {
             dayjs().day(5).format('DD.MM.YYYY'),
         ];
 
-        const user = await UserActions.getUserBySessionId(sessionId);
-        const project = await ProjectActions.getProjectByFilters({ projectId, sessionId }, { _id: 1 });
+        const user = await UserActions.getUserByEmail(authParams.email);
+        const project = await ProjectActions.getProjectById(authParams.projectId, { _id: 1 }, user?._id);
 
         if (!project) {
             return [];
@@ -96,7 +113,7 @@ export const TaskActions = {
     async getTaskAndCommentsById(auth: AuthType, taskId: string): Promise<{ comments: CommentType[], task: ViewTaskType }> {
         await connectDB();
 
-        const user = await UserActions.getUserBySessionId(auth.sessionId);
+        const user = await UserActions.getUserByEmail(auth.email);
         const project = await ProjectActions.getProjectByFilters(auth, { _id: 1 });
 
         if (!project) {
@@ -154,9 +171,8 @@ export const TaskActions = {
 
     async getUrgentTasks(authParams: AuthType): Promise<UrgentTask[]> {
         await connectDB();
-        const user = await UserActions.getUserBySessionId(authParams.sessionId);
-        const project = await ProjectActions.getProjectByFilters(authParams, { _id: true });
-
+        const user = await UserActions.getUserByEmail(authParams.email);
+        const project = await ProjectActions.getProjectByFilters(authParams, { _id: 1 });
 
         if (!project?._id || !user?._id) {
             return [];
@@ -193,7 +209,7 @@ export const TaskActions = {
         }
 
         const user = await UserActions.getUserBySessionId(userId)
-        const project = await ProjectActions.getProjectById(auth.projectId, {}, user._id);
+        const project = await ProjectActions.getProjectById(auth.projectId, {}, user._id.toString());
 
         if (!project) {
             return [];
@@ -382,7 +398,7 @@ export const TaskActions = {
                 result[key] = {
                     tasks: element.map(task => ({ ...task, _id: task._id.toString() })),
                     user: {
-                        _id: targetUser._id,
+                        _id: targetUser._id.toString(),
                         name: targetUser.name,
                         picture: targetUser.picture,
                     },

@@ -6,12 +6,12 @@ export const GET = async (req: Request) => {
 
     const date = searchParams.get('date') || '';
     const projectId = searchParams.get('project_id') || '';
-    const sessionId = searchParams.get('session_id') || '';
-    if (!sessionId || !date || !projectId) {
+    const email = searchParams.get('email') || '';
+    if (!email || !date || !projectId) {
         return NextResponse.json({ error: 'Did`n received all parameters' });
     }
 
-    const response = await CalendarActions.getMonthTaskDays({ projectId, sessionId }, date);
+    const response = await CalendarActions.getMonthTaskDays({ projectId, email }, date);
 
     if (Array.isArray(response)) {
         return NextResponse.json({

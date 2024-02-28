@@ -1,10 +1,10 @@
 import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
-import { CategoryRecord } from '@/server/actions/types';
-import { UIPaper } from '@/ui/UIPaper';
-import Typography from '@mui/material/Typography'
 import Link from 'next/link';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { CategoryRecord } from '@/server/actions/types';
 import { SeeMore } from '../Common/SeeMore';
+import { UIPaper } from '@/ui/UIPaper';
 
 type ProjectCategoriesType = {
     categories: CategoryRecord[]

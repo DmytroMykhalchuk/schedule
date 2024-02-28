@@ -6,7 +6,8 @@ type PageType = {
     },
 };
 
-const Page: React.FC<PageType> = ({ params }) => {
+const Page: React.FC<PageType> = async ({ params }) => {
+
     const { id: taskId } = params;
 
     return (

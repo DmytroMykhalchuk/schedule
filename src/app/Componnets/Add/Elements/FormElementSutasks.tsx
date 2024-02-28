@@ -10,7 +10,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 type FormElementSutasksType = {
-    defaultSubtasks?: string[] | null
+    defaultSubtasks?: string[] | null,
 };
 
 export const FormElementSutasks: React.FC<FormElementSutasksType> = ({ defaultSubtasks }) => {

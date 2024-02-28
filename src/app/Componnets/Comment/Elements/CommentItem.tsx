@@ -1,4 +1,3 @@
-import { CommentType } from "@/server/actions/CommentActions";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
@@ -6,8 +5,7 @@ import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete';
 import ReplyIcon from '@mui/icons-material/Reply';
-
-
+import { CommentType } from "@/server/actions/types";
 
 type CommentItemType = {
     comment: CommentType
@@ -41,10 +39,10 @@ export const CommentItem: React.FC<CommentItemType> = ({ comment, replyComment, 
                     <Typography variant="caption">{time}</Typography>
                 </Box>
                 <Box sx={{
-                    // opacity: 0,
-                    // '&:hover': {
-                    //     opacity: 1,
-                    // }
+                    opacity: 0,
+                    '&:hover': {
+                        opacity: 1,
+                    }
                 }}>
                     <IconButton aria-label="reply" onClick={onReply}>
                         <ReplyIcon />

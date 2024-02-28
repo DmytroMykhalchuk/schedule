@@ -1,9 +1,6 @@
 import Stack from "@mui/material/Stack";
 import styles from './styles.module.scss';
 import Link from "next/link";
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { getRequestURL } from "@/utlis/getUrl";
-import { useRouter } from "next/navigation";
 import cn from 'classnames';
 
 export type CalendarType = 'day' | 'week' | 'month';

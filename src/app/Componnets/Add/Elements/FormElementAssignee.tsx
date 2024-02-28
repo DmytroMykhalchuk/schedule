@@ -7,8 +7,8 @@ import { getProjectUsers } from '../actions';
 import { defaultFirstUserId } from "../actions";
 
 type FormElementAssigneeType = {
-    fieldName: string
-    defaultValue: string
+    fieldName: string,
+    defaultValue: string,
 };
 
 export const FormElementAssignee: React.FC<FormElementAssigneeType> = async ({ fieldName, defaultValue }) => {

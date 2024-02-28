@@ -1,14 +1,14 @@
-import { StoreCommentType, CommentDB, AuthType, StoreCommentRequestType, CommentType, LatestCommentType } from './types';
+import Comment from '../models/Comment';
 import connectDB from '../connectDB';
 import mongoose from 'mongoose';
 import Pusher from 'pusher';
+import { AuthType, CommentDB, CommentType, LatestCommentType, StoreCommentRequestType, StoreCommentType } from './types';
+import { channelPrefixName, newCommentEventName, removedCommentEventName } from '../constants';
+import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
 import { ObjectId } from 'mongodb';
 import { ProjectActions } from './ProjectActions';
-import { UserActions } from './UserActions';
-import { channelPrefixName, newCommentEventName, removedCommentEventName } from '../constants';
-import Comment from '../models/Comment';
 import { TaskActions } from './TaskActions';
-import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
+import { UserActions } from './UserActions';
 
 const pusher = new Pusher({
     appId: "1752490",
@@ -22,7 +22,7 @@ export const CommentActions = {
     async storeComment(auth: AuthType, requestComment: StoreCommentRequestType) {
         await connectDB();
 
-        const user = await UserActions.getUserBySessionId(auth.sessionId);
+        const user = await UserActions.getUserByEmail(auth.email);
         const project = await ProjectActions.getProjectById(auth.projectId, { _id: 1 }, user._id);
 
         if (!project) {
@@ -64,7 +64,7 @@ export const CommentActions = {
     async removeComment(auth: AuthType, commentId: string): Promise<{ success: boolean }> {
         await connectDB();
 
-        const user = await UserActions.getUserBySessionId(auth.sessionId);
+        const user = await UserActions.getUserByEmail(auth.email);
 
         const comment = await Comment.findByIdAndDelete({ _id: commentId, userId: user._id });
 
@@ -126,7 +126,7 @@ export const CommentActions = {
                 replyId: getRandomBoolean(0.4) ? commentsIds[Math.floor(Math.random() * commentsIds.length)]?.toString() || '' : '',
                 taskId: taskId,
                 text: getRandomString(3, 50),
-                userId: randomUser._id,
+                userId: randomUser._id.toString(),
                 _id: new ObjectId(),
             };
 

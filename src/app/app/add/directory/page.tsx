@@ -1,17 +1,18 @@
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import styles from '@/app/Componnets/Add/styles.module.scss';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import { createDirectory } from './actions';
+import { createDirectory, getDirectories } from './actions';
 import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
 import { DirectoriesList } from '@/app/Componnets/Add/DirectoriesList';
 import { UIInputField } from '@/app/Componnets/UI/UIInputField';
+import { getUserSessionAndEmail } from '@/app/Componnets/actions';
 
 type PageType = {
 };
 
-const Page: React.FC<PageType> = ({ }) => {
+const Page: React.FC<PageType> = async ({ }) => {
+    const { authEmail } = await getUserSessionAndEmail();
+    const directories = await getDirectories(authEmail);
 
     return (
         <Stack alignItems={'center'} justifyContent={'center'} spacing={2}>
@@ -27,7 +28,9 @@ const Page: React.FC<PageType> = ({ }) => {
                 </form>
             </MiddlePaperWrapper>
             <MiddlePaperWrapper>
-                <DirectoriesList />
+                <div>
+                    <DirectoriesList directories={directories} />
+                </div>
             </MiddlePaperWrapper>
         </Stack>
     );

@@ -1,23 +1,20 @@
 import Chip from '@mui/material/Chip';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { getCategoriesList } from '../actions';
-import { ReactNode } from 'react';
 import { FormSelect } from '../../Common/FormSelect';
-import { CategoryRecord } from '@/server/actions/types';
 import { defaultCategory } from '@/server/constants';
 
 type FormElementCategoryType = {
-    defaultCategoryId?: string
+    defaultCategoryId?: string,
+    authEmail: string,
 };
 
-export const FormElementCategory: React.FC<FormElementCategoryType> = async ({ defaultCategoryId }) => {
-    const categories = await getCategoriesList();
+export const FormElementCategory: React.FC<FormElementCategoryType> = async ({ defaultCategoryId, authEmail }) => {
+    const categories = await getCategoriesList(authEmail);
 
     const preparedCategories = defaultCategoryId
         ? [...categories]

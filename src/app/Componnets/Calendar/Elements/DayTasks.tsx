@@ -1,6 +1,7 @@
 import Typography from '@mui/material/Typography'
 import { redirect } from 'next/navigation';
 type DayTasksType = {
+    authEmail: string
 };
 
 export const DayTasks: React.FC<DayTasksType> = ({ }) => {

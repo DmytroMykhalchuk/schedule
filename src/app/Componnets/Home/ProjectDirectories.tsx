@@ -5,10 +5,11 @@ import { getDirectories } from './actions';
 import { ProjectDirectoryItem } from './Elements/ProjectDirectoryItem';
 
 type ProjectDirectoriesType = {
+    authEmail: string
 };
 
-export const ProjectDirectories: React.FC<ProjectDirectoriesType> = async ({ }) => {
-    const directories = await getDirectories();
+export const ProjectDirectories: React.FC<ProjectDirectoriesType> = async ({ authEmail }) => {
+    const directories = await getDirectories(authEmail);
 
     return (
         <Paper elevation={4} sx={{ p: 2 }}>

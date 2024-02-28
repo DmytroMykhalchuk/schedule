@@ -1,30 +1,17 @@
 import Box from '@mui/material/Box';
 import cn from 'classnames';
-import dayjs from 'dayjs';
 import Stack from '@mui/material/Stack';
 import styles from './../styles.module.scss';
 import Typography from '@mui/material/Typography';
-import { getAuthParams } from '../../actions';
-import { TaskActions } from '@/server/actions/TaskActions';
-
-const dateMap = {
-    [dayjs().format('DD.MM.YYYY')]: 'Today',
-    [dayjs().add(1, 'day').format('DD.MM.YYYY')]: 'Tommorow',
-    [dayjs().add(2, 'day').format('DD.MM.YYYY')]: 'Day after tomorrow',
-};
-
-const getUrgantTasks = async () => {
-    const authParams =  await getAuthParams();
-
-    const tasks = await TaskActions.getUrgentTasks(authParams)
-    return tasks;
-}
+import { getUrgantTasks } from '../actions';
+import { dateMap } from '@/server/constants';
 
 type UrgentTasksType = {
+    authEmail: string
 };
 
-export const UrgentTasks: React.FC<UrgentTasksType> = async ({ }) => {
-    const tasks = await getUrgantTasks();
+export const UrgentTasks: React.FC<UrgentTasksType> = async ({ authEmail }) => {
+    const tasks = await getUrgantTasks(authEmail);
     return (
         <>
             {

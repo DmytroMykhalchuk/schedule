@@ -28,7 +28,7 @@ export const Search: React.FC<SearchType> = ({ }) => {
 
 
     return (
-        <Box flex={1} bgcolor={'secondary'}>
+        <Box flex={1} bgcolor={'secondary'} display={'none'}>
             <FormControl variant="outlined" fullWidth color="warning" sx={{
                 backgroundColor: '#f1f1f1',
                 maxWidth: 380,

@@ -4,7 +4,7 @@ import { RevenueRecordPopulatedType } from "@/server/actions/types";
 import { redirect } from "next/navigation";
 
 export const getRevenue = async (page: number) => {
-    const authParams = await getAuthParams();
+    const projectId = getCookieProjectId();
 
     const result = await RevenueActions.getLastRevenue(authParams, page);
 
@@ -12,7 +12,7 @@ export const getRevenue = async (page: number) => {
 };
 
 export const getRevenurById = async (id: string) => {
-    const authParams = await getAuthParams();
+    const projectId = getCookieProjectId();
     const result = await RevenueActions.getRevenueById(authParams, id);
 
     result === null && redirect('/not-found')
@@ -23,7 +23,7 @@ export const getRevenurById = async (id: string) => {
 export const addRevenueRecord = async (formData: FormData) => {
     'use server';
 
-    const authParams = await getAuthParams();
+    const projectId = getCookieProjectId();
 
     const cost = parseInt(formData.get('cost') as string);
     const date = formData.get('date') as string;
@@ -38,7 +38,7 @@ export const addRevenueRecord = async (formData: FormData) => {
 export const updateRevenue = async (formData: FormData) => {
     'use server';
 
-    const authParams = await getAuthParams();
+    const projectId = getCookieProjectId();
 
     const cost = parseInt(formData.get('cost') as string);
     const date = formData.get('date') as string;
@@ -56,7 +56,7 @@ export const updateRevenue = async (formData: FormData) => {
 
 export const deleteRevenue = async (formData: FormData) => {
     'use server';
-    const authParams = await getAuthParams();
+    const projectId = getCookieProjectId();
     const id = formData.get('revenue_id') as string;
 
     const result = await RevenueActions.deleteRevenue(authParams, id);

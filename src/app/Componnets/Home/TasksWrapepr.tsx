@@ -6,9 +6,10 @@ import Typography from '@mui/material/Typography';
 import { UrgentTasks } from './Elements/UrgentTasks';
 
 type TasksWrapeprType = {
+    authEmail: string
 };
 
-export const TasksWrapepr: React.FC<TasksWrapeprType> = ({ }) => {
+export const TasksWrapepr: React.FC<TasksWrapeprType> = ({ authEmail }) => {
     return (
         <Paper elevation={4} sx={{ p: 2, mb: 2 }}>
             <div>
@@ -18,7 +19,9 @@ export const TasksWrapepr: React.FC<TasksWrapeprType> = ({ }) => {
                         <ArrowForwardIosIcon />
                     </Stack>
                 </Link>
-                <UrgentTasks />
+                <div>
+                    <UrgentTasks authEmail={authEmail} />
+                </div>
             </div>
         </Paper>
     );

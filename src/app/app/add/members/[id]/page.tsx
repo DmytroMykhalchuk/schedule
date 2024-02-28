@@ -6,11 +6,14 @@ import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 import Link from 'next/link'
 import { removeUser } from '../actions'
+import { getUserSessionAndEmail } from '@/app/Componnets/actions'
 type PageType = {
     params: { id: string },
 };
 
-const Page: React.FC<PageType> = ({ params }) => {
+const Page: React.FC<PageType> = async ({ params }) => {
+    const { authEmail } = await getUserSessionAndEmail();
+
     const id = params.id;
     return (
         <>
@@ -31,6 +34,7 @@ const Page: React.FC<PageType> = ({ params }) => {
                     </Link>
                     <form action={removeUser}>
                         <input type="hidden" name="user_id" value={id} />
+                        <input type="hidden" name="auth_email" value={authEmail} />
                         <Button variant='contained' color="warning" type='submit' sx={{ textTransform: 'none' }}>
                             Confirm
                         </Button>

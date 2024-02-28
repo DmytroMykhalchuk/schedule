@@ -6,13 +6,15 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Link from 'next/link';
 import { deleteTeamMember } from '@/app/Componnets/Add/actions';
+import { getUserSessionAndEmail } from '@/app/Componnets/actions';
 
 type PageType = {
     params: { id: string }
 };
 
-const Page: React.FC<PageType> = ({ params }) => {
+const Page: React.FC<PageType> = async ({ params }) => {
     const targetUserId = params.id;
+    const { authEmail } = await getUserSessionAndEmail();
 
     return (
         <>
@@ -33,6 +35,7 @@ const Page: React.FC<PageType> = ({ params }) => {
                     </Link>
                     <form action={deleteTeamMember}>
                         <input type="hidden" name="user_id" value={targetUserId} />
+                        <input type="hidden" name="auth_email" value={authEmail} />
                         <Button variant='contained' type='submit' color="warning" sx={{ textTransform: 'none' }}>
                             Confirm
                         </Button>

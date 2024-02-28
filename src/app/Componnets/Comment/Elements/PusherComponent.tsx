@@ -1,8 +1,8 @@
 'use client';
 import Pusher from 'pusher-js';
 import { channelPrefixName, newCommentEventName, removedCommentEventName } from '@/server/constants';
-import { CommentType } from '@/server/actions/CommentActions';
 import { useEffect } from 'react';
+import { CommentType } from '@/server/actions/types';
 
 Pusher.logToConsole = true;
 

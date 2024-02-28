@@ -1,17 +1,25 @@
 import { CommentActions } from "@/server/actions/CommentActions";
-import { getAuthParams } from "../actions";
+import { getCookieProjectId } from "../actions";
 import { DirectoryActions } from "@/server/actions/DirectoryActions";
+import { TaskActions } from "@/server/actions/TaskActions";
 
-export const getLastComments = async () => {
-    const { projectId, sessionId } = await getAuthParams();
+export const getLastComments = async (email: string) => {
+    const projectId = getCookieProjectId();
 
-    const comments = await CommentActions.getLastComments({ projectId, sessionId });
+    const comments = await CommentActions.getLastComments({ projectId, email });
 
     return comments;
 };
 
-export const getDirectories = async () => {
-    const authParams = await getAuthParams();
-    const directories = await DirectoryActions.getDirectories(authParams)
+export const getDirectories = async (email: string) => {
+    const projectId = getCookieProjectId();
+    const directories = await DirectoryActions.getDirectories({ email, projectId })
     return directories;
+};
+
+export const getUrgantTasks = async (email: string) => {
+    const projectId = getCookieProjectId();
+
+    const tasks = await TaskActions.getUrgentTasks({ projectId, email })
+    return tasks;
 };

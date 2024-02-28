@@ -28,10 +28,11 @@ const weekMapNames = {
 
 
 type OverviewTaskUserType = {
+    authEmail: string,
 };
 
-export const OverviewTaskUser: React.FC<OverviewTaskUserType> = async ({ }) => {
-    const taskTree = await getTaskByUser();
+export const OverviewTaskUser: React.FC<OverviewTaskUserType> = async ({ authEmail }) => {
+    const taskTree = await getTaskByUser(authEmail);
 
 
     const renderList = (): JSX.Element[] => {

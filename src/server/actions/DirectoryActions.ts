@@ -1,9 +1,8 @@
-import { ProccessStatusType, AuthType, DirectoryType, UpdateDirectoryType, TaskDB, DirectoryWithUsersType } from './types';
+import { ProccessStatusType, AuthType, DirectoryType, UpdateDirectoryType, DirectoryWithUsersType } from './types';
 import connectDB from "../connectDB";
 import Project from "../models/Project";
 import { ProjectActions } from './ProjectActions';
 import { ObjectId } from 'mongodb';
-import User from '../models/User';
 import { UserActions } from './UserActions';
 import Directory from '../models/Directory';
 import { getRandomString } from '../utils/utils';
@@ -28,7 +27,7 @@ export const DirectoryActions = {
     async getDirectories(auth: AuthType): Promise<DirectoryWithUsersType[]> {
         await connectDB();
 
-        const user = await UserActions.getUserBySessionId(auth.sessionId);
+        const user = await UserActions.getUserByEmail(auth.email);
 
         const project = await Project.findOne({ _id: auth.projectId, users: user._id }, { directories: 1 }).populate('directories').orFail();
 

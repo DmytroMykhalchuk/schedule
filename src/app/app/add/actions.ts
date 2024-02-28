@@ -1,15 +1,14 @@
 'use server';
 
+import { getCookieProjectId } from "@/app/Componnets/actions";
 import { ProjectActions } from "@/server/actions/ProjectActions";
-import { UserActions } from "@/server/actions/UserActions";
-import { projectIdCookieKey } from "@/server/constants";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const generateDB = async () => {
     'use server';
 
-    const projectId = cookies().get(projectIdCookieKey)?.value;
+    const projectId = getCookieProjectId();
+
     if (!projectId) {
         return;
     }
@@ -23,7 +22,8 @@ export const generateDB = async () => {
 export const removeGenerated = async () => {
     'use server';
 
-    const projectId = cookies().get(projectIdCookieKey)?.value;
+    const projectId = getCookieProjectId();
+
     if (!projectId) {
         return;
     }

@@ -11,13 +11,16 @@ import { HeaderLayout } from '@/app/Componnets/Layouts/HeaderLayout';
 import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
 import { projectIdCookieKey } from '@/server/constants';
 import { TaskForm } from '@/app/Componnets/Add/TaskForm';
+import { getUserSessionAndEmail } from '../actions';
 
 type TaskEditPageType = {
     taskId: string
 };
 
 export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId }) => {
-    const response = await getTask(taskId);
+    const { authEmail, session } = await getUserSessionAndEmail()
+
+    const response = await getTask(taskId, authEmail);
     const { task, comments } = response;
 
     return (
@@ -26,6 +29,10 @@ export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId }) => {
                 title="Task"
                 subtitle=""
                 isCenter
+                authUser={{
+                    name: session?.user?.name!,
+                    image: session?.user?.image!,
+                }}
             />
             <Stack alignItems={'centre'} justifyContent={'center'}>
                 <MiddlePaperWrapper>
@@ -57,6 +64,7 @@ export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId }) => {
                                 categoryId: task.categoryId,
                             }}
                             labelConfirm='Update'
+                            authEmail={authEmail}
                         />
                         <input type="hidden" name="task_id" value={task?._id?.toString() || ''} />
                     </form>
@@ -65,10 +73,11 @@ export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId }) => {
                             comments={comments}
                             taskId={task._id.toString()}
                             projectId={cookies().get(projectIdCookieKey)?.value as string}
+                            authEmail={authEmail}
                         />
                     </Box>
-                </MiddlePaperWrapper>
-            </Stack>
+                </MiddlePaperWrapper >
+            </Stack >
         </>
     );
 };

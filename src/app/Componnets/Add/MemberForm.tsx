@@ -11,9 +11,10 @@ type MemberFormType = {
     isDisabled?: boolean
     buttonConfirmLabel?: string
     requiredUniqueUsers?: boolean
+    authEmail: string
 };
 
-export const MemberForm: React.FC<MemberFormType> = async ({ userId, role, isDisabled, action, buttonConfirmLabel = 'Confirm', requiredUniqueUsers = false }) => {
+export const MemberForm: React.FC<MemberFormType> = async ({ userId, role, isDisabled, action, buttonConfirmLabel = 'Confirm', requiredUniqueUsers = false, authEmail }) => {
     const users = await getProjectUsers(requiredUniqueUsers) || [];
 
     userId || users.unshift({
@@ -25,6 +26,7 @@ export const MemberForm: React.FC<MemberFormType> = async ({ userId, role, isDis
 
     return (
         <form className={styles.formCreating} action={action}>
+            <input type="hidden" name="auth_email" value={authEmail} />
             <UserSelect fieldName="user" showEmail defaultUserId={userId} isDisabled={isDisabled} users={users} />
             <TextField
                 label="Role"

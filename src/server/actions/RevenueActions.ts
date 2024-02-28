@@ -1,10 +1,10 @@
-import dayjs from 'dayjs';
 import connectDB from '../connectDB';
-import { revenuePerPage } from '../constants';
+import dayjs from 'dayjs';
 import Revenue from '../models/Revenue';
+import { AuthType, ProccessStatusType, RevenueChartType, RevenueDBdType, RevenueItemPopulatedDB, RevenueRecordPopulatedType, RevenueRecordType, RevenueStoreType, UpdateRevenueType } from './types';
 import { ProjectActions } from './ProjectActions';
+import { revenuePerPage } from '../constants';
 import { UserActions } from './UserActions';
-import { AuthType, RevenueStoreType, ProccessStatusType, RevenueRecordType, RevenueDBdType, RevenueItemPopulatedDB, RevenueRecordPopulatedType, UpdateRevenueType, RevenueChartType } from './types';
 
 export const RevenueActions = {
     async getLastRevenue(authParams: AuthType, page: number): Promise<{ total: number, revenues: RevenueRecordType[] }> {
@@ -63,7 +63,8 @@ export const RevenueActions = {
     async addRevenue(authParams: AuthType, storeRevenue: RevenueStoreType): Promise<ProccessStatusType> {
         await connectDB();
 
-        const user = await UserActions.getUserBySessionId(authParams.sessionId);
+                const user = await UserActions.getUserByEmail(authParams.email);
+
         const project = await ProjectActions.getProjectById(authParams.projectId, { _id: 1 }, user._id);
 
         if (!project || !user) {
@@ -85,7 +86,7 @@ export const RevenueActions = {
 
     async updateRevenue(authParams: AuthType, updateRevenue: UpdateRevenueType): Promise<ProccessStatusType> {
         await connectDB();
-        const user = await UserActions.getUserBySessionId(authParams.sessionId, { _id: 1 });
+        const user = await UserActions.getUserByEmail(authParams.email, { _id: 1 });
         const project = await ProjectActions.getProjectById(authParams.projectId, { _id: 1 }, user._id);
 
         if (!project || !user) {

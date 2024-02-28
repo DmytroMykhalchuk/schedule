@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
 import styles from '@/app/Componnets/Add/styles.module.scss';
@@ -34,12 +33,14 @@ type TaskFormType = {
     },
     labelConfirm: string
     UnderFormSlot?: ReactNode
+    authEmail: string
 };
 
-export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, UnderFormSlot }) => {
+export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, UnderFormSlot, authEmail }) => {
 
     return (
         <>
+            <input type="hidden" name="auth_email" value={authEmail} />
             <Box px={2} py={1}>
                 <input className={styles.taskTitle} type='text' name='task_name' required defaultValue={defaultValues?.title || 'New task #1'} />
             </Box>
@@ -55,7 +56,7 @@ export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, 
                 </Grid>
                 <Grid item xs={12}>
                     <div>
-                        <FormElementProjects defaultDirectory={defaultValues?.directory} />
+                        <FormElementProjects defaultDirectory={defaultValues?.directory} authEmail={authEmail} />
                     </div>
                 </Grid>
                 <Grid item xs={12}>
@@ -64,7 +65,7 @@ export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, 
                     </div>
                 </Grid>
                 <FormElementPriority defaultPriority={defaultValues?.priority} />
-                <FormElementCategory defaultCategoryId={defaultValues.categoryId} />
+                <FormElementCategory defaultCategoryId={defaultValues.categoryId} authEmail={authEmail} />
             </Grid>
             <Stack px={2} spacing={2}>
                 <FormElementDescription defaultDescription={defaultValues?.description} />

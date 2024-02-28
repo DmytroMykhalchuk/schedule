@@ -1,17 +1,20 @@
-import { MiddlePaperWrapper } from "@/ui/MiddlePaperWrapper";
-import Stack from "@mui/material/Stack";
-import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
-import Typography from '@mui/material/Typography'
-import { getMembers } from "./actions";
-import Link from "next/link";
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Link from 'next/link';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { getMembers } from './actions';
+import { getUserSessionAndEmail } from '@/app/Componnets/actions';
+import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
 
 type PageType = {
 };
 
 const Page: React.FC<PageType> = async ({ }) => {
-    const users = await getMembers();
+    const { authEmail } = await getUserSessionAndEmail();
+
+    const users = await getMembers(authEmail);
     return (
         <Stack alignItems={'center'} justifyContent={'center'}>
             <MiddlePaperWrapper pathBack="/app/add" title="Members">

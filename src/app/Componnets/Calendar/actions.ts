@@ -1,20 +1,20 @@
 import { CalendarActions } from "@/server/actions/CalendarActions";
 import { cookies } from "next/headers";
-import { getAuthParams } from "../actions";
+import { getCookieProjectId } from "../actions";
 
-export const getDaysWithCurrentMonth = async (date: string) => {
-    const { projectId, sessionId } =  await getAuthParams();
+export const getDaysWithCurrentMonth = async (date: string, email: string) => {
+    const projectId = getCookieProjectId();
 
-    const days = await CalendarActions.getMonthTaskDays(projectId, sessionId, date);
+    const days = await CalendarActions.getMonthTaskDays({ projectId, email }, date);
 
     return days;
 
 };
 
-export const getWeekTasks = async (date: string) => {
-    const { projectId, sessionId } =  await getAuthParams();
+export const getWeekTasks = async (date: string, email: string) => {
+    const projectId = getCookieProjectId();
 
-    const tasks = CalendarActions.getWeekTasks({ projectId, sessionId }, date);
-    
+    const tasks = CalendarActions.getWeekTasks({ projectId, email }, date);
+
     return tasks;
 };

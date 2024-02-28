@@ -4,14 +4,17 @@ import styles from './styles.module.scss';
 import { ColumnItem } from '@/app/Componnets/Directory/ColumnItem';
 import { getDirectoryAndTasks } from './actions';
 import { HeaderWithBreadcrumbs } from '@/app/Componnets/Layouts/HeaderWithBreadcrumbs';
+import { getUserSessionAndEmail } from '@/app/Componnets/actions';
 
 type PageType = {
     params: { id: string }
 };
 
 const Page: React.FC<PageType> = async ({ params }) => {
+    const { authEmail } = await getUserSessionAndEmail()
+
     const { id } = params;
-    const info = await getDirectoryAndTasks(id);
+    const info = await getDirectoryAndTasks(id, authEmail);
 
     const titles = [
         { linkLabel: 'Project overview', linkHref: '/app/charts', },

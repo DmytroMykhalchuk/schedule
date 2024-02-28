@@ -5,12 +5,12 @@ export const GET = async (req: Request) => {
     const { searchParams } = new URL(req.url);
 
     const projectId = searchParams.get('project_id');
-    const sessionId = searchParams.get('session_id');
+    const email = searchParams.get('email');
     const taskId = searchParams.get('task_id') || undefined;
     const userId = searchParams.get('user_id');
     const date = searchParams.get('date');
 
-    if (!(projectId && sessionId && date)) {
+    if (!(projectId && email && date)) {
         return NextResponse.json({
             code: 500,
             message: 'Operation not allowed',
@@ -19,7 +19,7 @@ export const GET = async (req: Request) => {
         });
     }
 
-    const response = await TaskActions.getAllowedHours({ projectId, sessionId }, date, userId, taskId);
+    const response = await TaskActions.getAllowedHours({ projectId, email }, date, userId, taskId);
 
     return NextResponse.json({
         code: 200,

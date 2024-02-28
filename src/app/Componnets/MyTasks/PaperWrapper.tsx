@@ -1,12 +1,11 @@
-import { TaskShortType } from "@/server/actions/TaskActions";
 import Paper from "@mui/material/Paper";
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
-import Box from '@mui/material/Box';
 import dayjs from "dayjs";
 import { TaskRowItem } from "./TaskRowItem";
 import { StyleRangeType, priorityStyling, statusStyling, taskDayPropertyStyle } from "@/server/constants";
+import { TaskShortType } from "@/server/actions/types";
 
 const datePointStyle = {
     [dayjs().format('DD.MM.YYYY')]: taskDayPropertyStyle.today,
@@ -55,7 +54,7 @@ export const PaperWrapper: React.FC<PaperWrapperType> = ({ title, tasks, subtask
 
                         return (
                             <TaskRowItem key={index}
-                                taskId={task.taskId}
+                                url={task.taskId}
                                 datePoint={{ color: dateColor, label: dateName }}
                                 name={task.name}
                                 priority={priorityProps}

@@ -6,10 +6,11 @@ import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
 import { RecordActions } from '../Common/RecordActions';
 
 type TeamListType = {
+    authEmail: string,
 };
 
-export const TeamList: React.FC<TeamListType> = async ({ }) => {
-    const team = await getTeam();
+export const TeamList: React.FC<TeamListType> = async ({ authEmail }) => {
+    const team = await getTeam(authEmail);
 
     return (
         <MiddlePaperWrapper>

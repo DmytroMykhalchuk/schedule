@@ -1,33 +1,31 @@
-'use server';
-
 import { defaultFirstDirectory, defaultFirstUserId } from "@/app/Componnets/Add/actions";
-import { getAuthParams } from "@/app/Componnets/actions";
+import { getCookieProjectId } from "@/app/Componnets/actions";
 import { TaskActions } from "@/server/actions/TaskActions";
 import { redirect } from "next/navigation";
 
-export const createTask = async (formDate: FormData) => {
+export const createTask = async (formData: FormData) => {
     'use server';
-    const { projectId, sessionId } = await getAuthParams();
-
-    const assignee = formDate.get('assignee') as string;
-    const directory = formDate.get('directory') as string;
+    const projectId = getCookieProjectId();
+    const assignee = formData.get('assignee') as string;
+    const directory = formData.get('directory') as string;
+    const email = formData.get('auth_email') as string;
 
     const newTask = {
-        name: formDate.get('task_name') as string,
+        name: formData.get('task_name') as string,
         assignee: assignee === defaultFirstUserId ? null : assignee,
-        status: formDate.get('status') as string,
+        status: formData.get('status') as string,
         directory: directory === defaultFirstDirectory ? null : directory,
-        dueDate: formDate.get('due_date') as string,
-        priority: formDate.get('priority') as string,
-        description: formDate.get('description') as string,
-        subtasks: formDate.getAll('subtasks') as string[] | null,
-        comment: formDate.get('comment') as string | null,
-        fromHour: parseInt(formDate.get('from_hour') as string),
-        toHour: parseInt(formDate.get('to_hour') as string),
-        categoryId: formDate.get('categoryId') as string,
+        dueDate: formData.get('due_date') as string,
+        priority: formData.get('priority') as string,
+        description: formData.get('description') as string,
+        subtasks: formData.getAll('subtasks') as string[] | null,
+        comment: formData.get('comment') as string | null,
+        fromHour: parseInt(formData.get('from_hour') as string),
+        toHour: parseInt(formData.get('to_hour') as string),
+        categoryId: formData.get('categoryId') as string,
     };
 
-    const result = await TaskActions.storeTask({ projectId, sessionId }, newTask);
+    const result = await TaskActions.storeTask({ projectId, email }, newTask);
 
     //todo message notify about success
     redirect('/app/add/task');

@@ -16,7 +16,8 @@ export const PageActions = {
         const currentDate = dayjs();
         const currentDateStamp = currentDate.format('DD.MM.YYYY');
 
-        const user = await UserActions.getUserBySessionId(authParams.sessionId);
+                const user = await UserActions.getUserByEmail(authParams.email);
+
         const authUserId = user._id.toString();
         const project = await Project.findOne({ _id: authParams.projectId, users: authUserId }, { directories: 1, users: 1 }).populate('categories');
 

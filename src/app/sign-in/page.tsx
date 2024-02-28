@@ -22,7 +22,6 @@ type PageType = {
 const Page: React.FC<PageType> = async ({ searchParams }) => {
     const session = await getServerSession(nextAuthConfig);
     const authEmail = session?.user?.email;
-    const paramsProjectId = searchParams?.project_id;
     
     authEmail || redirect('/auth');
 

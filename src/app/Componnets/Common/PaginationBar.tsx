@@ -1,12 +1,12 @@
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Link from 'next/link';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button'
-import { ReactNode } from 'react';
 import styles from './styles.module.scss';
+import { ReactNode } from 'react';
 
 type PaginationBarType = {
     total: number,

@@ -30,5 +30,6 @@ export const deleteDirectory = async (formData: FormData) => {
     if (result.success) {
         redirect('/app/add/directory');
     }
+};
 
-}
+//todo protecting

@@ -12,13 +12,14 @@ const calendars = {
 type BigCalendarWrapperType = {
     type?: CalendarType
     date?: string
+    authEmail: string,
 };
 
-export const BigCalendarWrapper: React.FC<BigCalendarWrapperType> = ({ type = 'week', date }) => {
+export const BigCalendarWrapper: React.FC<BigCalendarWrapperType> = ({ type = 'week', date, authEmail }) => {
     const TargetCalendar = calendars[type];
     return (
         <>
-            <TargetCalendar date={date} />
+            <TargetCalendar date={date} authEmail={authEmail} />
         </>
     );
 };

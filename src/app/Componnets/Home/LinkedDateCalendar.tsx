@@ -24,14 +24,11 @@ function getRandomNumber(min: number, max: number) {
   return Math.round(Math.random() * (max - min) + min);
 };
 
-function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
+function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }, authEmail: string) {
   const formattedDate = date.format('DD.MM.YYYY');
   const targetProjectId = getCookieValue(projectIdCookieKey);
-  const sessionJson = getCookieValue(authCookieKey) || '';
-  const session = JSON.parse(decodeURIComponent(sessionJson) || '{}');
-  const sessionId = session?.sessionId || '';
 
-  return fetch(`/api/home-calendar?date=${formattedDate}&project_id=${targetProjectId}&session_id=${sessionId}`, {
+  return fetch(`/api/home-calendar?date=${formattedDate}&project_id=${targetProjectId}&email=${authEmail}`, {
     next: {
       revalidate: 1
     }
@@ -69,7 +66,7 @@ function ServerDay(props: PickersDayProps<Dayjs> & { highlightedDays?: number[] 
   );
 };
 
-export const LinkedDateCalendar = () => {
+export const LinkedDateCalendar = ({ authEmail }: { authEmail: string }) => {
   const router = useRouter();
   const theme = useTheme();
 
@@ -77,7 +74,7 @@ export const LinkedDateCalendar = () => {
 
   const requestAbortController = useRef<AbortController | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [highlightedDays, setHighlightedDays] = useState([1, 2, 15]);
+  const [highlightedDays, setHighlightedDays] = useState([] as number[]);
 
   const [currentDay, setCurrentDay] = useState(dayjs());
 
@@ -85,7 +82,7 @@ export const LinkedDateCalendar = () => {
     const controller = new AbortController();
     fakeFetch(date, {
       signal: controller.signal,
-    })
+    }, authEmail)
       .then((daysToHighlight) => {
         Array.isArray(daysToHighlight) && setHighlightedDays(daysToHighlight);
         setIsLoading(false);

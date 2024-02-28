@@ -31,7 +31,7 @@ export type UrgentTask = {
 
 export type AuthType = {
     projectId: string,
-    sessionId: string,
+    email: string,
 };
 
 export type StoreTaskType = {

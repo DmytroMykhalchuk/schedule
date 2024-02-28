@@ -1,10 +1,10 @@
 import { TaskActions } from "@/server/actions/TaskActions";
-import { getAuthParams } from "../actions";
+import { getCookieProjectId } from "../actions";
 
-export const getTaskByUser = async () => {
-    const authParams = await getAuthParams();
+export const getTaskByUser = async (email: string) => {
+    const projectId = getCookieProjectId();
 
-    const taskByUser = await TaskActions.getTaskByUser(authParams);
+    const taskByUser = await TaskActions.getTaskByUser({ projectId, email });
 
     return taskByUser;
 };
