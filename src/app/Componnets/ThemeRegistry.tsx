@@ -5,13 +5,30 @@ import { useServerInsertedHTML } from 'next/navigation';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import React from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { theme } from '@/app/theme/theme';
+import { useSelector } from 'react-redux';
+import { getThemeMode } from '@/redux/app/appSelector';
+import { ThemeMode } from '@/redux/app/appTypes';
+import Stack from '@mui/material/Stack';
+import CircularProgress from '@mui/material/CircularProgress';
 
 // This implementation is from emotion-js
 // https://github.com/emotion-js/emotion/issues/2928#issuecomment-1319747902
 export default function ThemeRegistry(props: any) {
     const { options, children } = props;
+    const [currentTheme, setCurrentTheme] = useState(null as ThemeMode | null)
+    useEffect(() => {
+        // Perform localStorage action
+
+    }, []);
+
+    useLayoutEffect(() => {
+        const item = localStorage.getItem('themeMode') as ThemeMode || 'light';
+        setCurrentTheme(item)
+        console.log(item)
+    }, [])
+
 
     const [{ cache, flush }] = React.useState(() => {
         const cache = createCache(options);
@@ -56,11 +73,16 @@ export default function ThemeRegistry(props: any) {
 
     return (
         <CacheProvider value={cache}>
-            <ThemeProvider theme={theme}>
+            <ThemeProvider theme={currentTheme ? theme[currentTheme] : theme.light}>
                 <CssBaseline />
-                <div style={{height:'100vh',overflow:'auto'}}>
-                    {children}
-                </div>
+                {currentTheme
+                    ? <div style={{ height: '100vh', overflow: 'auto' }}>
+                        {children}
+                    </div>
+                    : <Stack alignItems={'center'} justifyContent={'center'} height={'100vh'} sx={{ backgroundColor: 'warning.main' }}>
+                        <CircularProgress sx={{ color: "#fff" }} />
+                    </Stack>
+                }
             </ThemeProvider>
         </CacheProvider>
     );

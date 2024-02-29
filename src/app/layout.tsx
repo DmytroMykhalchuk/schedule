@@ -19,7 +19,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode,
 }) {
-  // console.log(pageProps)
   return (
     <StoreProvider>
       <html lang="en">
