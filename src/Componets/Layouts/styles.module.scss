@@ -1,0 +1,23 @@
+@import './../../assets/styles/global.scss';
+
+.sideBarWrapper {
+    width: 90px;
+    background-color: $orange;
+    height: 100vh;
+    position: sticky;
+    top:0;
+
+    &__menu {
+        padding-top: 0.5em;
+        align-items: center;
+    }
+
+    .menuIcon {
+        color: $peachy-light;
+        font-size: 2.5em;
+        
+        &.active {
+            color: $peachy-dark;
+        }
+    }
+}

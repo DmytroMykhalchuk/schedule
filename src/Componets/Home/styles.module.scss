@@ -1,0 +1,52 @@
+@import './../../assets/styles/global.scss';
+
+.avatar {
+    width: 60px;
+    height: 60px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+}
+
+.targetDay {
+    color: #D71170;
+    position: relative;
+    padding-left: 8px;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background-color: #D71170;
+    }
+}
+
+.checkMark {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border: 1px solid brown;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &__check {
+        display: none;
+    }
+
+    &.active &__check {
+        display: block;
+        background-color: #D71170;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin: 0 auto;
+        border: 1px solid #D71170;
+    }
+}

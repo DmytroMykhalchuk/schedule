@@ -14,9 +14,9 @@ type StoreProjectType = {
 };
 
 export const ProjectActions = {
-    async storeProject(project: StoreProjectType, sessionId: string) {
+    async storeProject(project: StoreProjectType, email: string) {
         await connectDB();
-        const user = await UserActions.getUserBySessionId(sessionId, { _id: 1, });
+        const user = await UserActions.getUserByEmail(email, { _id: 1, });
 
         const modelProject = new Project({
             name: project.name,
