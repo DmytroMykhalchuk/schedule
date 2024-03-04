@@ -1,4 +1,3 @@
-import { addMember } from './../app/add/team/actions';
 import { nextAuthConfig } from "@/configs/auth";
 import { projectIdCookieKey } from "@/server/constants";
 import { getServerSession } from "next-auth";

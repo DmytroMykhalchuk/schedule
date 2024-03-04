@@ -7,27 +7,23 @@ import { generateInvite, getInvitations, removeInvite } from "./actions";
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getUserSessionAndEmail } from "@/Componets/actions";
+import { useTranslations } from "next-intl";
 
 type PageType = {
+    params: {
+        locale: string;
+    };
 };
 
-const Page: React.FC<PageType> = async ({ }) => {
+const Page: React.FC<PageType> = async ({ params }) => {
+    const { locale } = params;
     const { authEmail } = await getUserSessionAndEmail();
 
     const ivitiations = await getInvitations(authEmail);
 
     return (
         <Stack justifyContent={'center'} alignItems={'center'} spacing={2}>
-            <MiddlePaperWrapper pathBack="/app/add" title="Invitings">
-                <Stack alignItems={'center'} mb={2}>
-                    <form className={styles.formCreating} action={generateInvite}>
-                        <input type="hidden" name="auth_email" value={authEmail} />
-                        <Button variant="contained" color="warning" sx={{ textTransform: 'none' }} type='submit'>
-                            Genereate
-                        </Button>
-                    </form>
-                </Stack>
-            </MiddlePaperWrapper>
+            <Content authEmail={authEmail} locale={locale} />
             <MiddlePaperWrapper>
                 <Stack>
                     {
@@ -47,6 +43,28 @@ const Page: React.FC<PageType> = async ({ }) => {
                 </Stack>
             </MiddlePaperWrapper>
         </Stack>
+    );
+};
+
+type ContentType = {
+    authEmail: string;
+    locale: string;
+};
+
+export const Content: React.FC<ContentType> = ({ authEmail, locale }) => {
+    const translation = useTranslations('Form');
+
+    return (
+        <MiddlePaperWrapper pathBack={`/${locale}/app/add`} title={translation('invitation_form.add_title')}>
+            <Stack alignItems={'center'} mb={2}>
+                <form className={styles.formCreating} action={generateInvite}>
+                    <input type="hidden" name="auth_email" value={authEmail} />
+                    <Button variant="contained" color="warning" sx={{ textTransform: 'none' }} type='submit'>
+                        {translation('generate')}
+                    </Button>
+                </form>
+            </Stack>
+        </MiddlePaperWrapper>
     );
 };
 

@@ -174,7 +174,7 @@ export type ProccessStatusType = {
 };
 
 export type DirectoryType = {
-    _id: mongoose.Types.ObjectId,
+    _id: string,
     name: string,
 };
 
@@ -320,6 +320,11 @@ export type ByDirectoryTaskRecord = {
 }
 
 
-
+export type TaskTree = {
+    [id: string]: {
+        tasks: TaskByUserRecord[];
+        user: TaskByUserUser;
+    }
+};
 
 

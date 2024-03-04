@@ -4,12 +4,14 @@ import Typography from '@mui/material/Typography';
 import { Comments } from './Elements/Comments';
 import { TagItem } from './Elements/TagItem';
 import { getCategoriesList } from '../Add/actions';
+import { PaperTitle } from '../Common/PaperTitle';
 
 type NewCommentsType = {
-    authEmail: string
+    authEmail: string;
+    locale: string;
 };
 
-export const NewComments: React.FC<NewCommentsType> = async ({ authEmail }) => {
+export const NewComments: React.FC<NewCommentsType> = async ({ authEmail, locale }) => {
     const categories = await getCategoriesList(authEmail);
     categories.length = 3;
 
@@ -17,11 +19,12 @@ export const NewComments: React.FC<NewCommentsType> = async ({ authEmail }) => {
         <>
             <Paper elevation={4} sx={{ p: 2, mb: 2 }}>
                 <div>
-                    <Typography variant="h6">New comments</Typography>
-                    <Comments authEmail={authEmail} />
+                    <PaperTitle pageName='AppHome' titleKey='new_comments' />
+                    <Comments authEmail={authEmail} locale={locale} />
                 </div>
             </Paper>
             <Paper elevation={4} sx={{ p: 2 }}>
+                <PaperTitle pageName='AppHome' titleKey='categories' />
                 <Stack direction={'row'} spacing={2}>
                     {
                         categories.map((item, index) => (

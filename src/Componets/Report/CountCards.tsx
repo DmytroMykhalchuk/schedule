@@ -1,8 +1,8 @@
-import { UIPaper } from "@/ui/UIPaper";
-import Stack from "@mui/material/Stack";
-import { CountCard } from "./Elements/CountCard";
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import GroupIcon from '@mui/icons-material/Group';
+import Stack from '@mui/material/Stack';
+import { CountCard } from './Elements/CountCard';
+import { useTranslations } from 'next-intl';
 
 type CountCardsType = {
     directoriesCount?: number,
@@ -10,24 +10,25 @@ type CountCardsType = {
 };
 
 export const CountCards: React.FC<CountCardsType> = ({ directoriesCount = 0, usersCount = 0 }) => {
+    const translation = useTranslations('Report');
 
     return (
         <Stack direction={'row'} justifyContent={"space-between"} spacing={2}>
             <CountCard
                 Icon={<AccountTreeIcon color='warning' />}
-                buttonLabel="Add new project"
+                buttonLabel={translation(`total_projects.add_button`)}
                 colorTheme="warning"
                 count={directoriesCount}
                 createUrl="/app/add/directory"
-                title="Total projects"
+                title={translation(`total_projects.title`)}
             />
             <CountCard
                 Icon={<GroupIcon color='secondary' />}
-                buttonLabel="Add new user"
+                buttonLabel={translation(`total_users.add_button`)}
                 colorTheme="secondary"
                 count={usersCount}
                 createUrl="/app/add/users"
-                title="Total users"
+                title={translation(`total_users.title`)}
             />
         </Stack>
     );

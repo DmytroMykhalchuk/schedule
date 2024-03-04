@@ -8,11 +8,13 @@ import { ByDirectoryTaskRecord } from '@/server/actions/types';
 import { TaskItem } from './Elements/TaskItem';
 
 type ColumnItemType = {
-    tasks?: ByDirectoryTaskRecord[],
-    title: string
+    tasks?: ByDirectoryTaskRecord[];
+    title: string;
+    locale: string;
+    createTaskLabel: string;
 };
 
-export const ColumnItem: React.FC<ColumnItemType> = ({ tasks, title }) => {
+export const ColumnItem: React.FC<ColumnItemType> = ({ tasks, title, locale, createTaskLabel }) => {
 
     return (
         <Paper
@@ -28,16 +30,16 @@ export const ColumnItem: React.FC<ColumnItemType> = ({ tasks, title }) => {
             <Stack spacing={2}>
                 {
                     tasks && tasks.map(task => (
-                        <TaskItem key={task._id} task={task} />
+                        <TaskItem key={task._id} task={task} locale={locale} />
                     ))
                 }
             </Stack>
             <Paper elevation={0} sx={{ position: 'sticky', bottom: -1, p: 2 }}>
                 <Stack alignItems={'center'} >
-                    <Link href='/app/add/tasks'>
-                    <Button variant="outlined" color='inherit' sx={{ p: 1, textTransform: 'none',fontSize:'1.25em' }}>
-                        + Add task
-                    </Button>
+                    <Link href={`/${locale}/app/add/tasks`}>
+                        <Button variant="outlined" color='inherit' sx={{ p: 1, textTransform: 'none', fontSize: '1.25em' }}>
+                            + {createTaskLabel}
+                        </Button>
                     </Link>
                 </Stack>
             </Paper>

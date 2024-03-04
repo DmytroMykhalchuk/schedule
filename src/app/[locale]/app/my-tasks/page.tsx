@@ -55,24 +55,27 @@ const Page: React.FC<PageType> = async ({ }) => {
 
     return (
         <>
-            <HeaderLayout title="My tasks" subtitle=""
+            <HeaderLayout title="page_title"
+                pageName='MyTasks'
                 authUser={{
                     name: session?.user?.name || '',
                     image: session?.user?.image || '',
                 }}
             />
             <Stack spacing={4}>
-                <PaperWrapper tasks={taskFiltered.today.tasks} title="Today" />
-                <PaperWrapper tasks={taskFiltered.tomorrow.tasks} title="Tommorow" />
-                <PaperWrapper tasks={taskFiltered.next.tasks} title="This week"
+                <PaperWrapper tasks={taskFiltered.today.tasks} title="today" />
+                <PaperWrapper tasks={taskFiltered.tomorrow.tasks} title="tomorrow" />
+                <PaperWrapper tasks={taskFiltered.next.tasks} title="this_week"
                     subtasks={taskFiltered.previous.tasks.length ? {
                         tasks: taskFiltered.previous.tasks,
-                        title: 'Later'
+                        title: 'later'
                     } : undefined} isGeneralTask />
 
             </Stack>
         </>
     );
 };
+
+
 
 export default Page;

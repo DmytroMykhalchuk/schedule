@@ -3,18 +3,19 @@ import { ReactNode } from "react";
 import { deleteDirectory } from "../actions";
 
 type PageType = {
-    params: { id: string },
+    params: {
+        id: string;
+        locale: string;
+    };
 };
 
 const Page: React.FC<PageType> = ({ params }) => {
-    const { id } = params;
+    const { id, locale } = params;
 
     return (
         <DeleteDialog
             FormWrapper={(props: any) => <FormWrapper directoryId={id} {...props} />}
-            cancelHref="/app/add/directory"
-            content='It will be deleted completely. Are you sure?'
-            title="Confrim action"
+            cancelHref={`/${locale}/app/add/directories`}
         />
     );
 };

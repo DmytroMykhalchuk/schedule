@@ -54,13 +54,15 @@ const getAllowedHours = (date: Dayjs, userId?: string | null, taskId?: string) =
 };
 
 type FormElementDateType = {
-    defaultDueDate?: string
-    fromHour?: number,
-    toHour?: number,
-    taskId?: string
+    defaultDueDate?: string;
+    fromHour?: number;
+    toHour?: number;
+    taskId?: string;
+    translatedName: string;
+    translatedForbiddenDate: string;
 };
 
-export const FormElementDate: React.FC<FormElementDateType> = ({ defaultDueDate, fromHour, toHour, taskId }) => {
+export const FormElementDate: React.FC<FormElementDateType> = ({ defaultDueDate, fromHour, toHour, taskId, translatedName, translatedForbiddenDate }) => {
     const isAllowedMakeHoursRequest = useRef(false);
 
     const assignee = useSelector(getTaskFormAssignee);
@@ -205,7 +207,7 @@ export const FormElementDate: React.FC<FormElementDateType> = ({ defaultDueDate,
         <Grid container spacing={2} sx={{ p: 2 }}>
             <Grid item xs={3} justifyContent={'center'}>
                 <Stack justifyContent={'center'} height={'100%'}>
-                    <Typography variant="body1" color={'gray'}>Due date</Typography>
+                    <Typography variant="body1" color={'gray'}>{translatedName}</Typography>
                 </Stack>
             </Grid>
             <Grid item xs={9}>
@@ -250,7 +252,7 @@ export const FormElementDate: React.FC<FormElementDateType> = ({ defaultDueDate,
                                 }}
                             />
                         </LocalizationProvider>
-                        {hasForbiddenDate.isError && <Typography variant="caption" color="error">This date: {hasForbiddenDate.formattedDay} not allowed</Typography>}
+                        {hasForbiddenDate.isError && <Typography variant="caption" color="error">{translatedForbiddenDate.replace('date', hasForbiddenDate.formattedDay)}</Typography>}
                     </Stack>
                     {
                         isFetchedHours &&

@@ -7,10 +7,11 @@ dayjs.extend(relativeTimePlugin);
 dayjs.locale('uk');
 
 type CommentsType = {
-    authEmail: string
+    authEmail: string;
+    locale: string;
 };
 
-export const Comments: React.FC<CommentsType> = async ({ authEmail }) => {
+export const Comments: React.FC<CommentsType> = async ({ authEmail, locale }) => {
     const comments = await getLastComments(authEmail);
     const now = dayjs();
 
@@ -28,6 +29,7 @@ export const Comments: React.FC<CommentsType> = async ({ authEmail }) => {
                         avatar={item.picture}
                         taskId={item.taskId?._id.toString()}
                         timeDiff={timeDiff}
+                        locale={locale}
                     />
                 )
             })}

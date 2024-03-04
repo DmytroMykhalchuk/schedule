@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { TaskRowItem } from "./TaskRowItem";
 import { StyleRangeType, priorityStyling, statusStyling, taskDayPropertyStyle } from "@/server/constants";
 import { TaskShortType } from "@/server/actions/types";
+import { useTranslations } from "next-intl";
 
 const datePointStyle = {
     [dayjs().format('DD.MM.YYYY')]: taskDayPropertyStyle.today,
@@ -14,11 +15,11 @@ const datePointStyle = {
 };
 
 const weekMapNames = {
-    [dayjs().day(1).format('DD.MM.YYYY')]: 'monday',
-    [dayjs().day(2).format('DD.MM.YYYY')]: 'tuesday',
-    [dayjs().day(3).format('DD.MM.YYYY')]: 'wednesday',
-    [dayjs().day(4).format('DD.MM.YYYY')]: 'thursday',
-    [dayjs().day(5).format('DD.MM.YYYY')]: 'friday',
+    [dayjs().day(1).format('DD.MM.YYYY')]: dayjs().day(1).format('ddd'),
+    [dayjs().day(2).format('DD.MM.YYYY')]: dayjs().day(2).format('ddd'),
+    [dayjs().day(3).format('DD.MM.YYYY')]: dayjs().day(3).format('ddd'),
+    [dayjs().day(4).format('DD.MM.YYYY')]: dayjs().day(4).format('ddd'),
+    [dayjs().day(5).format('DD.MM.YYYY')]: dayjs().day(5).format('ddd'),
 };
 
 const relativePointNames = {
@@ -37,12 +38,12 @@ type PaperWrapperType = {
 };
 
 export const PaperWrapper: React.FC<PaperWrapperType> = ({ title, tasks, subtasks, isGeneralTask }) => {
-
+    const translation = useTranslations('MyTasks');
     const renderSubtasks = () => {
         return (
             <>
                 <Divider variant="fullWidth" orientation="horizontal" flexItem sx={{ fontSize: '1.25em' }} >
-                    {subtasks?.title}
+                    {subtasks?.title && translation(subtasks?.title)}
                 </Divider>
                 <Stack spacing={2} pt={2}>
                     {subtasks?.tasks.map((task, index) => {
@@ -50,7 +51,7 @@ export const PaperWrapper: React.FC<PaperWrapperType> = ({ title, tasks, subtask
                         const styleProps = statusStyling[task.status] as StyleRangeType;
                         //@ts-ignore
                         const dateColor = (isGeneralTask ? datePointStyle[task.priority] : datePointStyle[task.dueDate]) as string;
-                        const dateName = isGeneralTask ? weekMapNames[task.dueDate] : relativePointNames[task.dueDate];
+                        const dateName = isGeneralTask ? weekMapNames[task.dueDate] : translation(relativePointNames[task.dueDate]);
 
                         return (
                             <TaskRowItem key={index}
@@ -70,7 +71,7 @@ export const PaperWrapper: React.FC<PaperWrapperType> = ({ title, tasks, subtask
     return (
         <>
             <Paper sx={{ p: 2, borderRadius: 4 }}>
-                <Typography variant="h5" fontWeight={600}>{title}</Typography>
+                <Typography variant="h5" fontWeight={600}>{translation(title)}</Typography>
                 {
                     tasks?.length > 0
                         ? <Stack spacing={2}>
@@ -79,7 +80,7 @@ export const PaperWrapper: React.FC<PaperWrapperType> = ({ title, tasks, subtask
                                 const styleProps = statusStyling[task.status] as StyleRangeType;
                                 //@ts-ignore
                                 const dateColor = (isGeneralTask ? datePointStyle[task.priority] : datePointStyle[task.dueDate]) as string;
-                                const dateName = isGeneralTask ? weekMapNames[task.dueDate] : relativePointNames[task.dueDate];
+                                const dateName = isGeneralTask ? weekMapNames[task.dueDate] : translation(relativePointNames[task.dueDate]);
                                 return (
                                     <TaskRowItem key={index}
                                         url={task.taskId}
@@ -94,7 +95,7 @@ export const PaperWrapper: React.FC<PaperWrapperType> = ({ title, tasks, subtask
                         </Stack>
                         : <>
                             <Stack justifyContent={'center'} alignItems={'center'} p={3}>
-                                <Typography variant="h6">{'No tasks'}</Typography>
+                                <Typography variant="h6">{translation('no_tasks')}</Typography>
                             </Stack>
                             {subtasks?.tasks && renderSubtasks()}
                         </>

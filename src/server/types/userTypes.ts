@@ -12,3 +12,11 @@ export type UserLoginResponse = {
     email: string
     id: string,
 };
+
+export type MemberType = {
+    _id: string,
+    name: string,
+    email: string,
+    picture: string,
+    isAdmin: boolean
+}

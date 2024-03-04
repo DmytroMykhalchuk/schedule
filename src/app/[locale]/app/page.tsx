@@ -10,9 +10,11 @@ import { NewComments } from "@/Componets/Home/NewComments";
 import { Team } from "@/Componets/Home/Team";
 
 type PageType = {
+    params: { locale: string },
 };
 
-const Page: React.FC<PageType> = async () => {
+const Page: React.FC<PageType> = async ({ params }) => {
+    const { locale } = params;
     const session = await getServerSession(nextAuthConfig);
     const authEmail = session?.user?.email as string;
 
@@ -26,24 +28,24 @@ const Page: React.FC<PageType> = async () => {
                     <Stack spacing={2}>
                         {/* <HomeCalendar authEmail={authEmail} /> */}
                         <div>
-                            <ProjectDirectories authEmail={authEmail} />
+                            <ProjectDirectories authEmail={authEmail} locale={locale} />
                         </div>
                     </Stack>
                 </Grid>
                 <Grid item sm={12} md={8}>
                     <div>
                         <div>
-                            <TasksWrapepr authEmail={authEmail} />
+                            <TasksWrapepr authEmail={authEmail} locale={locale} />
                         </div>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} md={6}>
+                            <Grid item xs={12} md={12} lg={6}>
                                 <div>
-                                    <NewComments authEmail={authEmail} />
+                                    <NewComments authEmail={authEmail} locale={locale} />
                                 </div>
                             </Grid>
-                            <Grid item xs={12} md={6}>
+                            <Grid item xs={12} md={12} lg={6}>
                                 <div>
-                                    <Team limit={4} authEmail={authEmail} />
+                                    <Team limit={4} authEmail={authEmail} locale={locale} />
                                 </div>
                             </Grid>
                         </Grid>

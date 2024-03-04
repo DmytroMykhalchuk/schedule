@@ -1,14 +1,14 @@
 import { CalendarLayout } from "@/Componets/Calendar/CalendarLayout";
 
 type PageType = {
-    params: { date: string }
+    params: { date: string, locale: string }
 };
 
 const Page: React.FC<PageType> = ({ params }) => {
-    const date = params.date;
+    const { date, locale } = params;
 
     return (
-        <CalendarLayout type="week" date={date}/>
+        <CalendarLayout type="week" date={date} locale={locale} />
     );
 };
 

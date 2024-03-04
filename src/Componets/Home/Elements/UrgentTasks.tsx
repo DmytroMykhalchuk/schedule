@@ -3,15 +3,17 @@ import cn from 'classnames';
 import Stack from '@mui/material/Stack';
 import styles from './../styles.module.scss';
 import Typography from '@mui/material/Typography';
-import { getUrgantTasks } from '../actions';
 import { dateMap } from '@/server/constants';
+import { getUrgantTasks } from '../actions';
 
 type UrgentTasksType = {
-    authEmail: string
+    authEmail: string;
+    locale: string;
 };
 
-export const UrgentTasks: React.FC<UrgentTasksType> = async ({ authEmail }) => {
+export const UrgentTasks: React.FC<UrgentTasksType> = async ({ authEmail, locale }) => {
     const tasks = await getUrgantTasks(authEmail);
+    
     return (
         <>
             {

@@ -13,10 +13,13 @@ type WorkHoursChartType = {
     workinkgHours: WorkHours,
     length: typeof weekLength | typeof yearMonthLength,
     subtitles: string[],
-    axisHours: number[],
+    axisHours: number[];
+    translate: {
+        hoursLetter: string;
+    };
 };
 
-export const WorkHoursChart: React.FC<WorkHoursChartType> = ({ workinkgHours, length, subtitles, axisHours }) => {
+export const WorkHoursChart: React.FC<WorkHoursChartType> = ({ workinkgHours, length, subtitles, axisHours, translate }) => {
     const axiosY = axisHours.sort((a, b) => b - a);
     const columnInfo = length === weekLength ? {
         totalColumn: 11, firstColumn: 1, barColumn: 2,
@@ -40,7 +43,7 @@ export const WorkHoursChart: React.FC<WorkHoursChartType> = ({ workinkgHours, le
                     <Stack>
                         {axiosY.map((item, index) => (
                             <Box key={index} p={2} sx={{ position: 'relative', borderBottomWidth: '1px', borderBottomStyle: 'solid', borderBottomColor: 'transparent' }}>
-                                <Typography textAlign={'center'} component={'div'} variant="caption" position={'absolute'} sx={{ bottom: '-25%', }}>{item} h</Typography>
+                                <Typography textAlign={'center'} component={'div'} variant="caption" position={'absolute'} sx={{ bottom: '-25%', }}>{item} {translate.hoursLetter}</Typography>
                             </Box>
                         ))}
                     </Stack>

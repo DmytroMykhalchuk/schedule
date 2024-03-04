@@ -4,17 +4,18 @@ import Select from '@mui/material/Select';
 import { ReactNode } from 'react';
 
 type FormSelectType = {
-    labelId?: string,
-    label?: string,
-    isFullWidth?: boolean
-    children: ReactNode
-    name: string
-    required?: boolean
-    defaultValue?: string
-    isBorderless?: boolean
+    labelId?: string;
+    label?: string;
+    isFullWidth?: boolean;
+    children: ReactNode;
+    name: string;
+    required?: boolean;
+    defaultValue?: string;
+    isBorderless?: boolean;
+    hasPadding?: boolean;
 };
 
-export const FormSelect: React.FC<FormSelectType> = ({ label, labelId, isFullWidth, children, name, required, defaultValue, isBorderless = true }) => {
+export const FormSelect: React.FC<FormSelectType> = ({ label, labelId, isFullWidth, children, name, required, defaultValue, isBorderless = true, hasPadding }) => {
     return (
         <FormControl fullWidth={isFullWidth} size='small' color='warning'>
             <InputLabel id={labelId}>{label}</InputLabel>
@@ -31,7 +32,7 @@ export const FormSelect: React.FC<FormSelectType> = ({ label, labelId, isFullWid
                         display: 'none',
                     },
                     '& .MuiSelect-select': {
-                        // p: 0,
+                        p: hasPadding ? undefined : 0,
                     },
                     '& fieldset': {
                         border: isBorderless ? 'none' : undefined,

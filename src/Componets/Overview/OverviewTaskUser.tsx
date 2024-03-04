@@ -7,33 +7,34 @@ import uk from 'dayjs/locale/uk';
 import { getCategoriesList } from '../Add/actions';
 import { getTaskByUser } from './actions';
 import { UIPaper } from '@/ui/UIPaper';
-import { TaskByUserRecord, TaskShortType } from '@/server/actions/types';
+import { TaskByUserRecord, TaskShortType, TaskTree } from '@/server/actions/types';
 import { TaskRowItem } from '../MyTasks/TaskRowItem';
 import { priorities, priorityStyling, statusStyling, taskDayPropertyStyle } from '@/server/constants';
 import { capitalizeFirstLetter } from '@/utlis/capitalizeFirstLetter';
+import { useTranslations } from 'next-intl';
 
 dayjs.locale(uk);
 const currentDay = dayjs();
 
-const weekMapNames = {
-    [currentDay.day(1).format('DD.MM.YYYY')]: 'monday',
-    [currentDay.day(2).format('DD.MM.YYYY')]: 'tuesday',
-    [currentDay.day(3).format('DD.MM.YYYY')]: 'wednesday',
-    [currentDay.day(4).format('DD.MM.YYYY')]: 'thursday',
-    [currentDay.day(5).format('DD.MM.YYYY')]: 'friday',
-    [currentDay.format('DD.MM.YYYY')]: 'Today',
-    [currentDay.add(1, 'day').format('DD.MM.YYYY')]: 'Tommorow',
-    // [currentDay.add(2, 'day').format('DD.MM.YYYY')]: 'Day after tomorrow',
-};
 
 
 type OverviewTaskUserType = {
-    authEmail: string,
+    locale: string;
+    taskTree: TaskTree
 };
 
-export const OverviewTaskUser: React.FC<OverviewTaskUserType> = async ({ authEmail }) => {
-    const taskTree = await getTaskByUser(authEmail);
+export const OverviewTaskUser: React.FC<OverviewTaskUserType> = ({ taskTree, locale }) => {
+    const translation = useTranslations('MyTasks');
 
+    const weekMapNames = {
+        [currentDay.day(1).format('DD.MM.YYYY')]: currentDay.day(1).format('dddd'),
+        [currentDay.day(2).format('DD.MM.YYYY')]: currentDay.day(2).format('dddd'),
+        [currentDay.day(3).format('DD.MM.YYYY')]: currentDay.day(3).format('dddd'),
+        [currentDay.day(4).format('DD.MM.YYYY')]: currentDay.day(4).format('dddd'),
+        [currentDay.day(5).format('DD.MM.YYYY')]: currentDay.day(5).format('dddd'),
+        [currentDay.format('DD.MM.YYYY')]: translation('today'),
+        [currentDay.add(1, 'day').format('DD.MM.YYYY')]: translation('tomorrow'),
+    };
 
     const renderList = (): JSX.Element[] => {
         const items = [] as JSX.Element[];
@@ -42,7 +43,7 @@ export const OverviewTaskUser: React.FC<OverviewTaskUserType> = async ({ authEma
             if (Object.prototype.hasOwnProperty.call(taskTree, assignee)) {
                 const element = taskTree[assignee];
                 items.push(
-                    <UserItemTasks key={assignee} tasks={element.tasks} user={element.user} />
+                    <UserItemTasks key={assignee} tasks={element.tasks} user={element.user} locale={locale} weekMapNames={weekMapNames} />
                 );
             }
         }
@@ -51,7 +52,7 @@ export const OverviewTaskUser: React.FC<OverviewTaskUserType> = async ({ authEma
     }
 
     return (
-        <UIPaper title="Task by user">
+        <UIPaper title={translation('task_by_user_title')}>
             <Stack spacing={2}>
                 {renderList()}
             </Stack>
@@ -60,11 +61,14 @@ export const OverviewTaskUser: React.FC<OverviewTaskUserType> = async ({ authEma
 };
 
 type UserItemTasksType = {
-    user: { name: string, picture: string },
-    tasks: TaskByUserRecord[],
+    user: { name: string, picture: string };
+    tasks: TaskByUserRecord[];
+    locale: string;
+    weekMapNames: { [dateMark: string]: string };
 };
 
-const UserItemTasks: React.FC<UserItemTasksType> = ({ user, tasks }) => {
+const UserItemTasks: React.FC<UserItemTasksType> = ({ user, tasks, locale, weekMapNames }) => {
+    const translation = useTranslations('MyTasks');
     return (
         <Stack spacing={2}>
             <Stack direction={'row'} spacing={1} alignItems={'center'}>
@@ -77,20 +81,21 @@ const UserItemTasks: React.FC<UserItemTasksType> = ({ user, tasks }) => {
                         key={item._id}
                         name={item.name}
                         priority={{
-                            label: item.priority,
+                            label: translation('priorities.' + item.priority),
                             primaryColor: priorityStyling[item.priority]?.primaryColor,
                             secondaryColor: priorityStyling[item.priority]?.secondaryColor,
                         }}
                         status={{
-                            label: item.status,
+                            label: translation('statuses.' + item.status),
                             primaryColor: statusStyling[item.status]?.primaryColor,
                             secondaryColor: statusStyling[item.status]?.secondaryColor,
                         }}
                         datePoint={{
+                            //@ts-ignore
                             color: taskDayPropertyStyle.hasOwnProperty(weekMapNames[item.dueDate]) ? taskDayPropertyStyle[weekMapNames[item.dueDate]] || '' : taskDayPropertyStyle[item.priority],
                             label: capitalizeFirstLetter(weekMapNames[item.dueDate]) || item.dueDate,
                         }}
-                        url={'/app/add/tasks/' + item._id}
+                        url={`/${locale}/app/add/tasks/${item._id}`}
                     />
                 ))}
             </Stack>

@@ -5,16 +5,19 @@ import Button from "@mui/material/Button";
 import { defaultFirstUserId, getProjectUsers } from "./actions";
 
 type MemberFormType = {
-    action: (formDate: FormData) => Promise<void>
-    userId?: string
-    role?: string
-    isDisabled?: boolean
-    buttonConfirmLabel?: string
-    requiredUniqueUsers?: boolean
-    authEmail: string
+    action: (formDate: FormData) => Promise<void>;
+    userId?: string;
+    role?: string;
+    isDisabled?: boolean;
+    buttonConfirmLabel?: string;
+    requiredUniqueUsers?: boolean;
+    authEmail: string;
+    tranlsateInput: {
+        role: string;
+    };
 };
 
-export const MemberForm: React.FC<MemberFormType> = async ({ userId, role, isDisabled, action, buttonConfirmLabel = 'Confirm', requiredUniqueUsers = false, authEmail }) => {
+export const MemberForm: React.FC<MemberFormType> = async ({ userId, role, isDisabled, action, buttonConfirmLabel = 'Confirm', tranlsateInput, requiredUniqueUsers = false, authEmail }) => {
     const users = await getProjectUsers(requiredUniqueUsers) || [];
 
     userId || users.unshift({
@@ -29,7 +32,7 @@ export const MemberForm: React.FC<MemberFormType> = async ({ userId, role, isDis
             <input type="hidden" name="auth_email" value={authEmail} />
             <UserSelect fieldName="user" showEmail defaultUserId={userId} isDisabled={isDisabled} users={users} />
             <TextField
-                label="Role"
+                label={tranlsateInput.role}
                 variant="outlined"
                 name="role"
                 defaultValue={role}

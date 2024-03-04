@@ -82,7 +82,7 @@ export const UserActions = {
     async getUserByEmail(email: string, selector = {}) {
         await connectDB();
 
-        const user = await User.findOne({ email }, selector);
+        const user = await User.findOne({ email }, selector).orFail();
 
         return user.toObject();
     },
@@ -120,14 +120,6 @@ export const UserActions = {
         const projects = await ProjectActions.getAvailableProjects(user._id);
 
         return projects;
-    },
-
-    async getUserByEmail(userEmail: string, selector = {}) {
-        await connectDB();
-
-        const user = await User.findOne({ email: userEmail }, selector).orFail();
-
-        return user;
     },
 };
 

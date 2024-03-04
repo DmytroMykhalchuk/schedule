@@ -2,14 +2,7 @@ import { AuthType } from './types';
 import connectDB from "../connectDB"
 import User from "../models/User";
 import { ProjectActions } from "./ProjectActions";
-
-type MemberType = {
-    _id: string,
-    name: string,
-    email: string,
-    picture: string,
-    isAdmin: boolean
-}
+import { MemberType } from '../types/userTypes';
 
 export const MemberActions = {
     async getMembers(authParams: AuthType): Promise<MemberType[]> {

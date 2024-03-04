@@ -8,12 +8,15 @@ import ReplyAllIcon from '@mui/icons-material/ReplyAll';
 import CloseIcon from '@mui/icons-material/Close';
 
 type NewCommentFormType = {
-    onSend: (comment: string) => void
-    replydTo?: string
-    onCancelReply: () => void
+    onSend: (comment: string) => void;
+    replydTo?: string;
+    onCancelReply: () => void;
+    dictionary: {
+        replyTo: string;
+    };
 };
 
-export const NewCommentForm: React.FC<NewCommentFormType> = ({ onSend, replydTo, onCancelReply }) => {
+export const NewCommentForm: React.FC<NewCommentFormType> = ({ onSend, replydTo, onCancelReply, dictionary }) => {
     const [newComment, setNewComment] = useState('');
 
     const onChangeNewComment = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +34,7 @@ export const NewCommentForm: React.FC<NewCommentFormType> = ({ onSend, replydTo,
             {replydTo &&
                 <Stack direction={'row'} alignItems={'center'} spacing={1}>
                     <ReplyAllIcon sx={{ fontSize: 20 }} />
-                    <Typography variant="subtitle2" alignItems={'center'} flex={1}>reply to {replydTo}</Typography>
+                    <Typography variant="subtitle2" alignItems={'center'} flex={1}>{dictionary.replyTo} {replydTo}</Typography>
                     <IconButton aria-label="cancel replying" size="small" onClick={onCancelReply}>
                         <CloseIcon />
                     </IconButton>

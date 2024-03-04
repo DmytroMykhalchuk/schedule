@@ -2,5 +2,156 @@
     "Index": {
         "title": "Привіт світ!"
     },
+    "AppHome": {
+        "header": {
+            "title": "Ласкаво просимо, {name}!",
+            "subtitle": "Ось ваш порядок денний на сьогодні"
+        },
+        "urgent_tasks": "Термінові завдання",
+        "new_comments": "Останні коментарі",
+        "team": "Команда",
+        "categories": "Категорії",
+        "project_directories": "Директорії проєкту"
+    },
+    "Calendar": {
+        "navigation": {
+            "day": "День",
+            "week": "Тиждень",
+            "month": "Місяць"
+        },
+        "page_title": "Календар"
+    },
+    "MyTasks": {
+        "page_title": "Мої задачі",
+        "today": "Сьогодні",
+        "tomorrow": "Завтра",
+        "this_week": "Цього тижня",
+        "no_tasks": "Немає задач",
+        "later": "Минулі",
+        "statuses": {
+            "pasued": "Пауза",
+            "not_started": "Не розпочато",
+            "in_progress": "Виконується",
+            "done": "Виконано",
+            "not_started_title": "До роботи",
+            "in_progress_title": "Виконується",
+            "done_title": "Виконано"
+        },
+        "priorities": {
+            "low_priority": "Низька",
+            "medium_priority": "Середня",
+            "critical_prority": "Висока"
+        },
+        "task_by_user_title": "Завдання користувачів",
+        "default_title": "Нова задача #1",
+        "assignee": "Призначення",
+        "status": "Статус",
+        "project": "Директорія",
+        "due_date": "Термін виконання",
+        "priority": "Приоритетність",
+        "category": "Категорія",
+        "description": "Опис",
+        "subtasks": "Підзадачі",
+        "is_subtasks": "Підзадачі",
+        "new_task": "Нова задача",
+        "task": "Таск",
+        "no_comments": "Коментарів немає",
+        "directory_overview": "Огляд директорії",
+        "kanban_view": "Канбан дошка",
+        "add_task": "Додати задачу",
+        "reply_to_message": "Відповідь на",
+        "reply_to_user": "Відповідь",
+        "": ""
+    },
+    "Overview": {
+        "page_title": "Огляд",
+        "": ""
+    },
+    "Report": {
+        "page_title": "Звіт",
+        "total_projects": {
+            "title": "Всього проєктів",
+            "add_button": "Додати новий проєкт"
+        },
+        "total_users": {
+            "title": "Всього учасників",
+            "add_button": "Додати учасника"
+        },
+        "project_progress": "Прогрес проєктів",
+        "project_categories": "Категорії проєктів",
+        "total_working_hours": {
+            "title": "Всього робочих годин",
+            "year": "Рік",
+            "week": "Тиждень",
+            "hours": "годин",
+            "hour_short": "г",
+            "avg_per_month": "C.з. {hours}г/місяць"
+        },
+        "project_revenue": {
+            "title": "Дохід проекту",
+            "avg_per_month": "С.з. ${cost}/місяць"
+        },
+        "add_new_revenue": "Додати запис",
+        "": ""
+    },
+    "Form": {
+        "add_member": "Додати учасника",
+        "add_more": "Додати ще",
+        "add_new": "",
+        "revenue": {
+            "title": "Додати запис",
+            "total": "Всього",
+            "note": "Примітка",
+            "date": "Дата",
+            "": ""
+        },
+        "directories": "Директорії",
+        "tasks": "Задачі",
+        "team": "Команда",
+        "invitations": "Запрошення",
+        "members": "Співучасники",
+        "categories": "Категорії",
+        "confirm": "Підтвердити",
+        "create": "Створити",
+        "update": "Оновити",
+        "generate": "Згенерувати",
+        "directory": {
+            "add_title": "Додати директорію",
+            "update_title": "Оновити директорію",
+            "directory_placeholder": "Ім'я директорії"
+        },
+        "invitation_form": {
+            "add_title": "Зпрошення"
+        },
+        "member_form": {
+            "title": "Співучаснки"
+        },
+        "category_form": {
+            "add_title": "Додати категорію",
+            "update_title": "Оновити категорію",
+            "category_placeholder": "Ім'я категорії",
+            "color_label": "Оберіть колір"
+        },
+        "team_form": {
+            "add_title": "Додати у команду",
+            "update_title": "Оновити роль",
+            "role": "Роль"
+        },
+        "forbidden_date": "Дата {date} не доступна",
+        "": ""
+    },
+    "Common": "Дізнатися більше",
+    "Modal": {
+        "cancel": "Скасувати",
+        "confirm": "Підтвердити",
+        "confirm_action": "Підтвердіть дію",
+        "default_delete_message": "Запис буде назавжди видалнео. Ви впевнені що хочете видалити?",
+        "": ""
+    },
+    "Settings": {
+        "dark_mode": "Темний режим",
+        "light_mode": "Світлий режим",
+        "": ""
+    },
     "": ""
 }

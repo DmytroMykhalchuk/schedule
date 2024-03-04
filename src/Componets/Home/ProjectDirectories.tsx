@@ -1,19 +1,20 @@
 import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
 import { AddDirectory } from './Elements/AddDirectory';
 import { getDirectories } from './actions';
+import { PaperTitle } from '../Common/PaperTitle';
 import { ProjectDirectoryItem } from './Elements/ProjectDirectoryItem';
 
 type ProjectDirectoriesType = {
-    authEmail: string
+    authEmail: string,
+    locale: string
 };
 
-export const ProjectDirectories: React.FC<ProjectDirectoriesType> = async ({ authEmail }) => {
+export const ProjectDirectories: React.FC<ProjectDirectoriesType> = async ({ authEmail, locale }) => {
     const directories = await getDirectories(authEmail);
 
     return (
         <Paper elevation={4} sx={{ p: 2 }}>
-            <Typography variant="h6">Project directory</Typography>
+            <PaperTitle pageName={'AppHome'} titleKey='project_directories' />
             {
                 directories.map((item, index) => (
                     <ProjectDirectoryItem
@@ -21,10 +22,11 @@ export const ProjectDirectories: React.FC<ProjectDirectoriesType> = async ({ aut
                         title={item.name}
                         users={item.users}
                         id={item._id.toString()}
+                        locale={locale}
                     />
                 ))
             }
-            <AddDirectory />
+            <AddDirectory locale={locale} />
         </Paper>
     );
 };

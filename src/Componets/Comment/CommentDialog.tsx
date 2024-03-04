@@ -80,13 +80,17 @@ const reducer = (state: StateType, action: ActionType): StateType => {
 };
 
 type CommentDialogType = {
-    comments: CommentType[],
-    taskId: string,
-    projectId: string,
-    authEmail: string,
+    comments: CommentType[];
+    taskId: string;
+    projectId: string;
+    authEmail: string;
+    dictionary: {
+        replyToMessage: string;
+        replyToUser: string;
+    };
 };
 
-export const CommentDialog: React.FC<CommentDialogType> = ({ comments, taskId, projectId, authEmail }) => {
+export const CommentDialog: React.FC<CommentDialogType> = ({ comments, taskId, projectId, authEmail, dictionary }) => {
     const now = dayjs();
 
     const [state, dispatch] = useReducer(reducer, { ...initialState, comments: comments as CommentType[] });
@@ -153,18 +157,21 @@ export const CommentDialog: React.FC<CommentDialogType> = ({ comments, taskId, p
                         state.comments.map((item) => {
                             const createdAt = dayjs(item.createdAt);
                             const timeDiff = createdAt ? now.to(createdAt) : undefined;
+
                             return (
                                 <Collapse key={item._id} id={item._id} >
-                                    <div className={state.highlightCommentId === item._id ? styles.highlight : ''}>
-                                        <CommentItem
-                                            comment={item}
-                                            onReply={() => { onReplyTo(item) }}
-                                            onDelete={() => onDeleteComment(item._id)}
-                                            replyComment={getReplyTargetComment(item.replyId)}
-                                            onShowReplyComment={onHiglightReplyTargetComment}
-                                            time={timeDiff}
-                                        />
-                                    </div>
+                                    <CommentItem
+                                        comment={item}
+                                        onReply={() => { onReplyTo(item) }}
+                                        onDelete={() => onDeleteComment(item._id)}
+                                        replyComment={getReplyTargetComment(item.replyId)}
+                                        onShowReplyComment={onHiglightReplyTargetComment}
+                                        time={timeDiff}
+                                        dictionary={{
+                                            replyTo: dictionary.replyToMessage,
+                                        }}
+                                        hasHiglight={state.highlightCommentId === item._id}
+                                    />
                                 </Collapse>
                             )
                         })
@@ -173,7 +180,11 @@ export const CommentDialog: React.FC<CommentDialogType> = ({ comments, taskId, p
                 <NewCommentForm
                     replydTo={state.replyTo.name}
                     onCancelReply={onCancelReply}
-                    onSend={onSendComment} />
+                    onSend={onSendComment}
+                    dictionary={{
+                        replyTo: dictionary.replyToUser,
+                    }}
+                />
             </Stack>
         </div>
     );

@@ -38,8 +38,8 @@ export const DirectoryActions = {
             name: item.name,
             users: tasks
                 .filter((task) => task.directory.toString() === item._id.toString())
+                .map((item) => item.assignee)
                 .filter((value, index, self) => self.indexOf(value) === index) //unique
-                .map((item) => item.assignee),
         }));
 
         return preparedDirectories;

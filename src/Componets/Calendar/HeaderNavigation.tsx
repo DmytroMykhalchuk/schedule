@@ -1,42 +1,50 @@
 import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
 import styles from './styles.module.scss';
 import Link from "next/link";
 import cn from 'classnames';
+import { useTranslations } from "next-intl";
 
 export type CalendarType = 'day' | 'week' | 'month';
 
-
-const navigations = [
-    {
-
-        path: '/app/calendar/day',
-        type: 'day',
-    },
-    {
-        path: '/app/calendar/week',
-        type: 'week',
-    },
-    {
-        path: '/app/calendar/month',
-        type: 'month',
-    }
-];
-
 type HeaderNavigationType = {
-    type?: CalendarType
+    type?: CalendarType;
+    locale: string;
 };
 
-export const HeaderNavigation: React.FC<HeaderNavigationType> = ({ type = 'week' }) => {
+export const HeaderNavigation: React.FC<HeaderNavigationType> = ({ type = 'week', locale }) => {
+    const translation = useTranslations('Calendar');
+    const navigations = [
+        {
+
+            path: `/${locale}/app/calendar/day`,
+            type: 'day',
+        },
+        {
+            path: `/${locale}/app/calendar/week`,
+            type: 'week',
+        },
+        {
+            path: `/${locale}/app/calendar/month`,
+            type: 'month',
+        }
+    ];
+
     return (
-        <Stack className={styles.navigationHeader} direction={'row'}>
+        <Stack className={styles.navigationHeader} direction={'row'} sx={{ backgroundColor: 'background.paper' }}>
             {
                 navigations.map((item, index) => (
-                    <Link
+                    <Box
+                        sx={{ backgroundColor: type === item.type ? 'peachy.light' : undefined }}
+                        borderRadius={4}
                         key={index}
-                        className={cn(styles.link, type === item.type && styles.link__active)}
-                        href={item.path}>
-                        {item.type[0].toUpperCase()}{item.type.substring(1)}
-                    </Link>
+                    >
+                        <Link
+                            className={cn(styles.link)}
+                            href={item.path}>
+                            {translation(`navigation.` + item.type)}
+                        </Link>
+                    </Box>
                 ))
             }
         </Stack>

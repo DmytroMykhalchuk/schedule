@@ -16,7 +16,7 @@ export const TeamList: React.FC<TeamListType> = async ({ authEmail }) => {
         <MiddlePaperWrapper>
             <Stack spacing={2}>
                 {
-                    team.map(member => (
+                    team.map(member =>(
                         <Stack direction={'row'} key={member.user._id.toString()} spacing={1} alignItems={'center'}>
                             <Avatar src={member.user.picture} alt={member.user.name} />
                             <Stack flex={1}>

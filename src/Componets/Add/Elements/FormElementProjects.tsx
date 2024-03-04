@@ -7,18 +7,19 @@ import ShareIcon from '@mui/icons-material/Share';
 import { getProjectDirectories } from "../actions";
 
 type FormElementProjectsType = {
-    defaultDirectory?: string
-    authEmail: string,
+    defaultDirectory?: string;
+    authEmail: string;
+    translatedName: string;
 };
 
-export const FormElementProjects: React.FC<FormElementProjectsType> = async ({ defaultDirectory, authEmail }) => {
+export const FormElementProjects: React.FC<FormElementProjectsType> = async ({ defaultDirectory, authEmail, translatedName }) => {
     const directories = await getProjectDirectories(authEmail) || [];
 
     return (
         <Grid container spacing={2} sx={{ p: 2 }}>
             <Grid item xs={3} justifyContent={'center'}>
                 <Stack justifyContent={'center'} height={'100%'}>
-                    <Typography variant="body1" color={'gray'}>Project</Typography>
+                    <Typography variant="body1" color={'gray'}>{translatedName}</Typography>
                 </Stack>
             </Grid>
             <Grid item xs={9}>

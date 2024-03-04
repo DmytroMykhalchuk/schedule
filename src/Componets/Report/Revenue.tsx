@@ -12,6 +12,7 @@ import { green, purple } from '@mui/material/colors';
 import { RevenueChartType } from '@/server/actions/types';
 import { UIAvarageCaption } from '../UI/UIAvarageCaption';
 import { UIPaper } from '@/ui/UIPaper';
+import { useTranslations } from 'next-intl';
 
 dayjs.locale(uk);
 
@@ -21,6 +22,7 @@ type RevenueType = {
 };
 
 export const Revenue: React.FC<RevenueType> = ({ chartData }) => {
+    const translation = useTranslations('Report');
     const chartInfo = extractDataChart(chartData);
 
     const currentDate = dayjs();
@@ -30,17 +32,13 @@ export const Revenue: React.FC<RevenueType> = ({ chartData }) => {
         mapMonth[index] = { monthPosition, monthName };
     });
 
-
-
-    const data = [0, 1000, 2000, 3000, 4000];
-
     const renderCreatingButton = (): JSX.Element => {
         return (
             <Link href='add-revenue'>
                 <Button variant="outlined" color='secondary'
                     startIcon={<AddIcon />}
                     sx={{ textTransform: 'none' }}>
-                    Add new
+                    {translation('add_new_revenue')}
                 </Button>
             </Link>
         );
@@ -49,7 +47,7 @@ export const Revenue: React.FC<RevenueType> = ({ chartData }) => {
 
     return (
         <>
-            <UIPaper title="Project revenue"
+            <UIPaper title={translation('project_revenue.title')}
                 titleSlot={renderCreatingButton()}
             >
                 <Stack direction={'row'} spacing={3} alignItems={'center'}>
@@ -58,7 +56,7 @@ export const Revenue: React.FC<RevenueType> = ({ chartData }) => {
                         ${chartInfo.total.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                     </Typography>
                     <UIAvarageCaption
-                        caption={`Avg. $${chartInfo.avarage}/month`}
+                        caption={translation('project_revenue.avg_per_month', { cost: chartInfo.avarage })}
                         fontColor='secondary.main'
                         backgroundColor={'#E3FFEB'}
                     />

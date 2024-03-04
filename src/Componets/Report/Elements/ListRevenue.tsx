@@ -3,11 +3,12 @@ import dayjs from 'dayjs';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import uk from 'dayjs/locale/uk';
-import { getRevenue } from '@/app/app/charts/add-revenue/actions';
 import { PaginationBar } from '../../Common/PaginationBar';
 import { revenuePerPage } from '@/server/constants';
 import { RecordActions } from '../../Common/RecordActions';
 import styles from './../styles.module.scss';
+import { getRevenue } from '@/app/[locale]/app/charts/add-revenue/actions';
+import { getUserSessionAndEmail } from '@/Componets/actions';
 
 dayjs.locale(uk);
 
@@ -16,13 +17,20 @@ type ListRevenueType = {
 };
 
 export const ListRevenue: React.FC<ListRevenueType> = async ({ page = 1 }) => {
-    const revenues = await getRevenue(page);
-    
+    const { authEmail } = await getUserSessionAndEmail();
+    const revenues = await getRevenue(page, authEmail);
+
     return (
         <Stack spacing={2}>
             {
                 revenues.revenues.map((item, index) => (
-                    <Stack className={styles.record} key={index} direction={'row'} spacing={2}>
+                    <Stack className={styles.record} key={index} direction={'row'} spacing={2}
+                        sx={{
+                            '&:hover': {
+                                backgroundColor: 'peachy.main',
+                            }
+                        }}
+                    >
                         <Box flex={1}>
                             <Typography variant="h6" sx={{
                                 fontWeight: 600,

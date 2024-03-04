@@ -5,6 +5,7 @@ import { useServerInsertedHTML } from 'next/navigation';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getThemeMode } from '@/redux/app/appSelector';
@@ -74,11 +75,11 @@ export default function ThemeRegistry(props: any) {
     return (
         <CacheProvider value={cache}>
             <ThemeProvider theme={currentTheme ? theme[currentTheme] : theme.light}>
-                <CssBaseline />
+                {/* <CssBaseline /> */}
                 {currentTheme
-                    ? <div style={{ height: '100vh', overflow: 'auto' }}>
+                    ? <Box sx={{ height: '100vh', overflow: 'auto', backgroundColor: 'background.default', color: 'fpage.main', }}>
                         {children}
-                    </div>
+                    </Box>
                     : <Stack alignItems={'center'} justifyContent={'center'} height={'100vh'} sx={{ backgroundColor: 'warning.main' }}>
                         <CircularProgress sx={{ color: "#fff" }} />
                     </Stack>

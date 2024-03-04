@@ -12,6 +12,8 @@ import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
 import { projectIdCookieKey } from '@/server/constants';
 import { TaskForm } from '@/Componets/Add/TaskForm';
 import { getUserSessionAndEmail } from '../actions';
+import { useTranslations } from 'next-intl';
+import { CommentType } from '@/server/actions/types';
 
 type TaskEditPageType = {
     taskId: string
@@ -26,8 +28,8 @@ export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId }) => {
     return (
         <>
             <HeaderLayout
-                title="Task"
-                subtitle=""
+                title="task"
+                pageName='MyTasks'
                 isCenter
                 authUser={{
                     name: session?.user?.name!,
@@ -62,22 +64,44 @@ export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId }) => {
                                 fromHour: task.fromHour,
                                 toHour: task.toHour,
                                 categoryId: task.categoryId,
+                                comments: [],
                             }}
-                            labelConfirm='Update'
+                            labelConfirm='update'
                             authEmail={authEmail}
                         />
                         <input type="hidden" name="task_id" value={task?._id?.toString() || ''} />
                     </form>
-                    <Box px={2}>
-                        <CommentDialog
-                            comments={comments}
-                            taskId={task._id.toString()}
-                            projectId={cookies().get(projectIdCookieKey)?.value as string}
-                            authEmail={authEmail}
-                        />
-                    </Box>
+                    <CommentDialogWrapper
+                        authEmail={authEmail}
+                        taskId={task._id}
+                        comments={comments}
+                    />
                 </MiddlePaperWrapper >
             </Stack >
         </>
+    );
+};
+
+type CommentDialogWrapperType = {
+    authEmail: string;
+    taskId: string;
+    comments: CommentType[];
+};
+
+export const CommentDialogWrapper: React.FC<CommentDialogWrapperType> = ({ taskId, authEmail, comments }) => {
+    const translation = useTranslations('MyTasks');
+    return (
+        <Box px={2}>
+            <CommentDialog
+                comments={comments}
+                taskId={taskId}
+                projectId={cookies().get(projectIdCookieKey)?.value as string}
+                authEmail={authEmail}
+                dictionary={{
+                    replyToMessage: translation('reply_to_message'),
+                    replyToUser: translation('reply_to_user'),
+                }}
+            />
+        </Box>
     );
 };

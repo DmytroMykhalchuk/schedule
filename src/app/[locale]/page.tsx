@@ -17,10 +17,10 @@ const Page: React.FC<PageType> = ({ params }) => {
     return notFound();
   }
   const aithId = cookies().get(authCookieKey)?.value
-  !aithId && redirect('/auth');
+  !aithId && redirect(`/${locale}/auth`);
 
   const projectId = cookies().get(projectIdCookieKey)?.value;
-  projectId && redirect('/app');
+  projectId && redirect(`/${locale}/app`);
 
 
 

@@ -7,17 +7,18 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import styles from '../styles.module.scss';
 
 type CommentItemType = {
-    projectName: string,
-    personName: string,
-    message: string
-    avatar: string
-    taskId: string
-    timeDiff?: string
+    projectName: string;
+    personName: string;
+    message: string;
+    avatar: string;
+    taskId: string;
+    timeDiff?: string;
+    locale: string;
 };
 
-export const CommentItem: React.FC<CommentItemType> = ({ projectName, personName, message, avatar, taskId, timeDiff }) => {
+export const CommentItem: React.FC<CommentItemType> = ({ projectName, personName, message, avatar, taskId, timeDiff, locale }) => {
     return (
-        <Link href={'/app/my-tasks/' + taskId} style={{}}>
+        <Link href={'/' + locale + '/app/my-tasks/' + taskId} style={{}}>
             <Stack direction={'row'} spacing={2} mb={2} alignItems={'center'}
                 sx={{
                     bgcolor: 'peachy.light',

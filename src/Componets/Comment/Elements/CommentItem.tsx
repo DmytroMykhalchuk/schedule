@@ -6,24 +6,31 @@ import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete';
 import ReplyIcon from '@mui/icons-material/Reply';
 import { CommentType } from "@/server/actions/types";
+import styles from './../styles.module.scss';
 
 type CommentItemType = {
-    comment: CommentType
-    onReply: () => void,
-    onDelete: () => void,
-    replyComment?: { name: string, text: string, _id: string }
-    onShowReplyComment: (commentId: string) => void
-    time?: string
+    comment: CommentType;
+    onReply: () => void;
+    onDelete: () => void;
+    replyComment?: { name: string, text: string, _id: string };
+    onShowReplyComment: (commentId: string) => void;
+    time?: string;
+    dictionary: {
+        replyTo: string;
+    };
+    hasHiglight: boolean;
 };
 
-export const CommentItem: React.FC<CommentItemType> = ({ comment, replyComment, time, onReply, onDelete, onShowReplyComment }) => {
+export const CommentItem: React.FC<CommentItemType> = ({ comment, replyComment, time, onReply, onDelete, onShowReplyComment, dictionary, hasHiglight }) => {
 
     return (
         <Box>
             {comment?.replyId && replyComment?.name &&
-                <ReplyMark name={replyComment.name} text={replyComment.text} onShow={() => onShowReplyComment(replyComment._id)} />
+                <ReplyMark name={replyComment.name} text={replyComment.text} onShow={() => onShowReplyComment(replyComment._id)} dictionary={dictionary} />
             }
-            <Stack direction={'row'} spacing={1} alignItems={'center'} p={2}
+            <Stack
+                className={styles.commentItem + ' ' + (hasHiglight ? styles.highlight : '')}
+                direction={'row'} spacing={1} alignItems={'center'} p={2}
                 sx={{
                     borderRadius: 4,
                     borderColor: 'warning.main',
@@ -38,12 +45,7 @@ export const CommentItem: React.FC<CommentItemType> = ({ comment, replyComment, 
                     <Typography variant="body1">{comment.text}</Typography>
                     <Typography variant="caption">{time}</Typography>
                 </Box>
-                <Box sx={{
-                    opacity: 0,
-                    '&:hover': {
-                        opacity: 1,
-                    }
-                }}>
+                <Box className={styles.commentItem__action}>
                     <IconButton aria-label="reply" onClick={onReply}>
                         <ReplyIcon />
                     </IconButton>
@@ -60,12 +62,15 @@ export const CommentItem: React.FC<CommentItemType> = ({ comment, replyComment, 
 };
 
 type ReplyMarkType = {
-    name: string,
-    text: string
-    onShow: () => void
+    name: string;
+    text: string;
+    onShow: () => void;
+    dictionary: {
+        replyTo: string;
+    };
 };
 
-export const ReplyMark: React.FC<ReplyMarkType> = ({ name = '', text = '', onShow }) => {
+export const ReplyMark: React.FC<ReplyMarkType> = ({ name = '', text = '', onShow, dictionary }) => {
     return (
         <>
             <Typography variant="caption" component={'button'}
@@ -73,10 +78,11 @@ export const ReplyMark: React.FC<ReplyMarkType> = ({ name = '', text = '', onSho
                     background: 'transparent',
                     border: 'none',
                     cursor: 'pointer',
+                    color: 'inherit'
                 }}
                 onClick={onShow}
             >
-                Replied to {name}: {text.substring(0, 12)} {text.length > 12 && '...'}
+                {dictionary.replyTo} {name}: {text.substring(0, 12)} {text.length > 12 && '...'}
             </Typography>
         </>
     );

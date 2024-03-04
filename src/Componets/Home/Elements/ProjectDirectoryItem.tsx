@@ -9,19 +9,24 @@ import Link from 'next/link';
 const maxDisplayAvatarsCount = 4;
 
 type ProjectDirectoryItemType = {
-    title: string
-    users: { picture: string, name: string, email: string }[],
-    id: string
+    title: string;
+    users: {
+        picture: string;
+        name: string;
+        email: string;
+    }[];
+    id: string;
+    locale: string;
 };
 
-export const ProjectDirectoryItem: React.FC<ProjectDirectoryItemType> = ({ title, users, id }) => {
+export const ProjectDirectoryItem: React.FC<ProjectDirectoryItemType> = ({ title, users, id, locale }) => {
 
     return (
         <>
             <Stack direction={'row'} alignItems={"center"} spacing={1}>
                 <ShareIcon sx={{ fontSize: 16 }} />
                 <Typography variant="body2" flex={1}>
-                    <Link href={'/app/directories/' + id + '/kaban-dashboard'}>
+                    <Link href={`/${locale}/app/directories/${id}/kaban-dashboard`}>
                         {title}
                     </Link>
                 </Typography>

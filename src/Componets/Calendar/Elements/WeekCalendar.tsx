@@ -12,15 +12,14 @@ import { priorityStyling, workHours } from '@/server/constants';
 import Link from 'next/link';
 
 const formatedWorkHours = [...workHours.map(hour => `${hour}:00`)];
-const weekdays = [
-    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-]
+
 type WeekCalendarType = {
-    date?: string
-    authEmail: string
+    date?: string;
+    authEmail: string;
+    locale: string;
 };
 
-export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date, authEmail }) => {
+export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date, authEmail, locale }) => {
     const currentDate = dayjs(date);
     const tasks = await getWeekTasks(currentDate.format('YYYY-MM-DD'), authEmail);
 
@@ -28,7 +27,7 @@ export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date, authEmail
         const days = [] as JSX.Element[];
         for (let index = 1; index < 6; index++) {
             const targetDay = currentDate.day(index);
-            const monthName = weekdays[index];
+            const monthName = targetDay.format('dddd');
             const formattedName = monthName[0].toUpperCase() + monthName.substring(1);
             const numberOfDay = targetDay.date();
 
@@ -119,7 +118,9 @@ export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date, authEmail
     return (
         <>
             <Grid container columns={10}>
-                {renderHeader()}
+                <Grid container columns={10} sx={{ pl: '40px' }}>
+                    {renderHeader()}
+                </Grid>
                 <Grid item xs={10}>
                     <Stack direction={'row'}>
                         <HoursColumn />
@@ -134,6 +135,7 @@ export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date, authEmail
             </Grid>
             <Box pt={2}>
                 <ControlPageCalendar
+                    locale={locale}
                     calendarType='week'
                     nextPath={currentDate.add(1, 'week').format('YYYY-MM-DD')}
                     previousPath={currentDate.subtract(1, 'week').format('YYYY-MM-DD')}

@@ -1,24 +1,25 @@
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import Chip from '@mui/material/Chip';
+import IconButton from '@mui/material/IconButton';
+import Link from 'next/link';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Stack from '@mui/material/Stack';
 import styles from './../styles.module.scss';
 import Typography from '@mui/material/Typography';
 import { ByDirectoryTaskRecord } from '@/server/actions/types';
 import { priorityStyling } from '@/server/constants';
-import Link from 'next/link';
-import IconButton from '@mui/material/IconButton'
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 
 type TaskItemType = {
-    task: ByDirectoryTaskRecord
+    task: ByDirectoryTaskRecord;
+    locale: string;
 };
 
-export const TaskItem: React.FC<TaskItemType> = ({ task }) => {
+export const TaskItem: React.FC<TaskItemType> = ({ task, locale }) => {
 
     return (
-        <Link href={'/app/add/task/' + task._id}>
+        <Link href={`/${locale}/app/add/tasks/${task._id}`}>
             <Box sx={{
                 backgroundColor: task.category?.color,
                 color: task.category?.textColor,
@@ -26,12 +27,15 @@ export const TaskItem: React.FC<TaskItemType> = ({ task }) => {
                 borderRadius: 4,
                 cursor: 'pointer',
                 '&:hover': {
-                    opacity: 0.7,
+                    opacity: 0.8,
                 },
+                borderColor: 'inherit',
+                borderWidth: 1,
+                borderStyle: 'solid',
             }}>
                 <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} spacing={2}>
                     <Typography className={styles.truncate} variant="h6" fontWeight={600}>{task.name}</Typography>
-                    <Chip variant="outlined" label={`#${task.category?.name}`} />
+                    <Chip variant="outlined" label={`# ${task.category?.name || ''}`} />
                 </Stack>
                 <Stack direction={'row'} alignItems={'center'} spacing={0.5}>
                     <Box width={12} height={12} borderRadius={'50%'} bgcolor={priorityStyling[task.priority].primaryColor} />

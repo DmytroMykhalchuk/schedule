@@ -4,12 +4,15 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { useState } from "react";
+import uk from 'dayjs/locale/uk';
+dayjs.locale(uk)
 
 type MonthCalendarType = {
-    defaultValue?: Date
+    defaultValue?: Date;
+    label: string;
 };
 
-export const MonthCalendar: React.FC<MonthCalendarType> = ({ defaultValue }) => {
+export const MonthCalendar: React.FC<MonthCalendarType> = ({ defaultValue, label }) => {
     const currentDay = dayjs();
     const theme = useTheme();
     //@ts-ignore
@@ -24,7 +27,7 @@ export const MonthCalendar: React.FC<MonthCalendarType> = ({ defaultValue }) => 
     return (
         <>
             <input type="hidden" name="date" value={date.format('YYYY-MM-DD')} />
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='uk'>
                 <DatePicker
                     defaultValue={dayjs(defaultValue)}
                     views={['month', 'year']}
@@ -33,7 +36,7 @@ export const MonthCalendar: React.FC<MonthCalendarType> = ({ defaultValue }) => 
                     minDate={currentDay.subtract(1, 'year')}
                     onChange={onChangeDate}
                     slotProps={{
-                        textField: { size: 'small', color: 'warning', label: 'Date' },
+                        textField: { size: 'small', color: 'warning', label },
                         day: { sx: { backgroundColor: 'red' } },
                         shortcuts: { sx: { backgroundColor: 'red' } },
                         layout: {

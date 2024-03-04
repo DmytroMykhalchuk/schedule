@@ -6,11 +6,11 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import uk from 'dayjs/locale/uk';
 import { UIPaper } from '@/ui/UIPaper';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { WorkHours } from '@/server/actions/types';
-import { WorkHoursChart } from './Elements/WorkHoursChart';
+import { WorkHoursChart } from './WorkHoursChart';
 import { weekLength, yearMonthLength } from '@/server/constants';
-import { UIAvarageCaption } from '../UI/UIAvarageCaption';
+import { UIAvarageCaption } from '../../UI/UIAvarageCaption';
 
 dayjs.locale(uk);
 
@@ -23,11 +23,20 @@ const monthAxisHours = [0, 40, 80, 120, 160, 200];
 
 
 type TotalWorkingHoursType = {
-    weekWorkHours?: WorkHours,
-    monthWorkHours?: WorkHours,
+    weekWorkHours?: WorkHours;
+    monthWorkHours?: WorkHours;
+    translate: {
+        title: string;
+        hours: string;
+        hoursShortLetter: string;
+        week: string;
+        year: string;
+        avarage: string;
+    };
 };
 
-export const TotalWorkingHours: React.FC<TotalWorkingHoursType> = ({ weekWorkHours, monthWorkHours }) => {
+export const TotalWorkingHours: React.FC<TotalWorkingHoursType> = ({ weekWorkHours, monthWorkHours, translate }) => {
+
     const [length, setLength] = useState(weekLength as typeof weekLength | typeof yearMonthLength);
     const [subtitles, setSubtitles] = useState(days as string[]);
 
@@ -79,33 +88,32 @@ export const TotalWorkingHours: React.FC<TotalWorkingHoursType> = ({ weekWorkHou
                 size='small'
                 color='warning'
             >
-                <MenuItem value={weekLength}>Week</MenuItem>
-                <MenuItem value={yearMonthLength}>Year</MenuItem>
+                <MenuItem value={weekLength}>{translate.week}</MenuItem>
+                <MenuItem value={yearMonthLength}>{translate.year}</MenuItem>
             </Select>
         );
     };
 
     return (
-        <>
-            <UIPaper title="Total working hours"
-                titleSlot={renderSelect()}
-            >
-                <Stack direction={'row'} spacing={3} alignItems={'center'}>
-                    <Typography variant="h4">{length === weekLength ? weekHours.total : monthHours.total} hours</Typography>
-                    <UIAvarageCaption
-                        caption={`Avg. ${monthHours.avarage}h/month`}
-                        fontColor='warning.main'
-                        backgroundColor='peachy.main'
-                    />
-                </Stack>
-                <WorkHoursChart
-                    length={length}
-                    subtitles={subtitles}
-                    workinkgHours={(length === weekLength ? weekWorkHours : reverseKeyMonthWorkHours(monthWorkHours)) || {}}
-                    axisHours={length === weekLength ? weekAxisHours : monthAxisHours}
+        <UIPaper title={translate.title} titleSlot={renderSelect()} >
+            <Stack direction={'row'} spacing={3} alignItems={'center'}>
+                <Typography variant="h4">{length === weekLength ? weekHours.total : monthHours.total} {translate.hours}</Typography>
+                <UIAvarageCaption
+                    caption={translate.avarage.replace('value', monthHours.avarage.toString())}
+                    fontColor='warning.main'
+                    backgroundColor='peachy.main'
                 />
-            </UIPaper >
-        </>
+            </Stack>
+            <WorkHoursChart
+                length={length}
+                subtitles={subtitles}
+                workinkgHours={(length === weekLength ? weekWorkHours : reverseKeyMonthWorkHours(monthWorkHours)) || {}}
+                axisHours={length === weekLength ? weekAxisHours : monthAxisHours}
+                translate={{
+                    hoursLetter: translate.hoursShortLetter,
+                }}
+            />
+        </UIPaper >
     );
 };
 

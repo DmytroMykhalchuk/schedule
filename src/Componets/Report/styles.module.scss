@@ -1,4 +1,4 @@
-@import './../../../assets/styles/global.scss';
+@import './../../assets/styles/global.scss';
 
 .progressProject {
     &__row {
@@ -29,7 +29,6 @@
 
 
     &:hover {
-        background-color: $peachy-light;
 
         .record__action {
             opacity: 1;

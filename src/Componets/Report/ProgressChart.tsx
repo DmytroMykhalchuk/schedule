@@ -7,6 +7,7 @@ import uk from 'dayjs/locale/uk';
 import { CategoryRecord, MonthProgressType } from '@/server/actions/types';
 import { ReactNode } from 'react';
 import { UIPaper } from '@/ui/UIPaper';
+import { useTranslations } from 'next-intl';
 
 dayjs.locale(uk);
 
@@ -16,6 +17,7 @@ type ProgressChartType = {
 };
 
 export const ProgressChart: React.FC<ProgressChartType> = ({ progress, categories }) => {
+    const translation = useTranslations('Report');
     const currentDate = dayjs();
 
     const renderBars = (range: { from: number, to: number }[], color?: string): JSX.Element[] => {
@@ -52,7 +54,7 @@ export const ProgressChart: React.FC<ProgressChartType> = ({ progress, categorie
 
     return (
         <>
-            <UIPaper title="Project progress">
+            <UIPaper title={translation('project_progress')}>
                 <Grid container>
                     <Grid item xs={4}><Typography textAlign={'center'} variant="body1">{currentDate.subtract(2, 'month').format('MMMM')}</Typography></Grid>
                     <Grid item xs={4}><Typography textAlign={'center'} variant="body1">{currentDate.subtract(1, 'month').format('MMMM')}</Typography></Grid>

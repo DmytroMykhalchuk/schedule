@@ -5,20 +5,21 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Chip from "@mui/material/Chip";
 import { priorities } from "@/server/constants";
+import { useTranslations } from "next-intl";
 
 
 type FormElementPriorityType = {
-    defaultPriority?: string
+    defaultPriority?: string;
 };
 
 export const FormElementPriority: React.FC<FormElementPriorityType> = ({ defaultPriority = priorities[0].statusName }) => {
-
+    const translation = useTranslations('MyTasks');
     return (
         <>
             <Grid container spacing={2} sx={{ p: 2 }}>
                 <Grid item xs={3} justifyContent={'center'}>
                     <Stack justifyContent={'center'} height={'100%'}>
-                        <Typography variant="body1" color={'gray'}>Priority</Typography>
+                        <Typography variant="body1" color={'gray'}>{translation('priority')}</Typography>
                     </Stack>
                 </Grid>
                 <Grid item xs={9}>
@@ -44,7 +45,7 @@ export const FormElementPriority: React.FC<FormElementPriorityType> = ({ default
                             priorities.map((priority, index) => (
                                 <MenuItem value={priority.statusName} key={index}>
                                     <Chip
-                                        label={priority.statusName}
+                                        label={translation('priorities.' + priority.statusName)}
                                         sx={{ backgroundColor: priority.secondaryColor, color: priority.primaryColor }}
                                     />
                                 </MenuItem>

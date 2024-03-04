@@ -1,4 +1,5 @@
 import { RevenuePage } from '@/Componets/Report/RevenuePage';
+import { addRevenueRecord } from './actions';
 
 type PageType = {
 };
@@ -6,7 +7,7 @@ type PageType = {
 const Page: React.FC<PageType> = ({ }) => {
 
     return (
-        <RevenuePage />
+        <RevenuePage formAction={addRevenueRecord} />
     );
 };
 

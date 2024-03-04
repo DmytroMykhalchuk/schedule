@@ -1,34 +1,37 @@
-import Box from "@mui/material/Box";
-import { HeaderLayout } from "../Layouts/HeaderLayout";
-import { CalendarType, HeaderNavigation } from "./HeaderNavigation";
-import { BigCalendarWrapper } from "./BigCalendarWrapper";
-import dayjs from "dayjs";
+import Box from '@mui/material/Box';
+import dayjs from 'dayjs';
 import uk from 'dayjs/locale/uk';
-import { getUserSessionAndEmail } from "../actions";
+import { BigCalendarWrapper } from './Elements/BigCalendarWrapper';
+import { CalendarType, HeaderNavigation } from './HeaderNavigation';
+import { getUserSessionAndEmail } from '../actions';
+import { HeaderLayout } from '../Layouts/HeaderLayout';
+
 dayjs.locale(uk)
 
 type CalendarLayoutType = {
-    type?: CalendarType
-    date?: string
+    type?: CalendarType;
+    date?: string;
+    locale: string;
 };
 
-export const CalendarLayout: React.FC<CalendarLayoutType> = async ({ type, date }) => {
+export const CalendarLayout: React.FC<CalendarLayoutType> = async ({ type, date, locale }) => {
     const { authEmail, session } = await getUserSessionAndEmail();
 
     return (
         <>
             <Box>
                 <HeaderLayout
-                    title="Calendar"
-                    subtitle={dayjs().format('MMMM D, YYYY')}
-                    slot={<HeaderNavigation type={type} />}
+                    title="page_title"
+                    pageName="Calendar"
+                    subtitle={{ isNeedTranslate: false, text: dayjs().format('MMMM D, YYYY') }}
+                    slot={<HeaderNavigation type={type} locale={locale} />}
                     authUser={{
                         name: session?.user?.name as string,
                         image: session?.user?.image as string,
                     }}
                 />
             </Box>
-            <BigCalendarWrapper type={type} date={date} authEmail={authEmail}/>
+            <BigCalendarWrapper type={type} date={date} authEmail={authEmail} locale={locale} />
         </>
     );
 };

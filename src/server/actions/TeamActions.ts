@@ -50,7 +50,7 @@ export const TeamActions = {
         const team: TeamItemType[] = project.team.map((item: PopulatedProjectTeamItem) => ({
             role: item.role,
             user: item.userId,
-            isAdmin: project.admin_id.toString() === user._id.toString(),
+            isAdmin: project.admin_id.toString() === item.userId._id.toString(),
         }));
 
         return team;
@@ -60,11 +60,8 @@ export const TeamActions = {
         await connectDB();
         const project = await ProjectActions.getProjectByFilters(authParams, { team: 1 });
 
-        const memeber = project?.team.find((user: { id: string, role: string }) => {
-            if (userId === user.id) {
-                return true;
-            }
-            return false;
+        const memeber = project?.team.find((user: { userId: string, role: string }) => {
+            return userId === user.userId.toString();
         });
 
         if (memeber) {

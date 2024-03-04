@@ -7,11 +7,12 @@ import { getProjectUsers } from '../actions';
 import { defaultFirstUserId } from "../actions";
 
 type FormElementAssigneeType = {
-    fieldName: string,
-    defaultValue: string,
+    fieldName: string;
+    defaultValue: string;
+    translatedName: string;
 };
 
-export const FormElementAssignee: React.FC<FormElementAssigneeType> = async ({ fieldName, defaultValue }) => {
+export const FormElementAssignee: React.FC<FormElementAssigneeType> = async ({ fieldName, defaultValue, translatedName }) => {
     const users = await getProjectUsers() || [];
 
     defaultValue || users.unshift({
@@ -25,7 +26,7 @@ export const FormElementAssignee: React.FC<FormElementAssigneeType> = async ({ f
         <Grid container spacing={2} sx={{ p: 2 }}>
             <Grid item xs={3} justifyContent={'center'}>
                 <Stack justifyContent={'center'} height={'100%'}>
-                    <Typography variant="body1" color={'gray'}>Assignee</Typography>
+                    <Typography variant="body1" color={'gray'}>{translatedName}</Typography>
                 </Stack>
             </Grid>
             <Grid item xs={9}>

@@ -5,18 +5,20 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Chip from "@mui/material/Chip";
 import { statuses } from "@/server/constants";
+import { useTranslations } from "next-intl";
 
 type FormElementStatusType = {
-    defaultStatus?: string
+    defaultStatus?: string;
 };
 
 export const FormElementStatus: React.FC<FormElementStatusType> = ({ defaultStatus = statuses[0].statusName }) => {
-
+    const translation = useTranslations('MyTasks');
+    
     return (
         <Grid container spacing={2} sx={{ p: 2 }}>
             <Grid item xs={3} justifyContent={'center'}>
                 <Stack justifyContent={'center'} height={'100%'}>
-                    <Typography variant="body1" color={'gray'}>Status</Typography>
+                    <Typography variant="body1" color={'gray'}>{translation('status')}</Typography>
                 </Stack>
             </Grid>
             <Grid item xs={9}>
@@ -42,7 +44,7 @@ export const FormElementStatus: React.FC<FormElementStatusType> = ({ defaultStat
                         statuses.map((status, index) => (
                             <MenuItem value={status.statusName} key={index}>
                                 <Chip
-                                    label={status.statusName}
+                                    label={translation('statuses.' + status.statusName)}
                                     sx={{ backgroundColor: status.secondaryColor, color: status.primaryColor }}
                                 />
                             </MenuItem>

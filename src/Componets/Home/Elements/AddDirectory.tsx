@@ -1,13 +1,17 @@
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+
 type AddDirectoryType = {
+    locale: string
 };
 
-export const AddDirectory: React.FC<AddDirectoryType> = ({ }) => {
-
+export const AddDirectory: React.FC<AddDirectoryType> = ({ locale }) => {
+    const translation = useTranslations('Form');
+    
     return (
-        <Link href={'/app/add/directory'}>
+        <Link href={`/${locale}/app/add/directory`}>
             <Button variant="outlined"
                 startIcon={<AddIcon />}
                 color='warning'
@@ -17,7 +21,7 @@ export const AddDirectory: React.FC<AddDirectoryType> = ({ }) => {
                     textTransform: 'none',
                 }}
             >
-                Add more
+                {translation('add_more')}
             </Button>
         </Link>
     );

@@ -7,9 +7,15 @@ import Switch from '@mui/material/Switch';
 import { useDispatch } from 'react-redux';
 
 type PageType = {
+    dictionary: {
+        mode: {
+            light: string;
+            dark: string;
+        };
+    };
 };
 
-export const ThemeSwither: React.FC<PageType> = ({ }) => {
+export const ThemeSwither: React.FC<PageType> = ({ dictionary }) => {
     const dispatch: AppDispatch = useDispatch();
 
     const savedTheme = localStorage.getItem('themeMode');
@@ -24,14 +30,14 @@ export const ThemeSwither: React.FC<PageType> = ({ }) => {
             <FormControlLabel
                 value="start"
                 control={<Switch color="warning" defaultChecked={savedTheme === 'dark'} />}
-                label="Dark mode"
+                label={dictionary.mode.dark}
                 labelPlacement="start"
                 onChange={onChanegTheme}
                 sx={{
-                    width:'100%',
-                    '&.MuiFormControlLabel-root':{
-                        justifyContent:'space-between',
-                        width:'100%',
+                    width: '100%',
+                    '&.MuiFormControlLabel-root': {
+                        justifyContent: 'space-between',
+                        width: '100%',
                     }
                 }}
             />

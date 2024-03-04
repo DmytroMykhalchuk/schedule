@@ -1,7 +1,7 @@
-@import './../../../assets/styles/global.scss';
+@import './../../assets/styles/global.scss';
 
 .navigationHeader {
-    background-color: #ECE9E7;
+    // background-color: #ECE9E7;
     padding: 8px;
     height: 80px;
     border-radius: 16px;
@@ -16,7 +16,7 @@
         border-radius: 16px;
 
         &__active {
-            background-color: #FFFFFF;
+            // background-color: #FFFFFF;
             font-weight: 600;
         }
     }

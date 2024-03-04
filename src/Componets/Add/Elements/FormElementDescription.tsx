@@ -2,14 +2,15 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 
 type FormElementDescriptionType = {
-    defaultDescription?: string
+    defaultDescription?: string;
+    translatedName: string;
 };
 
-export const FormElementDescription: React.FC<FormElementDescriptionType> = ({ defaultDescription }) => {
+export const FormElementDescription: React.FC<FormElementDescriptionType> = ({ defaultDescription, translatedName }) => {
 
     return (
         <>
-            <Typography variant="body1" fontWeight={600}>Description</Typography>
+            <Typography variant="body1" fontWeight={600}>{translatedName}</Typography>
             <TextField
                 multiline
                 minRows={5}
@@ -18,7 +19,11 @@ export const FormElementDescription: React.FC<FormElementDescriptionType> = ({ d
                 defaultValue={defaultDescription}
                 sx={{
                     borderWidth: 2,
-                    backgroundColor: '#f1f1f1',
+                    backgroundColor: 'peachy.main',
+                    borderRadius: 4,
+                    "& .MuiInputBase-root": {
+                        borderRadius: 4,
+                    },
                 }}
             />
         </>
