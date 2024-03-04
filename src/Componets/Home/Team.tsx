@@ -18,7 +18,7 @@ export const Team: React.FC<TeamType> = async ({ limit, authEmail, locale }) => 
     let isNeedRenderAddButton = true;
     if (limit && team.length >= limit) {
         team.length;
-        // isNeedRenderAddButton = false;
+        isNeedRenderAddButton = false;
     }
 
     return (

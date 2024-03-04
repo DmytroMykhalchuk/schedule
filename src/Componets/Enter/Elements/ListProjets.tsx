@@ -8,12 +8,13 @@ import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 
 type ListProjetsType = {
-    projects: ProjectListAvailableRecord[]
+    projects: ProjectListAvailableRecord[];
+    locale: string;
 };
 
 export const ListProjets: React.FC<ListProjetsType> = ({ projects }) => {
     const router = useRouter();
-    
+
     const onChoose = (projectId: string) => {
         setCookie('project_id', projectId);
         router.push('/app');
@@ -21,16 +22,17 @@ export const ListProjets: React.FC<ListProjetsType> = ({ projects }) => {
 
     return (
         <>
-            {projects.map(project => (
+            {projects.map((project, index) => (
                 <Stack key={project._id} spacing={2} component={'form'}>
                     <input type="hidden" name="project_id" value={project._id} />
                     <Typography
                         className={styles.buttonTitle}
                         variant="body1"
                         component={'button'}
+                        sx={{ color: 'warning.main' }}
                         onClick={() => onChoose(project._id)}
                     >
-                        {project.name}
+                        {index + 1}. {project.name}
                     </Typography>
                 </Stack>
             ))}

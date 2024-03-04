@@ -7,9 +7,8 @@ import { redirect } from "next/navigation";
 
 export const logout = async () => {
     'use server';
-    await UserActions.logout(cookies().get(authCookieKey)?.value || '')
-    cookies().delete(authCookieKey);
-    cookies().delete('auth');
+    // cookies().delete(authCookieKey);
+    // cookies().delete('auth');
 
     await signOut();
     redirect('/auth');

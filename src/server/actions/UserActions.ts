@@ -39,16 +39,6 @@ export const UserActions = {
         }
     },
 
-    async logout(sessionId: string) {
-        await connectDB();
-        const person = await User.findOneAndUpdate({
-            sessions: {
-                $in: [sessionId],
-            },
-        },
-            { $pull: { sessions: sessionId } });
-    },
-
     async updateSessionId(sessionId: string): Promise<{ sessionId: string }> {
         await connectDB();
         //todo ceheck update is still member in some project

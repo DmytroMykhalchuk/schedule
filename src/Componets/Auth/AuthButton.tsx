@@ -7,23 +7,29 @@ import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { signIn } from 'next-auth/react';
 
 type AuthButtonType = {
+    dictionary: {
+        loginByGoogle: string;
+    };
 };
 
-export const AuthButton: React.FC<AuthButtonType> = ({ }) => {
-
+export const AuthButton: React.FC<AuthButtonType> = ({ dictionary }) => {
+    //todo exect client id to env
     return (
         <>
             <GoogleOAuthProvider clientId="136560295788-7kvlva7fsji2n1nciafvipgo6jd1hbmm.apps.googleusercontent.com">
-                <GoogleButton></GoogleButton>
+                <GoogleButton dictionary={dictionary} />
             </GoogleOAuthProvider>
         </>
     );
 };
 
 type GoogleButtonType = {
+    dictionary: {
+        loginByGoogle: string;
+    };
 };
 
-export const GoogleButton: React.FC<GoogleButtonType> = ({ }) => {
+export const GoogleButton: React.FC<GoogleButtonType> = ({ dictionary }) => {
 
     const login = useGoogleLogin({
         onSuccess: async (credentialResponse) => {
@@ -53,7 +59,7 @@ export const GoogleButton: React.FC<GoogleButtonType> = ({ }) => {
                 <>
                     <GoogleIcon />
                     <Typography variant="h6">
-                        Увійти за допомогою гугл
+                        {dictionary.loginByGoogle}
                     </Typography>
                 </>
             </Button>

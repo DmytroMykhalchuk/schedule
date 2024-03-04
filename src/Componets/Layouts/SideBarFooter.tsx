@@ -4,6 +4,7 @@ import styles from './styles.module.scss';
 import { Button, Stack } from '@mui/material';
 import { logout } from './actions';
 import { MenuItem } from './Elements/MenuItem';
+import { LogoutButton } from './Elements/LogoutButton';
 
 type SideBarFooterType = {
     locale: string
@@ -17,11 +18,7 @@ export const SideBarFooter: React.FC<SideBarFooterType> = ({ locale }) => {
                 path={`/${locale}/app/settings`}
                 Icon={<SettingsIcon className={styles.menuIcon} />}
             />
-            <form action={logout}>
-                <Button type='submit'>
-                    <LogoutIcon className={styles.menuIcon} />
-                </Button>
-            </form>
+            <LogoutButton locale={locale}/>
         </Stack>
     );
 };

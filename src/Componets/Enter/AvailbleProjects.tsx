@@ -1,15 +1,14 @@
 
 import { getAvailbleProjects } from "./actions";
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography'
-import styles from './styles.module.scss';
 import { ListProjets } from "./Elements/ListProjets";
 
 type AvailbleProjectsType = {
-    authEmail: string
+    authEmail: string;
+    locale: string;
 };
 
-export const AvailbleProjects: React.FC<AvailbleProjectsType> = async ({ authEmail }) => {
+export const AvailbleProjects: React.FC<AvailbleProjectsType> = async ({ authEmail, locale }) => {
     const projects = await getAvailbleProjects(authEmail as string);
 
     if (!projects.length) {
@@ -18,7 +17,7 @@ export const AvailbleProjects: React.FC<AvailbleProjectsType> = async ({ authEma
 
     return (
         <Stack spacing={2}>
-            <ListProjets projects={projects} />
+            <ListProjets projects={projects} locale={locale} />
         </Stack>
     );
 };

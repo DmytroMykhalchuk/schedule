@@ -16,7 +16,7 @@ export const HomeHeader: React.FC<HomeHeaderType> = ({ userName, userPicture }) 
 
     return (
         <Grid container pb={2}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={10} md={6}>
                 <Typography variant="h5" fontWeight={600}>
                     {translation('header.title', { name: userName })}
                 </Typography>
@@ -24,7 +24,7 @@ export const HomeHeader: React.FC<HomeHeaderType> = ({ userName, userPicture }) 
                     {translation('header.subtitle', { name: userName })}
                 </Typography>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={2} md={6}>
                 <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'} spacing={2}>
                     <Search />
                     <Image className={styles.avatar} src={userPicture} alt="" width={80} height={80} />
