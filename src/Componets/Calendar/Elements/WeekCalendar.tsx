@@ -44,7 +44,6 @@ export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date, authEmail
 
     const renderColumnContent = (numberOfLine: number): JSX.Element[] => {
         const items = [] as JSX.Element[];
-        const dayTasks = tasks.filter(item => item.dueDate === dayjs().day(numberOfLine - 1).format('DD.MM.YYYY'));
 
         for (let index = 0; index < formatedWorkHours.length; index++) {
             items.push(
@@ -69,7 +68,7 @@ export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date, authEmail
             <Grid
                 className={styles.tableRow__td}
                 item xs={2}
-                sx={{}}
+                key={numberOfLine}
             >
                 <Stack sx={{ py: 4 }}>
                     <Box className={styles.innerColumn}>
@@ -85,16 +84,8 @@ export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date, authEmail
                                 taskId={task._id.toString()}
                             />
                         ))}
-                        {/* <Box position={'absolute'} top={0}>
-                        </Box> */}
-                        <Typography variant="subtitle2" sx={{
-                            borderRadius: 2,
-                            px: 1,
-                            mb: 0.5,
-                            position: 'absolute',
-                            top: 0,
-                        }}>
-                        </Typography>
+
+
                     </Box>
                 </Stack>
             </Grid>

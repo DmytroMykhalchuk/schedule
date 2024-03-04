@@ -42,8 +42,6 @@ export const FormElementSubtasks: React.FC<FormElementSubtasksType> = ({ default
         });
     };
 
-    console.log(subtasks);
-
     return (
         <>
             <Typography variant="body1" fontWeight={600}>{translatedName}</Typography>

@@ -25,7 +25,6 @@ const Page: React.FC<PageType> = async ({ params }) => {
     const { authEmail } = await getUserSessionAndEmail();
 
     const role = await getTeamUser(targetUserId, authEmail);
-    console.log(role)
 
     return (
         <Stack alignItems={'center'} justifyContent={'center'} spacing={2}>

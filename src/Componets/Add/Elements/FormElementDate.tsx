@@ -4,7 +4,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import uk from 'dayjs/locale/uk';
+// import uk from 'dayjs/locale/uk';
 import useDebounce from '@/utlis/useDebounce';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { authCookieKey, projectIdCookieKey, workHours } from '@/server/constants';
@@ -19,8 +19,8 @@ import { getCheckedWeekDay } from '@/utlis/getCheckedWeekDay';
 import { translateDateToDayjs } from '@/utlis/translateDateToDayjs';
 import { useSelector } from 'react-redux';
 import { getTaskFormAssignee } from '@/redux/task/taskSelector';
-
-dayjs.locale(uk)
+import uk from 'dayjs/locale/uk';
+// dayjs.locale(uk)
 
 type WorkHoursType = {
     fromHour: number,
@@ -60,9 +60,18 @@ type FormElementDateType = {
     taskId?: string;
     translatedName: string;
     translatedForbiddenDate: string;
+    dictionary: {
+        cancel: string;
+        confirm: string;
+        selectDate: string;
+    };
+    locale: string;
 };
 
-export const FormElementDate: React.FC<FormElementDateType> = ({ defaultDueDate, fromHour, toHour, taskId, translatedName, translatedForbiddenDate }) => {
+export const FormElementDate: React.FC<FormElementDateType> = ({ defaultDueDate, fromHour, toHour, taskId, translatedName, translatedForbiddenDate, dictionary, locale }) => {
+    if (locale === 'uk') {
+        dayjs.locale(uk);
+    }
     const isAllowedMakeHoursRequest = useRef(false);
 
     const assignee = useSelector(getTaskFormAssignee);
@@ -245,6 +254,19 @@ export const FormElementDate: React.FC<FormElementDateType> = ({ defaultDueDate,
                                             borderRadius: 36,
                                         },
                                     },
+                                    actionBar: {
+                                        //@ts-ignore
+                                        dictionary: {
+                                            cancel: dictionary.cancel,
+                                            confirm: dictionary.confirm,
+                                        },
+                                    },
+                                    toolbar: {
+                                        //@ts-ignore
+                                        dictionary: {
+                                            title: dictionary.selectDate,
+                                        },
+                                    }
                                 }}
                                 slots={{
                                     actionBar: CalendarActionBar,

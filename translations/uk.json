@@ -113,7 +113,9 @@
         "categories": "Категорії",
         "confirm": "Підтвердити",
         "create": "Створити",
+        "cancel": "Скасувати",
         "update": "Оновити",
+        "select_date": "Вибрати дату",
         "generate": "Згенерувати",
         "directory": {
             "add_title": "Додати директорію",

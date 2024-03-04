@@ -43,6 +43,7 @@ const Content: React.FC<ContentType> = ({ authEmail, locale }) => {
                         labelConfirm='create'
                         UnderFormSlot={<CommentBox />}
                         authEmail={authEmail}
+                        locale={locale}
                     />
                 </form>
             </MiddlePaperWrapper>

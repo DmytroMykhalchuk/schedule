@@ -27,7 +27,6 @@ export default function ThemeRegistry(props: any) {
     useLayoutEffect(() => {
         const item = localStorage.getItem('themeMode') as ThemeMode || 'light';
         setCurrentTheme(item)
-        console.log(item)
     }, [])
 
 

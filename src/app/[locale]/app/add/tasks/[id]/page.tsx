@@ -2,16 +2,17 @@ import { TaskEditPage } from '@/Componets/Add/TaskEditPage';
 
 type PageType = {
     params: {
-        id: string
-    },
+        id: string;
+        locale: string;
+    };
 };
 
 const Page: React.FC<PageType> = async ({ params }) => {
 
-    const { id: taskId } = params;
+    const { id: taskId, locale } = params;
 
     return (
-        <TaskEditPage taskId={taskId} />
+        <TaskEditPage taskId={taskId} locale={locale} />
     )
 };
 

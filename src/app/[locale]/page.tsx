@@ -12,6 +12,7 @@ type PageType = {
 
 const Page: React.FC<PageType> = ({ params }) => {
   const locale = params?.locale;
+
   if (!locale || !availableLanguages.includes(locale)) {
     //@ts-ignore
     return notFound();
@@ -34,3 +35,4 @@ const Page: React.FC<PageType> = ({ params }) => {
 }
 export default Page;
 
+//todo kanban view for categories

@@ -6,7 +6,6 @@ import { CalendarType, HeaderNavigation } from './HeaderNavigation';
 import { getUserSessionAndEmail } from '../actions';
 import { HeaderLayout } from '../Layouts/HeaderLayout';
 
-dayjs.locale(uk)
 
 type CalendarLayoutType = {
     type?: CalendarType;
@@ -15,6 +14,8 @@ type CalendarLayoutType = {
 };
 
 export const CalendarLayout: React.FC<CalendarLayoutType> = async ({ type, date, locale }) => {
+    dayjs.locale(locale === 'uk' ? uk : undefined);
+
     const { authEmail, session } = await getUserSessionAndEmail();
 
     return (

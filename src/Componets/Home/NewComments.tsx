@@ -1,10 +1,9 @@
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { Comments } from './Elements/Comments';
-import { TagItem } from './Elements/TagItem';
 import { getCategoriesList } from '../Add/actions';
 import { PaperTitle } from '../Common/PaperTitle';
+import { TagItem } from './Elements/TagItem';
 
 type NewCommentsType = {
     authEmail: string;

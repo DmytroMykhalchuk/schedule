@@ -3,7 +3,11 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { PickersActionBarProps } from '@mui/x-date-pickers';
 
-export const CalendarActionBar: React.FC<PickersActionBarProps> = ({ onAccept, onCancel, className }) => {
+export const CalendarActionBar: React.FC<PickersActionBarProps> = ({ onAccept, onCancel, className, ...props }) => {
+    //@ts-ignore
+    const confirmLabel = props?.dictionary?.confirm;
+    //@ts-ignore
+    const cancelLabel = props?.dictionary?.cancel;
     return (
         <Box className={className}>
             <Stack alignItems={'end'} p={1} width={'100%'}>
@@ -11,12 +15,12 @@ export const CalendarActionBar: React.FC<PickersActionBarProps> = ({ onAccept, o
                     <Button variant="outlined" color="warning" onClick={onCancel}
                         sx={{ textTransform: 'none' }}
                     >
-                        Cancel
+                        {cancelLabel || 'Cancel'}
                     </Button>
                     <Button variant="contained" color="warning" onClick={onAccept}
                         sx={{ textTransform: 'none' }}
                     >
-                        Confirm
+                        {confirmLabel || 'Confirm'}
                     </Button>
                 </Stack>
             </Stack>

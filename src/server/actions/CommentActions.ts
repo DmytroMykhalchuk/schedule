@@ -103,7 +103,7 @@ export const CommentActions = {
             return [];
         }
 
-        const comments = await Comment.find({ projectId: project._id }).populate('taskId', 'name').sort('-createdAt').limit(10);
+        const comments = await Comment.find({ projectId: project._id }).populate('taskId', 'name').sort('-createdAt').limit(6);
 
         return comments as LatestCommentType[];
     },

@@ -21,7 +21,9 @@ const Page: React.FC<PageType> = async ({ params }) => {
     return (
         <>
             <Box>
-                <HomeHeader userName={session?.user?.name || ''} userPicture={session?.user?.image || ''} />
+                <div>
+                    <HomeHeader userName={session?.user?.name || ''} userPicture={session?.user?.image || ''} />
+                </div>
             </Box>
             <Grid container spacing={2}>
                 <Grid item sm={12} md={4}>

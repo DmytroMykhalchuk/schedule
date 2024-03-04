@@ -16,10 +16,11 @@ import { useTranslations } from 'next-intl';
 import { CommentType } from '@/server/actions/types';
 
 type TaskEditPageType = {
-    taskId: string
+    taskId: string;
+    locale: string;
 };
 
-export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId }) => {
+export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId, locale }) => {
     const { authEmail, session } = await getUserSessionAndEmail()
 
     const response = await getTask(taskId, authEmail);
@@ -68,6 +69,7 @@ export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId }) => {
                             }}
                             labelConfirm='update'
                             authEmail={authEmail}
+                            locale={locale}
                         />
                         <input type="hidden" name="task_id" value={task?._id?.toString() || ''} />
                     </form>

@@ -35,9 +35,10 @@ type TaskFormType = {
     labelConfirm: string;
     UnderFormSlot?: ReactNode;
     authEmail: string;
+    locale: string;
 };
 
-export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, UnderFormSlot, authEmail }) => {
+export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, UnderFormSlot, authEmail, locale }) => {
     const translation = useTranslations('MyTasks');
     const translationForm = useTranslations('Form');
     return (
@@ -70,6 +71,12 @@ export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, 
                             taskId={defaultValues?.taskId}
                             translatedName={translation('due_date')}
                             translatedForbiddenDate={translationForm('forbidden_date', { date: 'date' })}
+                            locale={locale}
+                            dictionary={{
+                                confirm: translationForm('confirm'),
+                                cancel: translationForm('cancel'),
+                                selectDate: translationForm('select_date'),
+                            }}
                         />
                     </div>
                 </Grid>
