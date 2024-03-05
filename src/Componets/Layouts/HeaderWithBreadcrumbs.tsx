@@ -3,15 +3,15 @@ import Grid from '@mui/material/Grid';
 import Link from 'next/link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { cookies } from 'next/headers';
+import { getUserSessionAndEmail } from '../actions';
 
 type HeaderWithBreadcrumbsType = {
     title: string | { linkLabel: string, linkHref: string }[]
     subtitle: string
 };
 
-export const HeaderWithBreadcrumbs: React.FC<HeaderWithBreadcrumbsType> = ({ title, subtitle }) => {
-    const authUser = JSON.parse(cookies().get('auth')?.value || '{}');
+export const HeaderWithBreadcrumbs: React.FC<HeaderWithBreadcrumbsType> = async ({ title, subtitle }) => {
+    const { session } = await getUserSessionAndEmail();
 
     const renderTitle = (): JSX.Element => {
         if (Array.isArray(title)) {
@@ -41,7 +41,7 @@ export const HeaderWithBreadcrumbs: React.FC<HeaderWithBreadcrumbsType> = ({ tit
             </Grid>
             <Grid item xs={2}>
                 <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} spacing={2}>
-                    <Avatar src={authUser.picture} alt={authUser.name} sx={{ width: 60, height: 60 }} />
+                    <Avatar src={session?.user?.image||undefined} alt={session?.user?.name||undefined} sx={{ width: 60, height: 60 }} />
                 </Stack>
             </Grid>
         </Grid >

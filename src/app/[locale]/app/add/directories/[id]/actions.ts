@@ -1,3 +1,4 @@
+import { getCookieProjectId } from "@/Componets/actions";
 import { DirectoryActions } from "@/server/actions/DirectoryActions"
 import { redirect } from "next/navigation";
 
@@ -16,7 +17,7 @@ export const updateDirectory = async (formData: FormData) => {
     const result = await DirectoryActions.updateDirectory({ directoryId, directoryName });
 
     if (result.success) {
-        redirect('/app/add/directory');
+        redirect('/app/add/directories');
     }
 };
 
@@ -24,11 +25,12 @@ export const deleteDirectory = async (formData: FormData) => {
     'use server';
 
     const directoryId = formData.get('directory_id') as string;
+    const projectId = getCookieProjectId()
 
-    const result = await DirectoryActions.deleteDirectory(directoryId);
+    const result = await DirectoryActions.deleteDirectory(directoryId, projectId);
 
     if (result.success) {
-        redirect('/app/add/directory');
+        redirect('/app/add/directories');
     }
 };
 

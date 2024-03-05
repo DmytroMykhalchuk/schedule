@@ -27,17 +27,13 @@ type WorkHoursType = {
     toHour: number,
 };
 
-const getAllowedHours = (date: Dayjs, userId?: string | null, taskId?: string) => {
-
+const getAllowedHours = (email: string, date: Dayjs, userId?: string | null, taskId?: string) => {
     const projectId = getCookieValue(projectIdCookieKey);
-    const sessionJson = getCookieValue(authCookieKey) || '';
-    const session = JSON.parse(decodeURIComponent(sessionJson) || '{}');
-    const sessionId = session?.sessionId || '';
 
     return axios.get('/api/tasks-alowed-hours/', {
         params: {
             project_id: projectId,
-            session_id: sessionId,
+            email: email,
             date: date.format('DD.MM.YYYY'),
             task_id: taskId,
             user_id: userId,
@@ -54,6 +50,7 @@ const getAllowedHours = (date: Dayjs, userId?: string | null, taskId?: string) =
 };
 
 type FormElementDateType = {
+    authEmail: string;
     defaultDueDate?: string;
     fromHour?: number;
     toHour?: number;
@@ -68,7 +65,7 @@ type FormElementDateType = {
     locale: string;
 };
 
-export const FormElementDate: React.FC<FormElementDateType> = ({ defaultDueDate, fromHour, toHour, taskId, translatedName, translatedForbiddenDate, dictionary, locale }) => {
+export const FormElementDate: React.FC<FormElementDateType> = ({ authEmail, defaultDueDate, fromHour, toHour, taskId, translatedName, translatedForbiddenDate, dictionary, locale }) => {
     if (locale === 'uk') {
         dayjs.locale(uk);
     }
@@ -80,13 +77,11 @@ export const FormElementDate: React.FC<FormElementDateType> = ({ defaultDueDate,
     const [hasForbiddenDate, setHasForbiddenDate] = useState({ isError: false, formattedDay: '' });
     const [allowedHours, setAllowedHours] = useState(workHours.slice(0, 2));
     const [selectedWorkHours, setSelectedWorkHours] = useState({ fromHour: fromHour || 0, toHour: toHour || 0 })
-    const [isFetchedHours, setIsFetchedHours] = useState(false);
     const [chunkHours, setChunkHours] = useState([] as number[][]);
 
-    const debounceDate = useDebounce(date, 1000);
 
     useEffect(() => {
-        if (!debounceDate || !isAllowedMakeHoursRequest.current) {
+        if (!assignee || !isAllowedMakeHoursRequest.current) {
             if (!isAllowedMakeHoursRequest.current) {
                 isAllowedMakeHoursRequest.current = true;
             }
@@ -94,25 +89,22 @@ export const FormElementDate: React.FC<FormElementDateType> = ({ defaultDueDate,
         }
 
         const fetchData = async () => {
-            const response = await getAllowedHours(date, assignee, taskId);
+            const response = await getAllowedHours(authEmail, date, assignee, taskId);
             if (!(response?.code === 200 && response?.data)) return;
             deChunkAllowedHours(response.data);
             setAllowedHours(response.data);
-            setIsFetchedHours(true);
 
-            selectedWorkHours.fromHour === 0 && setSelectedWorkHours({
-                fromHour: response.data[0],
-                toHour: response.data[1],
-            });
+            if (true) {
+                setSelectedWorkHours({
+                    fromHour: response.data[0],
+                    toHour: response.data[1],
+                });
+            }
         };
 
         fetchData();
 
-    }, [debounceDate]);
-
-    useEffect(() => {
-
-    }, []);
+    }, [date, assignee]);
 
     const deChunkAllowedHours = (hours: number[]) => {
         const ranges = [] as number[][];
@@ -276,14 +268,11 @@ export const FormElementDate: React.FC<FormElementDateType> = ({ defaultDueDate,
                         </LocalizationProvider>
                         {hasForbiddenDate.isError && <Typography variant="caption" color="error">{translatedForbiddenDate.replace('date', hasForbiddenDate.formattedDay)}</Typography>}
                     </Stack>
-                    {
-                        isFetchedHours &&
-                        <Stack direction={'row'} spacing={1} alignItems={'center'}>
-                            <HourSelect allowedHours={getAllowedFromHourValues()} onChange={onChangeHourFrom} value={selectedWorkHours.fromHour || allowedHours[0]} name="from_hour" />
-                            <Typography variant="body1" component='div'>-</Typography>
-                            <HourSelect allowedHours={getAllowedToHourValues()} onChange={onChangeHourTo} value={selectedWorkHours.toHour || allowedHours[1]} name="to_hour" />
-                        </Stack>
-                    }
+                    <Stack direction={'row'} spacing={1} alignItems={'center'}>
+                        <HourSelect allowedHours={getAllowedFromHourValues()} onChange={onChangeHourFrom} value={selectedWorkHours.fromHour || allowedHours[0]} name="from_hour" />
+                        <Typography variant="body1" component='div'>-</Typography>
+                        <HourSelect allowedHours={getAllowedToHourValues()} onChange={onChangeHourTo} value={selectedWorkHours.toHour || allowedHours[1]} name="to_hour" />
+                    </Stack>
                 </Stack>
             </Grid>
         </Grid>

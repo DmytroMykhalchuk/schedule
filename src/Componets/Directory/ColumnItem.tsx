@@ -6,6 +6,7 @@ import styles from './styles.module.scss';
 import Typography from '@mui/material/Typography';
 import { ByDirectoryTaskRecord } from '@/server/actions/types';
 import { TaskItem } from './Elements/TaskItem';
+import { useTranslations } from 'next-intl';
 
 type ColumnItemType = {
     tasks?: ByDirectoryTaskRecord[];
@@ -15,6 +16,8 @@ type ColumnItemType = {
 };
 
 export const ColumnItem: React.FC<ColumnItemType> = ({ tasks, title, locale, createTaskLabel }) => {
+    const translation = useTranslations('MyTasks');
+    //todo modal review
 
     return (
         <Paper
@@ -30,7 +33,9 @@ export const ColumnItem: React.FC<ColumnItemType> = ({ tasks, title, locale, cre
             <Stack spacing={2}>
                 {
                     tasks && tasks.map(task => (
-                        <TaskItem key={task._id} task={task} locale={locale} />
+                        <TaskItem key={task._id} task={task} locale={locale} dictionary={{
+                            priority: translation('priorities.' + task.priority)
+                        }} />
                     ))
                 }
             </Stack>

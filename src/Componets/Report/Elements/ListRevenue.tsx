@@ -11,7 +11,7 @@ import { getRevenue } from '@/app/[locale]/app/charts/add-revenue/actions';
 import { getUserSessionAndEmail } from '@/Componets/actions';
 
 dayjs.locale(uk);
-
+//todo translate all dates to locale
 type ListRevenueType = {
     page?: number
 };
@@ -47,9 +47,12 @@ export const ListRevenue: React.FC<ListRevenueType> = async ({ page = 1 }) => {
                     </Stack>
                 ))
             }
-            <Stack>
-                <PaginationBar total={revenues.total} limit={revenuePerPage} page={page} />
-            </Stack>
+            {
+                revenues.revenues.length > 0 &&
+                <Stack>
+                    <PaginationBar total={revenues.total} limit={revenuePerPage} page={page} />
+                </Stack>
+            }
         </Stack>
     );
 };

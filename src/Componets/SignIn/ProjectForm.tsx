@@ -1,10 +1,9 @@
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import styles from './styles.module.scss';
-import Typography from '@mui/material/Typography';
 import { UIInputField } from '../UI/UIInputField';
 import { useTranslations } from 'next-intl';
-import { createProject } from '@/app/[locale]/sign-in/create-project/actions';
+import { createProject } from '@/app/[locale]/sign-in/actions';
 import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
 
 type ProjectFormType = {

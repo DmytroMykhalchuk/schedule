@@ -1,14 +1,13 @@
 import Stack from "@mui/material/Stack";
-import { getCategoriesList } from "./actions";
 import Typography from '@mui/material/Typography'
 import { RecordActions } from "../Common/RecordActions";
+import { CategoryRecord } from "@/server/actions/types";
 
 type CategoryListType = {
-    authEmail: string,
+    categories: CategoryRecord[];
 };
 
-export const CategoryList: React.FC<CategoryListType> = async ({ authEmail }) => {
-    const categories = await getCategoriesList(authEmail);
+export const CategoryList: React.FC<CategoryListType> = async ({ categories }) => {
 
     return (
         <Stack spacing={2}>
@@ -30,7 +29,7 @@ export const CategoryList: React.FC<CategoryListType> = async ({ authEmail }) =>
                                 editPath={item._id}
                             />
                         </Stack>
-                    </Stack> 
+                    </Stack>
                 </div>
             ))}
         </Stack>

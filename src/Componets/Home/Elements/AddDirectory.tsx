@@ -11,7 +11,7 @@ export const AddDirectory: React.FC<AddDirectoryType> = ({ locale }) => {
     const translation = useTranslations('Form');
     
     return (
-        <Link href={`/${locale}/app/add/directory`}>
+        <Link href={`/${locale}/app/add/directories`}>
             <Button variant="outlined"
                 startIcon={<AddIcon />}
                 color='warning'

@@ -10,7 +10,9 @@ import { Revenue } from '@/Componets/Report/Revenue';
 import { WorkingHoursWrapper } from '@/Componets/Report/WorkingHoursWrapper';
 
 type PageType = {
-    params: { locale: string };
+    params: {
+        locale: string;
+    };
 };
 
 const Page: React.FC<PageType> = async ({ params }) => {
@@ -29,19 +31,33 @@ const Page: React.FC<PageType> = async ({ params }) => {
                     image: session?.user?.image || '',
                 }}
             />
-            <Grid container spacing={2}>
-                <Grid xs={12} lg={12} mb={2}>
-                    <Stack spacing={2}>
-                        <CountCards directoriesCount={info.projectCount} usersCount={info.userCount} />
-                        <ProgressChart progress={info.progress} categories={info.categories} />
-                        <ProjectCategories categories={info.categories} locale={locale}/>
-                    </Stack>
+            <Grid container spacing={2} pt={2}>
+                <Grid item xs={12} lg={12} mb={2}>
+                    <div>
+                        <Stack spacing={2}>
+                            <div>
+                                <CountCards directoriesCount={info.projectCount} usersCount={info.userCount} locale={locale} />
+                            </div>
+                            <div>
+                                <ProgressChart progress={info.progress} categories={info.categories} />
+                            </div>
+                            <div>
+                                <ProjectCategories categories={info.categories} locale={locale} />
+                            </div>
+                        </Stack>
+                    </div>
                 </Grid>
-                <Grid xs={12} lg={12} mb={2}>
-                    <Stack spacing={2}>
-                        <WorkingHoursWrapper monthWorkHours={info.monthWorkHours} weekWorkHours={info.weekWorkHours} />
-                        <Revenue chartData={info.revenue} />
-                    </Stack>
+                <Grid item xs={12} lg={12} mb={2}>
+                    <div>
+                        <Stack spacing={2}>
+                            <div>
+                                <WorkingHoursWrapper monthWorkHours={info.monthWorkHours} weekWorkHours={info.weekWorkHours} />
+                            </div>
+                            <div>
+                                <Revenue chartData={info.revenue} />
+                            </div>
+                        </Stack>
+                    </div>
                 </Grid>
             </Grid>
         </>
@@ -49,3 +65,4 @@ const Page: React.FC<PageType> = async ({ params }) => {
 };
 
 export default Page;
+//todo disconnetct pusher

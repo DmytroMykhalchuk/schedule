@@ -5,11 +5,12 @@ import { CountCard } from './Elements/CountCard';
 import { useTranslations } from 'next-intl';
 
 type CountCardsType = {
-    directoriesCount?: number,
-    usersCount?: number,
+    directoriesCount?: number;
+    usersCount?: number;
+    locale: string;
 };
 
-export const CountCards: React.FC<CountCardsType> = ({ directoriesCount = 0, usersCount = 0 }) => {
+export const CountCards: React.FC<CountCardsType> = ({ directoriesCount = 0, usersCount = 0, locale }) => {
     const translation = useTranslations('Report');
 
     return (
@@ -19,7 +20,7 @@ export const CountCards: React.FC<CountCardsType> = ({ directoriesCount = 0, use
                 buttonLabel={translation(`total_projects.add_button`)}
                 colorTheme="warning"
                 count={directoriesCount}
-                createUrl="/app/add/directory"
+                createUrl={`/${locale}/app/add/directories`}
                 title={translation(`total_projects.title`)}
             />
             <CountCard
@@ -27,7 +28,7 @@ export const CountCards: React.FC<CountCardsType> = ({ directoriesCount = 0, use
                 buttonLabel={translation(`total_users.add_button`)}
                 colorTheme="secondary"
                 count={usersCount}
-                createUrl="/app/add/users"
+                createUrl={`/${locale}/app/add/users`}
                 title={translation(`total_users.title`)}
             />
         </Stack>

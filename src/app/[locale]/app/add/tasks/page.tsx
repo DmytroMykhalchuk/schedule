@@ -10,15 +10,21 @@ type PageType = {
     params: {
         locale: string;
     };
+    searchParams: {
+        task_directory_required?: string;
+    };
 };
 
-const Page: React.FC<PageType> = async ({ params }) => {
+const Page: React.FC<PageType> = async ({ params, searchParams }) => {
     const { locale } = params;
+    const { task_directory_required: isDirectoryRequired } = searchParams;
     const { authEmail } = await getUserSessionAndEmail();
 
     return (
         <Stack alignItems={'center'}>
-            <Content authEmail={authEmail} locale={locale} />
+            <div>
+                <Content authEmail={authEmail} locale={locale} isDirectoryRequired={Boolean(isDirectoryRequired)} />
+            </div>
         </Stack>
     );
 };
@@ -26,9 +32,10 @@ const Page: React.FC<PageType> = async ({ params }) => {
 type ContentType = {
     authEmail: string;
     locale: string;
+    isDirectoryRequired: boolean;
 };
 
-const Content: React.FC<ContentType> = ({ authEmail, locale }) => {
+const Content: React.FC<ContentType> = ({ authEmail, locale, isDirectoryRequired }) => {
     const translation = useTranslations('MyTasks');
     return (
         <>
@@ -37,13 +44,12 @@ const Content: React.FC<ContentType> = ({ authEmail, locale }) => {
                 pathBack={`/${locale}/app/add`}
             >
                 <form action={createTask} >
-                    <Stack direction={'row'} sx={{ p: 2, pt: 0 }}>
-                    </Stack>
                     <TaskForm
                         labelConfirm='create'
                         UnderFormSlot={<CommentBox />}
                         authEmail={authEmail}
                         locale={locale}
+                        isDirectoryRequired={isDirectoryRequired}
                     />
                 </form>
             </MiddlePaperWrapper>

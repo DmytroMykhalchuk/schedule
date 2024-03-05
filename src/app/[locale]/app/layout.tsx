@@ -31,7 +31,7 @@ const Layout: React.FC<LayoutType> = async ({ children, params }) => {
 
     return (
         <Stack direction={'row'}>
-            <AppSideBar locale={locale}/>
+            <AppSideBar locale={locale} />
             <Stack
                 sx={{
                     width: '100%',

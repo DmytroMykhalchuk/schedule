@@ -18,7 +18,7 @@ const Page: React.FC<PageType> = async ({ params }) => {
 
     return (
         <Stack alignItems={'center'} justifyContent={'center'} spacing={2}>
-            <DirectoryCreateForm locale={locale} formAction={createDirectory} title='directory.add_title' type='create'/>
+            <DirectoryCreateForm locale={locale} formAction={createDirectory} title='directory.add_title' type='create' directoriesCount={directories?.length} />
             <MiddlePaperWrapper>
                 <div>
                     <DirectoriesList directories={directories} />

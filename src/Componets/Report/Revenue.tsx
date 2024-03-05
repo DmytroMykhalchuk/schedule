@@ -27,6 +27,7 @@ export const Revenue: React.FC<RevenueType> = ({ chartData }) => {
 
     const currentDate = dayjs();
     const mapMonth = {} as { [index: number]: { monthPosition: string, monthName: string } };
+
     Array.from({ length: 12 }).map((_, index) => {
         const [monthPosition, monthName] = currentDate.subtract(index, 'month').format('M MMM').split(' ');
         mapMonth[index] = { monthPosition, monthName };
@@ -175,8 +176,10 @@ const extractDataChart = (chartData: RevenueChartType) => {
 
     const rangeY = [0, roundedValue * 0.25, roundedValue * 0.5, roundedValue * 0.75, roundedValue];
 
+    const avarageValue = Math.round(total / counter);
+    
     return {
-        avarage: Math.round(total / counter),
+        avarage: isNaN(avarageValue) ? 0 : avarageValue,
         total, rangeY,
     };
 }

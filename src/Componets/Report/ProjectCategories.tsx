@@ -23,7 +23,7 @@ export const ProjectCategories: React.FC<ProjectCategoriesType> = ({ categories,
                 <Grid container spacing={1}>
                     {
                         categories.map((category, index) => (
-                            <Grid key={index} md={3} sx={{ p: 1 }}>
+                            <Grid key={index} item md={3} sx={{ p: 1 }}>
                                 {/* <Link href={`/${locale}/app/directories/${category._id}/kaban-dashboard`}> */}
                                     <Stack sx={{
                                         p: 2,

@@ -16,7 +16,7 @@ export const PageActions = {
         const currentDate = dayjs();
         const currentDateStamp = currentDate.format('DD.MM.YYYY');
 
-                const user = await UserActions.getUserByEmail(authParams.email);
+        const user = await UserActions.getUserByEmail(authParams.email);
 
         const authUserId = user._id.toString();
         const project = await Project.findOne({ _id: authParams.projectId, users: authUserId }, { directories: 1, users: 1 }).populate('categories');
@@ -49,7 +49,7 @@ export const PageActions = {
         prevTasks.forEach((task) => {
             const month = task.dueDate.month() + 1;
             if (requiredMonths.includes(month)) {
-                const categoryId = task.categoryId.toString();
+                const categoryId = task.categoryId?.toString();
 
                 if (categoriesProgress.hasOwnProperty(categoryId)) {
                     categoriesProgress[categoryId].push(task.dueDate);
@@ -58,18 +58,20 @@ export const PageActions = {
                 }
             };
 
-            if (monthWorkHours.hasOwnProperty(month)) {
-                monthWorkHours[month] += task.toHour - task.fromHour;
-            } else {
-                monthWorkHours[month] = task.toHour - task.fromHour;
-            }
-
-            if (task.assignee.toString() === authUserId && currentDate.isSame(task.dueDate, 'week')) {
-                const dayOfWeek = task.dueDate.day();
-                if (weekWorkHours.hasOwnProperty(dayOfWeek)) {
-                    weekWorkHours[dayOfWeek] += task.toHour - task.fromHour;
+            if (task.assignee?.toString() === authUserId) {
+                if (monthWorkHours.hasOwnProperty(month)) {
+                    monthWorkHours[month] += task.toHour - task.fromHour;
                 } else {
-                    weekWorkHours[dayOfWeek] = task.toHour - task.fromHour;
+                    monthWorkHours[month] = task.toHour - task.fromHour;
+                }
+
+                if (currentDate.isSame(task.dueDate, 'week')) {
+                    const dayOfWeek = task.dueDate.day();
+                    if (weekWorkHours.hasOwnProperty(dayOfWeek)) {
+                        weekWorkHours[dayOfWeek] += task.toHour - task.fromHour;
+                    } else {
+                        weekWorkHours[dayOfWeek] = task.toHour - task.fromHour;
+                    }
                 }
             }
 

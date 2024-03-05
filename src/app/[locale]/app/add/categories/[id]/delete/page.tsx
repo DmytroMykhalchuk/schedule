@@ -4,17 +4,18 @@ import { deleteCategory } from "../../actions";
 import { getUserSessionAndEmail } from "@/Componets/actions";
 
 type PageType = {
-    params: { id: string }
+    params: {
+        id: string;
+        locale: string;
+    };
 };
 
 const Page: React.FC<PageType> = async ({ params }) => {
-    const { id } = params;
+    const { locale, id } = params;
 
     return (
         <DeleteDialog
-            cancelHref="/app/add/categories"
-            content='It will be deleted completely. Are you sure?'
-            title="Confrim action"
+            cancelHref={`/${locale}/app/add/categories`}
             FormWrapper={(props = {}) => (<FormWrapper categoryId={id} {...props} />)}
         />
     );

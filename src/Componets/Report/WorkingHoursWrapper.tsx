@@ -10,7 +10,6 @@ type WorkingHoursWrapperType = {
 export const WorkingHoursWrapper: React.FC<WorkingHoursWrapperType> = ({ weekWorkHours, monthWorkHours }) => {
     const translation = useTranslations('Report');
 
-
     return (
         <TotalWorkingHours translate={{
             title: translation('total_working_hours.title'),

@@ -46,7 +46,7 @@ export type StoreTaskType = {
     comment?: string | null
     fromHour: number,
     toHour: number,
-    categoryId: string
+    categoryId: string | null
 };
 
 export type StoreCommentType = {
@@ -123,7 +123,7 @@ export type ViewTaskType = {
     status: StatusType,
     priority: PriorityType,
     assignee: string,
-    directory: string,
+    directory?: string,
     subtasks: string[],
     fromHour: number,
     toHour: number,
@@ -142,7 +142,7 @@ export type TaskUpdateType = {
     subtasks: string[] | null,
     fromHour: number,
     toHour: number,
-    categoryId: string
+    categoryId: string | null
 };
 
 export type StoreCommentRequestType = {

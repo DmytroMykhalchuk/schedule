@@ -18,9 +18,10 @@ import { CommentType } from '@/server/actions/types';
 type TaskEditPageType = {
     taskId: string;
     locale: string;
+    isDirectoryRequired: boolean;
 };
 
-export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId, locale }) => {
+export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId, locale, isDirectoryRequired }) => {
     const { authEmail, session } = await getUserSessionAndEmail()
 
     const response = await getTask(taskId, authEmail);
@@ -57,7 +58,7 @@ export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId, locale 
                                 title: task.name,
                                 assignee: task.assignee,
                                 description: task.description,
-                                directory: task.directory.toString(),
+                                directory: task?.directory || '',
                                 dueDate: task.dueDate,
                                 priority: task.priority,
                                 status: task.status,
@@ -70,6 +71,7 @@ export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId, locale 
                             labelConfirm='update'
                             authEmail={authEmail}
                             locale={locale}
+                            isDirectoryRequired={isDirectoryRequired}
                         />
                         <input type="hidden" name="task_id" value={task?._id?.toString() || ''} />
                     </form>

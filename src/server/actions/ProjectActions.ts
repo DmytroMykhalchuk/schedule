@@ -93,7 +93,7 @@ export const ProjectActions = {
             ? { _id: projectId, users: userId }
             : { _id: projectId };
 
-        const project = Project.findOne(filter, selector)
+        const project = Project.findOne(filter, selector);
 
         return project;
     },

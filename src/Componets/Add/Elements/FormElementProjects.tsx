@@ -5,14 +5,19 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import ShareIcon from '@mui/icons-material/Share';
 import { getProjectDirectories } from "../actions";
+import { defaultDirectory } from "@/server/constants";
+import { useTranslations } from "next-intl";
+
 
 type FormElementProjectsType = {
-    defaultDirectory?: string;
+    defaultValue?: string;
     authEmail: string;
     translatedName: string;
+    translatedDefaultCategory: string;
+    isDirectoryRequired: boolean;
 };
 
-export const FormElementProjects: React.FC<FormElementProjectsType> = async ({ defaultDirectory, authEmail, translatedName }) => {
+export const FormElementProjects: React.FC<FormElementProjectsType> = async ({ defaultValue, authEmail, translatedName, isDirectoryRequired, translatedDefaultCategory }) => {
     const directories = await getProjectDirectories(authEmail) || [];
 
     return (
@@ -22,7 +27,7 @@ export const FormElementProjects: React.FC<FormElementProjectsType> = async ({ d
                     <Typography variant="body1" color={'gray'}>{translatedName}</Typography>
                 </Stack>
             </Grid>
-            <Grid item xs={9}>
+            <Grid item xs={9} direction={'column'} display={'flex'}>
                 <Select
                     size='small'
                     color='warning'
@@ -37,23 +42,39 @@ export const FormElementProjects: React.FC<FormElementProjectsType> = async ({ d
                             border: 'none',
                         }
                     }}
-                    defaultValue={defaultDirectory || directories[0]._id.toString()}
+                    placeholder="Directory"
+                    defaultValue={defaultValue || defaultDirectory.value}
                     required
                     name="directory"
                 >
+                    <MenuItem value={defaultDirectory.value}>
+                        <Stack direction={'row'} spacing={1}>
+                            <Typography variant="body1" component={'span'}>{translatedDefaultCategory}</Typography>
+                            {<ShareIcon />}
+                        </Stack>
+                    </MenuItem>
                     {
                         directories.map((directory, index) => (
                             <MenuItem value={directory._id.toString()} key={index}>
                                 <Stack direction={'row'} spacing={1}>
                                     <Typography variant="body1" component={'span'}>{directory.name}</Typography>
-                                    {index === 0 && <ShareIcon />}
                                 </Stack>
                             </MenuItem>
                         ))
                     }
                 </Select>
-
+                {isDirectoryRequired && <ErrorMessage />}
             </Grid>
         </Grid>
+    );
+};
+
+type ErrorMessageType = {
+};
+
+export const ErrorMessage: React.FC<ErrorMessageType> = ({ }) => {
+    const translation = useTranslations('Form');
+    return (
+        <Typography variant="caption" color="error">{translation('required')}</Typography>
     );
 };

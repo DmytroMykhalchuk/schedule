@@ -111,6 +111,11 @@ export const defaultCategory: CategoryRecord = {
     textColor: '#000000',
 };
 
+export const defaultDirectory = {
+    title: "no_directory",
+    value: 'no_directory',
+};
+
 export const weekLength = 5;
 export const yearMonthLength = 12;
 

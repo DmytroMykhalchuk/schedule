@@ -1,10 +1,11 @@
 import connectDB from '../connectDB';
-import { AuthType, ProccessStatusType, CategoryRecord, CategoryDB } from './types';
+import Task from '../models/Task';
+import { AuthType, CategoryDB, CategoryRecord, ProccessStatusType } from './types';
+import { categoryColors } from '../constants';
 import { getContrastColor } from '@/utlis/getContrastColor';
+import { getRandomString } from '../utils/utils';
 import { ObjectId } from 'mongodb';
 import { ProjectActions } from './ProjectActions';
-import { categoryColors } from '../constants';
-import { getRandomString } from '../utils/utils';
 
 export type StoreCategory = {
     color: string,
@@ -94,6 +95,8 @@ export const CategoryActions = {
         project.categories = project?.categories.filter((category: CategoryDB) => category._id.toString() !== categoryId);
 
         project?.save();
+
+        await Task.updateMany({ categoryId: categoryId }, { categoryId: '' });
 
         return { success: Boolean(project) };
     },

@@ -13,7 +13,7 @@ export const createCategory = async (formData: FormData) => {
 
     const result = await CategoryActions.storeCategory({ projectId, email }, { categoryName, color });
 
-    result && redirect('/app/add/categories/' + result);
+    result && redirect('/app/add/categories');
 };
 
 export const updateCategory = async (formData: FormData) => {

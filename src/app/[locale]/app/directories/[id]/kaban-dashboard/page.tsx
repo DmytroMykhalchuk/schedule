@@ -49,7 +49,7 @@ export const Content: React.FC<ContentType> = ({ directory, tasks, locale }) => 
                 title={titles}
             />
             <Grid container sx={{ flex: 1 }}>
-                <Grid className={styles.tableColumn} item md={12} lg={4}>
+                <Grid className={styles.tableColumn} item xs={12} lg={4}>
                     <ColumnItem
                         tasks={tasks?.filter(item => item.status === 'not_started')}
                         title={translation('statuses.not_started_title')}
@@ -57,7 +57,7 @@ export const Content: React.FC<ContentType> = ({ directory, tasks, locale }) => 
                         createTaskLabel={translation('add_task')}
                     />
                 </Grid>
-                <Grid className={styles.tableColumn} item md={12} lg={4}>
+                <Grid className={styles.tableColumn} item xs={12} lg={4}>
                     <ColumnItem
                         tasks={tasks?.filter(item => item.status === 'in_progress')}
                         title={translation('statuses.in_progress_title')}
@@ -65,7 +65,7 @@ export const Content: React.FC<ContentType> = ({ directory, tasks, locale }) => 
                         createTaskLabel={translation('add_task')}
                     />
                 </Grid>
-                <Grid className={styles.tableColumn} item md={12} lg={4}>
+                <Grid className={styles.tableColumn} item xs={12} lg={4}>
                     <ColumnItem
                         tasks={tasks?.filter(item => item.status === 'done')}
                         title={translation('statuses.done_title')}

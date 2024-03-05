@@ -56,10 +56,10 @@ export const Content: React.FC<ContentType> = ({ locale, authEmail }) => {
                 <Typography variant="h3" textAlign={'center'}>{translation('welcome')}</Typography>
                 <Typography variant="body1" textAlign={'center'}>{translation('welocme_subtitle')}</Typography>
             </Box>
-            <InviteInputForm locale={locale} />
+            <InviteInputForm locale={locale} authEmail={authEmail} />
             <Box>
                 <Typography variant="h6" fontWeight={600}>{translation('avalable_projects')}</Typography>
-                <AvailbleProjects authEmail={authEmail as string} locale={locale}/>
+                <AvailbleProjects authEmail={authEmail as string} locale={locale} />
             </Box>
         </Paper>
     );

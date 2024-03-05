@@ -7,6 +7,8 @@ import { UserActions } from './UserActions';
 import Directory from '../models/Directory';
 import { getRandomString } from '../utils/utils';
 import { TaskActions } from './TaskActions';
+import mongoose from 'mongoose';
+import Task from '../models/Task';
 
 export const DirectoryActions = {
     async storeDirectory(directoryName: string, projectId: string): Promise<ProccessStatusType> {
@@ -37,7 +39,7 @@ export const DirectoryActions = {
             _id: item._id,
             name: item.name,
             users: tasks
-                .filter((task) => task.directory.toString() === item._id.toString())
+                .filter((task) => task.directory && task.directory.toString() === item._id.toString())
                 .map((item) => item.assignee)
                 .filter((value, index, self) => self.indexOf(value) === index) //unique
         }));
@@ -50,7 +52,10 @@ export const DirectoryActions = {
 
         const directory = await Directory.findOne({ _id: directoryId });
 
-        return directory;
+        return {
+            ...directory.toObject(),
+            _id: directory._id.toString(),
+        };
     },
 
     async updateDirectory(updateDirectory: UpdateDirectoryType): Promise<ProccessStatusType> {
@@ -63,10 +68,21 @@ export const DirectoryActions = {
         return { success: Boolean(directory) };
     },
 
-    async deleteDirectory(directoryId: string): Promise<ProccessStatusType> {
+    async deleteDirectory(directoryId: string, projectId: string): Promise<ProccessStatusType> {
         await connectDB();
 
+        const project = await ProjectActions.getProjectById(projectId, { directories: 1 });
+
+        if (!project) {
+            return { success: false };
+        }
+
         const directory = await Directory.findOneAndDelete({ _id: directoryId });
+
+        project.directories = project.directories.filter((id: mongoose.Types.ObjectId) => id.toString() !== directoryId);
+        project.save();
+
+        await Task.findOneAndUpdate({ directoryId: directoryId }, { directoryId: '' });
 
         return { success: Boolean(directory) };
     },

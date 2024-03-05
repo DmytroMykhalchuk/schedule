@@ -27,7 +27,7 @@ import { CommentActions } from './CommentActions';
 import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
 import { getRandomWeekdayDate } from '@/utlis/getRandomWeekdayDate';
 import { ObjectId } from 'mongodb';
-import { priorities, statuses, workHours } from '../constants';
+import { defaultCategory, priorities, statuses, workHours } from '../constants';
 import { ProjectActions } from './ProjectActions';
 import { UserActions } from './UserActions';
 
@@ -138,7 +138,8 @@ export const TaskActions = {
             ...task.toObject(),
             assignee: task.assignee.toString(),
             _id: task._id.toString(),
-            categoryId: task?.categoryId?.toString() || ''
+            categoryId: task?.categoryId?.toString() || '',
+            directory: task.directory ? task.directory.toString() : task.directory,
         };
 
         return { task: handledTask, comments: preparedCommnets };
@@ -153,6 +154,8 @@ export const TaskActions = {
             return { success: false };
         }
 
+        console.log(updateTask.directory, updateTask.categoryId)
+
         const task = await Task.findOneAndUpdate({ _id: updateTask.taskId }, {
             name: updateTask.name,
             assignee: updateTask.assignee,
@@ -164,6 +167,7 @@ export const TaskActions = {
             toHour: updateTask.toHour,
             subtasks: updateTask.subtasks || [],
             categoryId: updateTask.categoryId,
+            directory: updateTask.directory,
         });
 
         return { success: Boolean(task) };
@@ -208,7 +212,7 @@ export const TaskActions = {
             return allowedHours;
         }
 
-        const user = await UserActions.getUserBySessionId(userId)
+        const user = await User.findById(userId).orFail();
         const project = await ProjectActions.getProjectById(auth.projectId, {}, user._id.toString());
 
         if (!project) {

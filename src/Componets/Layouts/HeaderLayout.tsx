@@ -18,7 +18,7 @@ type HeaderLayoutType = {
 
 export const HeaderLayout: React.FC<HeaderLayoutType> = ({ title, subtitle, slot, isCenter, authUser, pageName }) => {
     const translation = useTranslations(pageName);
-console.log(slot ? 6 : 10)
+
     return (
         <Grid container sx={{ pb: 2 }} alignItems={isCenter ? 'center' : undefined}>
             <Grid item xs={slot ? 6 : 10}>

@@ -8,8 +8,6 @@ import styles from './../styles.module.scss';
 import { getDaysWithCurrentMonth } from '../actions';
 import { ControlPageCalendar } from './ControlPageCalendar';
 
-const weekdaysMin = ['', "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-
 type MonthCalendarType = {
     date?: string;
     authEmail: string;

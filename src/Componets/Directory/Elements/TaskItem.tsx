@@ -14,9 +14,12 @@ import { priorityStyling } from '@/server/constants';
 type TaskItemType = {
     task: ByDirectoryTaskRecord;
     locale: string;
+    dictionary: {
+        priority: string;
+    };
 };
 
-export const TaskItem: React.FC<TaskItemType> = ({ task, locale }) => {
+export const TaskItem: React.FC<TaskItemType> = ({ task, locale, dictionary }) => {
 
     return (
         <Link href={`/${locale}/app/add/tasks/${task._id}`}>
@@ -39,7 +42,7 @@ export const TaskItem: React.FC<TaskItemType> = ({ task, locale }) => {
                 </Stack>
                 <Stack direction={'row'} alignItems={'center'} spacing={0.5}>
                     <Box width={12} height={12} borderRadius={'50%'} bgcolor={priorityStyling[task.priority].primaryColor} />
-                    <Typography variant="subtitle2">{task.priority}</Typography>
+                    <Typography variant="subtitle2">{dictionary.priority}</Typography>
                 </Stack>
                 <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
                     <Link href={'mailto:' + task.assignee.email}>

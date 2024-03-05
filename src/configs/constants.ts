@@ -36,7 +36,7 @@ export const menuList: MenuItemTyp[] = [
     {
         path: '/app/add/',
         Icon: AddBoxIcon,
-        activeChecks: ['/app/add/', '/app/add/directory/', '/app/add/tasks/', '/app/add/team/', '/app/add/invitations/', '/app/add/members/', '/app/add/categories/'],
+        activeChecks: ['/app/add/', '/app/add/directories/', '/app/add/tasks/', '/app/add/team/', '/app/add/invitations/', '/app/add/members/', '/app/add/categories/'],
     },
 ];
 

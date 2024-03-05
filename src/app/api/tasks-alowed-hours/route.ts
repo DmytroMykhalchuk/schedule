@@ -10,6 +10,8 @@ export const GET = async (req: Request) => {
     const userId = searchParams.get('user_id');
     const date = searchParams.get('date');
 
+    //todo pass email by headers
+
     if (!(projectId && email && date)) {
         return NextResponse.json({
             code: 500,

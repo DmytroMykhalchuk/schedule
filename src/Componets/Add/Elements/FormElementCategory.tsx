@@ -1,12 +1,12 @@
-import Chip from '@mui/material/Chip';
 import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { getCategoriesList } from '../actions';
-import { FormSelect } from '../../Common/FormSelect';
 import { defaultCategory } from '@/server/constants';
+import { FormSelect } from '../../Common/FormSelect';
+import { getCategoriesList } from '../actions';
 
 type FormElementCategoryType = {
     defaultCategoryId?: string;
@@ -16,8 +16,8 @@ type FormElementCategoryType = {
 
 export const FormElementCategory: React.FC<FormElementCategoryType> = async ({ defaultCategoryId, authEmail, translatedName }) => {
     const categories = await getCategoriesList(authEmail);
-
-    const preparedCategories = defaultCategoryId
+    
+    const preparedCategories = defaultCategoryId&&defaultCategoryId!==defaultCategory._id
         ? [...categories]
         : [defaultCategory, ...categories];
 
@@ -45,6 +45,8 @@ export const FormElementCategory: React.FC<FormElementCategoryType> = async ({ d
                                                 p: 0,
                                                 backgroundColor: category.color,
                                                 color: category.textColor,
+                                                width: '100%',
+                                                mb: 0.5,
                                             }}
                                         />
                                     </MenuItem>

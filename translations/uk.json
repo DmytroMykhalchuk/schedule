@@ -61,6 +61,7 @@
         "add_task": "Додати задачу",
         "reply_to_message": "Відповідь на",
         "reply_to_user": "Відповідь",
+        "default_directory":"Немає директорії",
         "": ""
     },
     "Overview": {
@@ -117,6 +118,7 @@
         "update": "Оновити",
         "select_date": "Вибрати дату",
         "generate": "Згенерувати",
+        "required":"Обов'язкове до заповненя",
         "directory": {
             "add_title": "Додати директорію",
             "update_title": "Оновити директорію",

@@ -1,37 +1,27 @@
-import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { categoryColors } from '@/server/constants';
-import { UIInputField } from '../UI/UIInputField';
+import { ControlCategoryForm } from './Elements/ControlCategoryForm';
 import { useTranslations } from 'next-intl';
 
 type CategoryFormType = {
     color?: string;
     name?: string;
+    categoriesCount?: number;
 };
 
-export const CategoryForm: React.FC<CategoryFormType> = ({ color, name }) => {
+export const CategoryForm: React.FC<CategoryFormType> = ({ color, name, categoriesCount=0 }) => {
     const translation = useTranslations('Form');
     return (
         <Stack spacing={2}>
-            <UIInputField
-                label={translation('category_form.category_placeholder')}
-                name="category_name"
-                defaultValue={name}
+            <ControlCategoryForm
+                name={name}
+                color={color}
+                dictionary={{
+                    categoryName: translation('category_form.category_placeholder'),
+                    colorLabel: translation('category_form.color_label'),
+                    confirm: translation('confirm'),
+                }}
+                categoriesCount={categoriesCount}
             />
-            <Stack direction={'row'} spacing={1} alignItems={'center'}>
-                <label htmlFor="color">{translation('category_form.color_label')}:</label>
-                <input type="color" id="color" name="color" list="colorList" defaultValue={color || categoryColors[0]}></input>
-            </Stack>
-            <datalist id="colorList">
-                {
-                    categoryColors.map((color, index) => (
-                        <option key={index} value={color}>{color}</option>
-                    ))
-                }
-            </datalist>
-            <Button variant="contained" color="warning" type="submit">
-                {translation('confirm')}
-            </Button>
         </Stack>
     );
 };

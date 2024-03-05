@@ -52,7 +52,11 @@ export const TotalWorkingHours: React.FC<TotalWorkingHoursType> = ({ weekWorkHou
             }
         }
 
-        return { total, avarage: Math.round(total / count) };
+        const avarageValue = Math.round(total / count);
+        return {
+            total,
+            avarage: isNaN(avarageValue) ? 0 : avarageValue,
+        };
     }, [monthWorkHours]);
 
     const weekHours = useMemo(() => {
@@ -65,7 +69,12 @@ export const TotalWorkingHours: React.FC<TotalWorkingHoursType> = ({ weekWorkHou
                 count++;
             }
         }
-        return { total, avarage: Math.round(total / count) };
+
+        const avarageValue = Math.round(total / count);
+        return {
+            total,
+            avarage: isNaN(avarageValue) ? 0 : avarageValue,
+        };
     }, [weekWorkHours]);
 
     const handleChange = (event: SelectChangeEvent) => {

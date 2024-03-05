@@ -10,12 +10,13 @@ export const CalendarActions = {
     async getMonthTaskDays(auth: AuthType, findDate: string): Promise<number[]> {
         await connectDB();
         const user = await UserActions.getUserByEmail(auth.email);
-        if (!user?._id) {
+        const project = await ProjectActions.getProjectById(auth.projectId, { _id: 1 }, user._id);
+        if (!project) {
             return [];
         }
         const formattedDate = findDate?.slice(2);
         const regex = new RegExp(formattedDate, 'i') // i for case insensitive
-        const tasks = await Task.find({ dueDate: { $regex: regex } });
+        const tasks = await Task.find({ projectId: project._id, dueDate: { $regex: regex } });
 
         const days = tasks.map(task => +task.dueDate.substr(0, 2))
 

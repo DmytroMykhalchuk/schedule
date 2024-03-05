@@ -16,7 +16,7 @@ export const createDirectory = async (formData: FormData) => {
     }
 
     await DirectoryActions.storeDirectory(directoryName, targetProjectId);
-    redirect('/app');
+    redirect('/app/add/directories');
 };
 
 export const getDirectories = async (email: string) => {

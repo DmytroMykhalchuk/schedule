@@ -36,13 +36,14 @@ type TaskFormType = {
     UnderFormSlot?: ReactNode;
     authEmail: string;
     locale: string;
+    isDirectoryRequired: boolean;
 };
 
-export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, UnderFormSlot, authEmail, locale }) => {
+export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, UnderFormSlot, authEmail, locale, isDirectoryRequired }) => {
     const translation = useTranslations('MyTasks');
     const translationForm = useTranslations('Form');
     return (
-        <>
+        <div>
             <input type="hidden" name="auth_email" value={authEmail} />
             <Box px={2} py={1}>
                 <input className={styles.taskTitle} type='text' name='task_name' required defaultValue={defaultValues?.title || translation('default_title')} />
@@ -59,12 +60,19 @@ export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, 
                 </Grid>
                 <Grid item xs={12}>
                     <div>
-                        <FormElementProjects defaultDirectory={defaultValues?.directory} authEmail={authEmail} translatedName={translation('project')} />
+                        <FormElementProjects
+                            defaultValue={defaultValues?.directory}
+                            authEmail={authEmail}
+                            translatedName={translation('project')}
+                            translatedDefaultCategory={translation('default_directory')}
+                            isDirectoryRequired={isDirectoryRequired}
+                        />
                     </div>
                 </Grid>
                 <Grid item xs={12}>
                     <div>
                         <FormElementDate
+                            authEmail={authEmail}
                             defaultDueDate={defaultValues?.dueDate}
                             fromHour={defaultValues?.fromHour}
                             toHour={defaultValues?.toHour}
@@ -80,8 +88,14 @@ export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, 
                         />
                     </div>
                 </Grid>
-                <FormElementPriority defaultPriority={defaultValues?.priority} />
-                <FormElementCategory defaultCategoryId={defaultValues?.categoryId} authEmail={authEmail} translatedName={translation('category')} />
+                <Grid item xs={12}>
+                    <FormElementPriority defaultPriority={defaultValues?.priority} />
+                </Grid>
+                <Grid item xs={12}>
+                    <div>
+                        <FormElementCategory defaultCategoryId={defaultValues?.categoryId} authEmail={authEmail} translatedName={translation('category')} />
+                    </div>
+                </Grid>
             </Grid>
             <Stack px={2} spacing={2}>
                 <FormElementDescription defaultDescription={defaultValues?.description} translatedName={translation('description')} />
@@ -106,6 +120,6 @@ export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, 
                     {translationForm(labelConfirm)}
                 </Button>
             </Stack>
-        </>
+        </div>
     );
 };

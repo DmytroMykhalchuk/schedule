@@ -1,9 +1,8 @@
 import Stack from '@mui/material/Stack';
-import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
-import { ListRevenue } from '@/Componets/Report/Elements/ListRevenue';
 import { FormRevenue } from './Elements/FormRevenue';
-import { addRevenueRecord, deleteRevenue } from '@/app/[locale]/app/charts/add-revenue/actions';
 import { getUserSessionAndEmail } from '../actions';
+import { ListRevenue } from '@/Componets/Report/Elements/ListRevenue';
+import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
 
 type RevenuePageType = {
     page?: number,

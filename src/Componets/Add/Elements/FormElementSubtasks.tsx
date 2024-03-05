@@ -88,6 +88,7 @@ const SubtasksItem: React.FC<SubtasksItemType> = ({ task, subtask, position, isL
                 size='small'
                 onChange={onChangeSubtask}
                 value={subtask}
+                color='warning'
             />
             {
                 isLastIndex

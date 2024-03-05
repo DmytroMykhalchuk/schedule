@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { TaskActions } from '@/server/actions/TaskActions';
 import { TeamActions } from '@/server/actions/TeamActions';
 import { CategoryActions } from '@/server/actions/CategoryActions';
+import { defaultCategory, defaultDirectory } from '@/server/constants';
 
 export const defaultFirstDirectory = 'choose_directory'
 export const defaultFirstUserId = '0'
@@ -66,20 +67,22 @@ export const updateTask = async (formData: FormData) => {
     const name = formData.get('task_name') as string;
     const assignee = formData.get('assignee') as string;
     const status = formData.get('status') as StatusType;
-    const directory = formData.get('directory') as string;
+    const directory = formData.get('directory') as string || null;
+    const categoryId = formData.get('category_id') as string || null;
     const dueDate = formData.get('due_date') as string;
     const priority = formData.get('priority') as PriorityType;
     const description = formData.get('description') as string;
     const fromHour = formData.get('from_hour') as string;
     const toHour = formData.get('to_hour') as string;
     const subtasks = formData.getAll('subtasks') as string[] | null;
-    const categoryId = formData.get('category_id') as string;
     const email = formData.get('auth_email') as string;
 
     const result = await TaskActions.updateTask(
         { projectId, email },
         {
-            name, taskId, assignee, status, directory, dueDate, priority, description, subtasks, categoryId,
+            name, taskId, assignee, status, dueDate, priority, description, subtasks,
+            directory: directory === defaultDirectory.value ? null : directory || null,
+            categoryId: categoryId === defaultCategory._id ? null : categoryId || null,
             toHour: +toHour,
             fromHour: +fromHour,
         }
