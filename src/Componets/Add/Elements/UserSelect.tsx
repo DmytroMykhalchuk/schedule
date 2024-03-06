@@ -4,7 +4,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
-// import { defaultFirstUserId } from "../actions";
 import { ProjectUsers } from "@/server/actions/types";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -12,14 +11,15 @@ import { AppDispatch } from "@/redux/store";
 import { setTaskFormAssignee } from "@/redux/task/taskReducer";
 
 type UserSelectType = {
-    fieldName: string
-    showEmail?: boolean
-    defaultUserId?: string
-    isDisabled?: boolean
-    users: ProjectUsers[]
+    fieldName: string;
+    showEmail?: boolean;
+    defaultUserId?: string;
+    isDisabled?: boolean;
+    users: ProjectUsers[];
+    onChange?: (userId: string) => void;
 };
 
-export const UserSelect: React.FC<UserSelectType> = ({ fieldName, showEmail = false, defaultUserId, isDisabled, users }) => {
+export const UserSelect: React.FC<UserSelectType> = ({ fieldName, showEmail = false, defaultUserId, isDisabled, users, onChange }) => {
     const dispatch: AppDispatch = useDispatch();
 
     const [assignee, setAssignee] = useState(defaultUserId ? defaultUserId : '0');
@@ -30,10 +30,15 @@ export const UserSelect: React.FC<UserSelectType> = ({ fieldName, showEmail = fa
         }
     }, []);
 
+    useEffect(() => {
+        setAssignee(defaultUserId ? defaultUserId : '0');
+    }, [defaultUserId]);
+
     const onSelectAssignee = (event: SelectChangeEvent) => {
         const assignee = event.target.value;
         setAssignee(assignee);
-        dispatch(setTaskFormAssignee({ assignee }))
+        dispatch(setTaskFormAssignee({ assignee }));
+        onChange && onChange(assignee);
     };
 
     return (

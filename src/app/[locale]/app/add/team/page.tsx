@@ -1,4 +1,5 @@
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import { addMember } from './actions';
 import { MemberForm } from '@/Componets/Add/MemberForm';
 import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
@@ -18,7 +19,9 @@ const Page: React.FC<PageType> = async ({ params }) => {
 
     return (
         <Stack alignItems={'center'} justifyContent={'center'} spacing={2}>
-            <Content authEmail={authEmail} locale={locale} />
+            <div>
+                <Content authEmail={authEmail} locale={locale} />
+            </div>
         </Stack>
     );
 };
@@ -31,7 +34,7 @@ type ContentType = {
 export const Content: React.FC<ContentType> = ({ authEmail, locale }) => {
     const translation = useTranslations('Form');
     return (
-        <>
+        <Stack spacing={2}>
             <MiddlePaperWrapper title={translation('team_form.add_title')} pathBack={`/${locale}/app/add`}>
                 <div>
                     <MemberForm
@@ -48,7 +51,7 @@ export const Content: React.FC<ContentType> = ({ authEmail, locale }) => {
             <div>
                 <TeamList authEmail={authEmail} />
             </div>
-        </>
+        </Stack>
     );
 };
 

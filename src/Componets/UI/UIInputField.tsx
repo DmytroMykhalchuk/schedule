@@ -12,10 +12,11 @@ type UIInputFieldType = {
     inputAdorment?: {
         position: 'start' | 'end',
         label: string
-    }
+    },
+    inputProps?: { maxLength?: number }
 };
 
-export const UIInputField: React.FC<UIInputFieldType> = ({ label, name, value, defaultValue, onChange, type = 'text', required = false, inputAdorment }) => {
+export const UIInputField: React.FC<UIInputFieldType> = ({ label, name, value, defaultValue, onChange, type = 'text', required = false, inputAdorment, inputProps }) => {
     return (
         <TextField
             label={label}
@@ -35,6 +36,7 @@ export const UIInputField: React.FC<UIInputFieldType> = ({ label, name, value, d
                     {
                         startAdornment: <InputAdornment position={inputAdorment.position}>{inputAdorment.label}</InputAdornment>,
                     } : {}}
+            inputProps={inputProps}
         />
     );
 };

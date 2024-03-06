@@ -1,12 +1,9 @@
-import { HomeCalendar } from "@/Componets/Home/HomeCalendar";
-import { LinkedDateCalendar } from "@/Componets/Home/LinkedDateCalendar";
 import { Team } from "@/Componets/Home/Team";
 import { HeaderLayout } from "@/Componets/Layouts/HeaderLayout";
-import { OverviewProgress } from "@/Componets/Overview/OverviewProgress";
+import { NoAssigneeTasks } from "@/Componets/Overview/NoAssigneeTasks";
 import { OverviewTaskUser } from "@/Componets/Overview/OverviewTaskUser";
 import { getTaskByUser } from "@/Componets/Overview/actions";
 import { getUserSessionAndEmail } from "@/Componets/actions";
-import { UIPaper } from "@/ui/UIPaper";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 
@@ -17,7 +14,7 @@ type PageType = {
 const Page: React.FC<PageType> = async ({ params }) => {
     const { locale } = params;
     const { authEmail, session } = await getUserSessionAndEmail();
-    const taskTree = await getTaskByUser(authEmail);
+    const { taskTree, noAssineeTasks } = await getTaskByUser(authEmail);
 
     return (
         <>
@@ -47,6 +44,9 @@ const Page: React.FC<PageType> = async ({ params }) => {
                         {/* <OverviewProgress /> */}
                         <div>
                             <OverviewTaskUser taskTree={taskTree} locale={locale} />
+                        </div>
+                        <div>
+                            <NoAssigneeTasks tasks={noAssineeTasks} locale={locale} />
                         </div>
                     </Stack>
                 </Grid>

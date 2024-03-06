@@ -78,8 +78,8 @@ export const TeamActions = {
         if (!project?.team)
             return { success: false };
 
-        project.team.forEach((user: { _id: mongoose.Types.ObjectId, role: string }) => {
-            if (user._id.toString() !== member.userId)
+        project.team.forEach((user: { userId: mongoose.Types.ObjectId, role: string }) => {
+            if (user.userId.toString() !== member.userId)
                 return;
             user.role = member.role;
         });
@@ -92,9 +92,11 @@ export const TeamActions = {
         await connectDB();
         const project = await ProjectActions.getProjectByFilters(authParams, { team: 1 });
 
-        project.team = project.team.filter((member: { id: string }) => member.id !== memberId);
+        project.team = project.team.filter((member: { userId: mongoose.Types.ObjectId }) => member.userId.toString() !== memberId);
         project.save();
 
         return { success: true };
     },
-}
+};
+
+//todo add email notification

@@ -38,7 +38,7 @@ export const Content: React.FC<ContentType> = ({ directory, tasks, locale }) => 
     const translation = useTranslations('MyTasks');
     const titles = [
         { linkLabel: translation('directory_overview'), linkHref: `/${locale}/app/charts`, },
-        { linkLabel: directory.name, linkHref: `/${locale}/app/charts`, },
+        { linkLabel: directory.name, linkHref: `/${locale}/app/add/directories/${directory._id}`, },
         { linkLabel: translation('kanban_view'), linkHref: '', },
     ];
 

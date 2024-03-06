@@ -20,7 +20,7 @@ const currentDay = dayjs();
 
 type OverviewTaskUserType = {
     locale: string;
-    taskTree: TaskTree
+    taskTree: TaskTree;
 };
 
 export const OverviewTaskUser: React.FC<OverviewTaskUserType> = ({ taskTree, locale }) => {

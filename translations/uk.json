@@ -62,6 +62,7 @@
         "reply_to_message": "Відповідь на",
         "reply_to_user": "Відповідь",
         "default_directory":"Немає директорії",
+        "no_assignes_tasks":"Не призначенні задачі",
         "": ""
     },
     "Overview": {

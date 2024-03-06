@@ -34,5 +34,8 @@ export const createTask = async (formData: FormData) => {
     const result = await TaskActions.storeTask({ projectId, email }, newTask);
 
     //todo message notify about success
-    redirect('/app/add/tasks?success=1');
+
+    if (result?._id) {
+        redirect(`/app/add/tasks/${result._id}`);
+    }
 };

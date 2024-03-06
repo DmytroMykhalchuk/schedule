@@ -122,7 +122,7 @@ export type ViewTaskType = {
     dueDate: string,
     status: StatusType,
     priority: PriorityType,
-    assignee: string,
+    assignee: string | null,
     directory?: string,
     subtasks: string[],
     fromHour: number,

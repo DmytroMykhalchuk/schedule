@@ -30,9 +30,10 @@ import { ObjectId } from 'mongodb';
 import { defaultCategory, priorities, statuses, workHours } from '../constants';
 import { ProjectActions } from './ProjectActions';
 import { UserActions } from './UserActions';
+import Comment from '../models/Comment';
 
 export const TaskActions = {
-    async storeTask(auth: AuthType, storeTask: StoreTaskType): Promise<{ projectId?: string }> {
+    async storeTask(auth: AuthType, storeTask: StoreTaskType): Promise<TaskDB> {
         await connectDB();
         //todo validation for hours
         const user = await UserActions.getUserByEmail(auth.email);
@@ -136,7 +137,7 @@ export const TaskActions = {
 
         const handledTask: ViewTaskType = {
             ...task.toObject(),
-            assignee: task.assignee.toString(),
+            assignee: task.assignee?.toString(),
             _id: task._id.toString(),
             categoryId: task?.categoryId?.toString() || '',
             directory: task.directory ? task.directory.toString() : task.directory,
@@ -153,8 +154,6 @@ export const TaskActions = {
         if (!project) {
             return { success: false };
         }
-
-        console.log(updateTask.directory, updateTask.categoryId)
 
         const task = await Task.findOneAndUpdate({ _id: updateTask.taskId }, {
             name: updateTask.name,
@@ -242,6 +241,7 @@ export const TaskActions = {
         }
 
         const task = await Task.findOneAndDelete({ _id: taskId, projectId: project._id });
+        await Comment.deleteMany({ taskId: task._id });
 
         return { success: Boolean(task) };
     },
@@ -377,14 +377,20 @@ export const TaskActions = {
         const tasks = await Task.find({ projectId: project?._id, dueDate: { $in: requiredDates } }, { dueDate: 1, name: 1, assignee: 1, status: 1, priority: 1, });
 
         const taskTree = {} as { [id: string]: TaskByUserDB[] };
+        const noAssineeTasks = [] as TaskByUserDB[];
         const userIds = [] as string[];
 
         tasks.forEach(task => {
-            if (taskTree.hasOwnProperty(task.assignee)) {
-                taskTree[task.assignee].push(task.toObject());
+            if (task.assignee === null) {
+                noAssineeTasks.push(task);
             } else {
-                userIds.push(task.assignee);
-                taskTree[task.assignee] = [task.toObject()];
+
+                if (taskTree.hasOwnProperty(task.assignee)) {
+                    taskTree[task.assignee].push(task.toObject());
+                } else {
+                    userIds.push(task.assignee);
+                    taskTree[task.assignee] = [task.toObject()];
+                }
             }
         });
 
@@ -410,7 +416,7 @@ export const TaskActions = {
             }
         }
 
-        return result;
+        return { taskTree: result, noAssineeTasks };
     },
 
     async getTasksByProjectId(projectId: string, mask = {}, withUser = false) {

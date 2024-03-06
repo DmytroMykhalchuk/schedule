@@ -3,6 +3,7 @@ import { UserSelect } from "./Elements/UserSelect";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { defaultFirstUserId, getProjectUsers } from "./actions";
+import { ControlMemberForm } from './Elements/ControlMemberForm';
 
 type MemberFormType = {
     action: (formDate: FormData) => Promise<void>;
@@ -30,17 +31,14 @@ export const MemberForm: React.FC<MemberFormType> = async ({ userId, role, isDis
     return (
         <form className={styles.formCreating} action={action}>
             <input type="hidden" name="auth_email" value={authEmail} />
-            <UserSelect fieldName="user" showEmail defaultUserId={userId} isDisabled={isDisabled} users={users} />
-            <TextField
-                label={tranlsateInput.role}
-                variant="outlined"
-                name="role"
-                defaultValue={role}
-                type="text" size="small" color="warning"
-                sx={{ textAlign: 'center' }}
-                fullWidth
-                inputProps={{ maxLength: 30 }}
-                required
+            <ControlMemberForm
+                dictionary={{
+                    roleLabel: tranlsateInput.role,
+                }}
+                users={users}
+                isDisabledSelect={isDisabled}
+                role={role}
+                userId={userId}
             />
             <Button variant="contained" color="warning" sx={{ textTransform: 'none' }} type='submit'>
                 {buttonConfirmLabel}

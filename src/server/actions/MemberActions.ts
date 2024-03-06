@@ -3,6 +3,8 @@ import connectDB from "../connectDB"
 import User from "../models/User";
 import { ProjectActions } from "./ProjectActions";
 import { MemberType } from '../types/userTypes';
+import Task from '../models/Task';
+import mongoose from 'mongoose';
 
 export const MemberActions = {
     async getMembers(authParams: AuthType): Promise<MemberType[]> {
@@ -28,19 +30,10 @@ export const MemberActions = {
         await connectDB();
         const project = await ProjectActions.getProjectByFilters(authParams, { users: 1, tasks: 1 });
 
-        project.users = project.users.filter((id: string) => id !== userId);
-
-        project.tasks = project.tasks.map((task: { assignee: string, comments: { userId: string }[] }) => {
-
-            if (task.assignee === userId) {
-                task.assignee = '';
-            }
-            task.comments = task.comments.filter((comment) => comment.userId !== userId);
-
-            return task;
-        });
+        project.users = project.users.filter((id: mongoose.Types.ObjectId) => id.toString() !== userId);
 
         project.save();
+        await Task.updateMany({ projectId: project?._id, assignee: userId }, { assignee: null });
 
         return { success: true };
     },

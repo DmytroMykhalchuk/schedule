@@ -1,7 +1,7 @@
-import { DeleteDialog } from "@/app/Componnets/Common/DeleteDialog";
 import { ReactNode } from "react";
 import { deleteTask } from "./actions";
 import { getUserSessionAndEmail } from "../actions";
+import { DeleteDialog } from "../Common/DeleteDialog";
 
 type TaskDeleteType = {
     taskId: string,
@@ -12,8 +12,6 @@ export const TaskDelete: React.FC<TaskDeleteType> = ({ backUrl, taskId }) => {
     return (
         <DeleteDialog
             cancelHref={backUrl}
-            content='It will be deleted completely. Are you sure?'
-            title="Confrim action"
             FormWrapper={(props = {}) => <FormWrapper taskId={taskId} {...props} />}
         />
     );
