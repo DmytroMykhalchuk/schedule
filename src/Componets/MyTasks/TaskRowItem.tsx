@@ -49,9 +49,11 @@ export const TaskRowItem: React.FC<TaskRowItemType> = ({ url, name, status, date
             {/* <Grid item xs={3}>
                 <Stack direction={'row'}>
                     <Typography variant="body2" flex={1}></Typography>
-                    <span>todo avatars</span>
+                    <span>avatars</span>
                 </Stack>
             </Grid> */}
         </Grid>
     );
 };
+
+//todo-soon multiple attachment

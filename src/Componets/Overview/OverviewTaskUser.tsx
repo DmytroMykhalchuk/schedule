@@ -1,22 +1,16 @@
-import Box from '@mui/material/Box';
 import dayjs from 'dayjs';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import uk from 'dayjs/locale/uk';
-import { getCategoriesList } from '../Add/actions';
-import { getTaskByUser } from './actions';
 import { UIPaper } from '@/ui/UIPaper';
-import { TaskByUserRecord, TaskShortType, TaskTree } from '@/server/actions/types';
+import { TaskByUserRecord, TaskTree } from '@/server/actions/types';
 import { TaskRowItem } from '../MyTasks/TaskRowItem';
-import { priorities, priorityStyling, statusStyling, taskDayPropertyStyle } from '@/server/constants';
+import { priorityStyling, statusStyling, taskDayPropertyStyle } from '@/server/constants';
 import { capitalizeFirstLetter } from '@/utlis/capitalizeFirstLetter';
 import { useTranslations } from 'next-intl';
 
-dayjs.locale(uk);
 const currentDay = dayjs();
-
-
 
 type OverviewTaskUserType = {
     locale: string;
@@ -24,6 +18,8 @@ type OverviewTaskUserType = {
 };
 
 export const OverviewTaskUser: React.FC<OverviewTaskUserType> = ({ taskTree, locale }) => {
+    locale === 'uk' && dayjs.locale(uk);
+
     const translation = useTranslations('MyTasks');
 
     const weekMapNames = {

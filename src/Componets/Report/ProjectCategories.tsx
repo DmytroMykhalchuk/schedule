@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import { CategoryRecord } from '@/server/actions/types';
 import { UIPaper } from '@/ui/UIPaper';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 type ProjectCategoriesType = {
     categories: CategoryRecord[];
@@ -23,8 +24,8 @@ export const ProjectCategories: React.FC<ProjectCategoriesType> = ({ categories,
                 <Grid container spacing={1}>
                     {
                         categories.map((category, index) => (
-                            <Grid key={index} item md={3} sx={{ p: 1 }}>
-                                {/* <Link href={`/${locale}/app/directories/${category._id}/kaban-dashboard`}> */}
+                            <Grid key={index} item xs={4} sx={{ p: 1 }}>
+                                <Link href={`/${locale}/app/categories/${category._id}/kanban-dashboard`}>
                                     <Stack sx={{
                                         p: 2,
                                         backgroundColor: category.color,
@@ -32,7 +33,7 @@ export const ProjectCategories: React.FC<ProjectCategoriesType> = ({ categories,
                                     }}>
                                         <Typography variant="body1" sx={{ color: category.textColor }}>{category.name}</Typography>
                                     </Stack>
-                                {/* </Link> */}
+                                </Link>
                             </Grid>
                         ))
                     }

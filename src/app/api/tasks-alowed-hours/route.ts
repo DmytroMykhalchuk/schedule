@@ -1,16 +1,17 @@
 import { TaskActions } from "@/server/actions/TaskActions";
+import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 export const GET = async (req: Request) => {
     const { searchParams } = new URL(req.url);
+    const headersList = headers();
+    
+    const email = headersList.get('x-user');
+    const projectId = headersList.get('x-project');
 
-    const projectId = searchParams.get('project_id');
-    const email = searchParams.get('email');
     const taskId = searchParams.get('task_id') || undefined;
     const userId = searchParams.get('user_id');
     const date = searchParams.get('date');
-
-    //todo pass email by headers
 
     if (!(projectId && email && date)) {
         return NextResponse.json({

@@ -33,6 +33,7 @@ export const NewComments: React.FC<NewCommentsType> = async ({ authEmail, locale
                                 colorSecondary={item.color}
                                 name={''}
                                 tag={item.name}
+                                categoryId={item._id}
                             />
                         ))
                     }

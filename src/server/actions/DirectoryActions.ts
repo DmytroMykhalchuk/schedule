@@ -47,8 +47,13 @@ export const DirectoryActions = {
         return preparedDirectories;
     },
 
-    async getDirectory(directoryId: string): Promise<DirectoryType> {
+    async getDirectory(auth: AuthType, directoryId: string): Promise<DirectoryType | null> {
         await connectDB();
+
+        const project = await ProjectActions.getProjectByFilters(auth);
+        if (!project) {
+            return null;
+        }
 
         const directory = await Directory.findOne({ _id: directoryId });
 
@@ -58,8 +63,13 @@ export const DirectoryActions = {
         };
     },
 
-    async updateDirectory(updateDirectory: UpdateDirectoryType): Promise<ProccessStatusType> {
+    async updateDirectory(auth: AuthType, updateDirectory: UpdateDirectoryType): Promise<ProccessStatusType> {
         await connectDB();
+
+        const project = await ProjectActions.getProjectByFilters(auth);
+        if (!project) {
+            return { success: false };
+        }
 
         const directory = await Directory.findOneAndUpdate({ _id: updateDirectory.directoryId }, {
             name: updateDirectory.directoryName,
@@ -68,11 +78,10 @@ export const DirectoryActions = {
         return { success: Boolean(directory) };
     },
 
-    async deleteDirectory(directoryId: string, projectId: string): Promise<ProccessStatusType> {
+    async deleteDirectory(auth: AuthType, directoryId: string): Promise<ProccessStatusType> {
         await connectDB();
 
-        const project = await ProjectActions.getProjectById(projectId, { directories: 1 });
-
+        const project = await ProjectActions.getProjectByFilters(auth, { directories: 1 });
         if (!project) {
             return { success: false };
         }

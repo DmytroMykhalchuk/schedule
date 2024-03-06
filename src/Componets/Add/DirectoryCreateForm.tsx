@@ -13,9 +13,10 @@ type DirectoryCreateFormType = {
         id: string;
     };
     directoriesCount?: number;
+    authEmail: string;
 };
 
-export const DirectoryCreateForm: React.FC<DirectoryCreateFormType> = ({ locale, formAction, title, type, defaultValues, directoriesCount = 0, }) => {
+export const DirectoryCreateForm: React.FC<DirectoryCreateFormType> = ({ locale, formAction, title, authEmail, type, defaultValues, directoriesCount = 0, }) => {
     const translation = useTranslations('Form');
 
     return (
@@ -25,6 +26,7 @@ export const DirectoryCreateForm: React.FC<DirectoryCreateFormType> = ({ locale,
         >
             <form className={styles.formCreating} action={formAction}>
                 {defaultValues?.id && <input type="hidden" name="directory_id" value={defaultValues.id} />}
+                <input type="hidden" name="auth_email" value={authEmail} />
                 <ControlDirectoryForm
                     directoryName={defaultValues?.name}
                     dictionary={{

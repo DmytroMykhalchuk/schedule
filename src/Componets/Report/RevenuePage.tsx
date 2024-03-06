@@ -5,18 +5,23 @@ import { ListRevenue } from '@/Componets/Report/Elements/ListRevenue';
 import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
 
 type RevenuePageType = {
-    page?: number,
-    formAction: (formData: FormData) => void
+    page?: number;
+    formAction: (formData: FormData) => void;
+    locale: string;
 };
 
-export const RevenuePage: React.FC<RevenuePageType> = async ({ page, formAction }) => {
+export const RevenuePage: React.FC<RevenuePageType> = async ({ page, formAction, locale }) => {
     const { authEmail } = await getUserSessionAndEmail();
 
     return (
         <Stack alignItems={'center'} justifyContent={'center'} spacing={2}>
-            <FormRevenue formAction={formAction} authEmail={authEmail}/>
+            <div>
+                <FormRevenue formAction={formAction} authEmail={authEmail} locale={locale} />
+            </div>
             <MiddlePaperWrapper>
-                <ListRevenue page={page} />
+                <div>
+                    <ListRevenue page={page} locale={locale} />
+                </div>
             </MiddlePaperWrapper>
         </Stack>
     );

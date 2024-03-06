@@ -10,13 +10,13 @@ type AuthButtonType = {
     dictionary: {
         loginByGoogle: string;
     };
+    GOOGLE_CLIENT_ID: string;
 };
 
-export const AuthButton: React.FC<AuthButtonType> = ({ dictionary }) => {
-    //todo exect client id to env
+export const AuthButton: React.FC<AuthButtonType> = ({ dictionary, GOOGLE_CLIENT_ID }) => {
     return (
         <>
-            <GoogleOAuthProvider clientId="136560295788-7kvlva7fsji2n1nciafvipgo6jd1hbmm.apps.googleusercontent.com">
+            <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
                 <GoogleButton dictionary={dictionary} />
             </GoogleOAuthProvider>
         </>
@@ -35,7 +35,6 @@ export const GoogleButton: React.FC<GoogleButtonType> = ({ dictionary }) => {
         onSuccess: async (credentialResponse) => {
             const user = await authApi.getGoogleUser(credentialResponse.access_token);
             const { email, locale, name, picture, sub } = user;
-            //todo change locale
             await signIn('credentials', { email, locale, name, picture, sub })
         },
         onError: () => {

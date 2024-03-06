@@ -26,7 +26,7 @@ export const ProjectDirectoryItem: React.FC<ProjectDirectoryItemType> = ({ title
             <Stack direction={'row'} alignItems={"center"} spacing={1}>
                 <ShareIcon sx={{ fontSize: 16 }} />
                 <Typography variant="body2" flex={1}>
-                    <Link href={`/${locale}/app/directories/${id}/kaban-dashboard`}>
+                    <Link href={`/${locale}/app/directories/${id}/kanban-dashboard`}>
                         {title}
                     </Link>
                 </Typography>

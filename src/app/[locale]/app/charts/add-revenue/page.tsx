@@ -2,12 +2,15 @@ import { RevenuePage } from '@/Componets/Report/RevenuePage';
 import { addRevenueRecord } from './actions';
 
 type PageType = {
+    params: {
+        locale: string;
+    };
 };
 
-const Page: React.FC<PageType> = ({ }) => {
-
+const Page: React.FC<PageType> = ({ params }) => {
+    const { locale } = params;
     return (
-        <RevenuePage formAction={addRevenueRecord} />
+        <RevenuePage formAction={addRevenueRecord} locale={locale} />
     );
 };
 

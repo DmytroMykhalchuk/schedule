@@ -200,7 +200,7 @@ export const TaskItem: React.FC<TaskItemType> = ({ primaryColor, secondaryColor,
                 width: '100%',
                 px: 0.5,
             }}
-        ><Link href={'/app/my-tasks/' + taskId}>
+        ><Link href={'/app/add/tasks/' + taskId}>
                 <Typography variant="subtitle2" sx={{
                     backgroundColor: secondaryColor,
                     color: primaryColor,

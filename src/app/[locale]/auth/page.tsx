@@ -38,9 +38,12 @@ export const Content: React.FC<ContentType> = ({ }) => {
     const translation = useTranslations('Auth');
     return (
         <>
-            <AuthButton dictionary={{
-                loginByGoogle: translation('login_by_google')
-            }} />
+            <AuthButton
+                dictionary={{
+                    loginByGoogle: translation('login_by_google')
+                }}
+                GOOGLE_CLIENT_ID={process.env.GOOGLE_CLIENT_ID!}
+            />
         </>
     );
 };

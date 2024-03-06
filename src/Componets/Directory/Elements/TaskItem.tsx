@@ -8,11 +8,11 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Stack from '@mui/material/Stack';
 import styles from './../styles.module.scss';
 import Typography from '@mui/material/Typography';
-import { ByDirectoryTaskRecord } from '@/server/actions/types';
+import { ByDirectoryOrCategoryTaskRecord } from '@/server/actions/types';
 import { priorityStyling } from '@/server/constants';
 
 type TaskItemType = {
-    task: ByDirectoryTaskRecord;
+    task: ByDirectoryOrCategoryTaskRecord;
     locale: string;
     dictionary: {
         priority: string;

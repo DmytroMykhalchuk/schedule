@@ -15,14 +15,16 @@ import { getUserSessionAndEmail } from '../actions';
 import { useTranslations } from 'next-intl';
 import { CommentType } from '@/server/actions/types';
 import { AddTaskButton } from './AddTaskButton';
+import { Notification } from '../Common/Notification';
 
 type TaskEditPageType = {
     taskId: string;
     locale: string;
     isDirectoryRequired: boolean;
+    isUpdated?: boolean;
 };
 
-export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId, locale, isDirectoryRequired }) => {
+export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId, locale, isDirectoryRequired, isUpdated }) => {
     const { authEmail, session } = await getUserSessionAndEmail()
 
     const response = await getTask(taskId, authEmail);
@@ -30,6 +32,7 @@ export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId, locale,
 
     return (
         <>
+            {isUpdated && <NotificationWrapper />}
             <HeaderLayout
                 title="task"
                 pageName='MyTasks'
@@ -113,5 +116,12 @@ export const CommentDialogWrapper: React.FC<CommentDialogWrapperType> = ({ taskI
                 }}
             />
         </Box>
+    );
+};
+
+const NotificationWrapper = () => {
+    const translation = useTranslations("Notifications");
+    return (
+        <Notification message={translation('succesfully_updated')} />
     );
 };

@@ -6,11 +6,14 @@ export const sendComment = async (taskId: string, comment: string, replyToCommen
     const projectId = getCookieValue(projectIdCookieKey);
 
     return axios.post('/api/comments', {
-        project_id: projectId,
-        email,
         comment,
         reply_id: replyToCommentId,
         task_id: taskId,
+    }, {
+        headers: {
+            'x-project': projectId,
+            'x-user': email,
+        }
     }).then(response => {
         return response.data;
     }).catch(err => {
@@ -26,6 +29,10 @@ export const deleteComment = async (commentId: string, email: string) => {
             comment_id: commentId,
             project_id: projectId,
             email,
+        },
+        headers: {
+            'x-project': projectId,
+            'x-user': email,
         }
     }).then(response => {
         return response.data;

@@ -39,7 +39,7 @@ const Page: React.FC<PageType> = async ({ params }) => {
                                 <CountCards directoriesCount={info.projectCount} usersCount={info.userCount} locale={locale} />
                             </div>
                             <div>
-                                <ProgressChart progress={info.progress} categories={info.categories} />
+                                <ProgressChart progress={info.progress} categories={info.categories} locale={locale} />
                             </div>
                             <div>
                                 <ProjectCategories categories={info.categories} locale={locale} />
@@ -51,10 +51,10 @@ const Page: React.FC<PageType> = async ({ params }) => {
                     <div>
                         <Stack spacing={2}>
                             <div>
-                                <WorkingHoursWrapper monthWorkHours={info.monthWorkHours} weekWorkHours={info.weekWorkHours} />
+                                <WorkingHoursWrapper monthWorkHours={info.monthWorkHours} weekWorkHours={info.weekWorkHours} locale={locale} />
                             </div>
                             <div>
-                                <Revenue chartData={info.revenue} />
+                                <Revenue chartData={info.revenue} locale={locale} />
                             </div>
                         </Stack>
                     </div>
@@ -65,4 +65,3 @@ const Page: React.FC<PageType> = async ({ params }) => {
 };
 
 export default Page;
-//todo disconnetct pusher

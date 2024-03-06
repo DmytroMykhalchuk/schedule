@@ -8,7 +8,9 @@ import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 
 type PageType = {
-    params: { locale: string };
+    params: {
+        locale: string;
+    };
 };
 
 const Page: React.FC<PageType> = async ({ params }) => {
@@ -31,7 +33,7 @@ const Page: React.FC<PageType> = async ({ params }) => {
 
                 <Grid item xs={12} lg={6}>
                     <div>
-                        {/* <HomeCalendar/> */}
+                        {/* <HomeCalendar authEmail={authEmail} locale={locale}/> */}
                         <Stack spacing={2}>
                             <div>
                                 <Team authEmail={authEmail} locale={locale} />
@@ -41,7 +43,7 @@ const Page: React.FC<PageType> = async ({ params }) => {
                 </Grid>
                 <Grid item xs={12} lg={6}>
                     <Stack spacing={2}>
-                        {/* <OverviewProgress /> */}
+                        {/* <OverviewProgress locale={locale} /> */}
                         <div>
                             <OverviewTaskUser taskTree={taskTree} locale={locale} />
                         </div>

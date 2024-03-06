@@ -8,20 +8,20 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import uk from 'dayjs/locale/uk';
 import { capitalizeFirstLetter } from '@/utlis/capitalizeFirstLetter';
-import { green, purple } from '@mui/material/colors';
+import { purple } from '@mui/material/colors';
 import { RevenueChartType } from '@/server/actions/types';
 import { UIAvarageCaption } from '../UI/UIAvarageCaption';
 import { UIPaper } from '@/ui/UIPaper';
 import { useTranslations } from 'next-intl';
 
-dayjs.locale(uk);
-
-
 type RevenueType = {
-    chartData: RevenueChartType
+    chartData: RevenueChartType;
+    locale: string;
 };
 
-export const Revenue: React.FC<RevenueType> = ({ chartData }) => {
+export const Revenue: React.FC<RevenueType> = ({ chartData, locale }) => {
+    locale === 'uk' && dayjs.locale(uk);
+    
     const translation = useTranslations('Report');
     const chartInfo = extractDataChart(chartData);
 
@@ -177,7 +177,7 @@ const extractDataChart = (chartData: RevenueChartType) => {
     const rangeY = [0, roundedValue * 0.25, roundedValue * 0.5, roundedValue * 0.75, roundedValue];
 
     const avarageValue = Math.round(total / counter);
-    
+
     return {
         avarage: isNaN(avarageValue) ? 0 : avarageValue,
         total, rangeY,

@@ -89,8 +89,7 @@ export const updateTask = async (formData: FormData) => {
     );
 
     if (result.success) {
-        //todo add to params is-updated and change style button
-        redirect('/app/my-tasks/' + taskId);
+        redirect('/app/add/tasks/' + taskId + '?is_updated=1');
     }
 };
 

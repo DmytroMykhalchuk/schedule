@@ -10,13 +10,13 @@ import styles from './../styles.module.scss';
 import { getRevenue } from '@/app/[locale]/app/charts/add-revenue/actions';
 import { getUserSessionAndEmail } from '@/Componets/actions';
 
-dayjs.locale(uk);
-//todo translate all dates to locale
 type ListRevenueType = {
-    page?: number
+    page?: number;
+    locale: string;
 };
 
-export const ListRevenue: React.FC<ListRevenueType> = async ({ page = 1 }) => {
+export const ListRevenue: React.FC<ListRevenueType> = async ({ page = 1, locale }) => {
+    locale === 'uk' && dayjs.locale(uk);
     const { authEmail } = await getUserSessionAndEmail();
     const revenues = await getRevenue(page, authEmail);
 

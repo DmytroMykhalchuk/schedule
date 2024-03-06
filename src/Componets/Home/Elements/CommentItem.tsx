@@ -18,7 +18,7 @@ type CommentItemType = {
 
 export const CommentItem: React.FC<CommentItemType> = ({ projectName, personName, message, avatar, taskId, timeDiff, locale }) => {
     return (
-        <Link href={'/' + locale + '/app/my-tasks/' + taskId} style={{}}>
+        <Link href={'/' + locale + '/app/add/tasks/' + taskId} style={{}}>
             <Stack direction={'row'} spacing={2} mb={2} alignItems={'center'}
                 sx={{
                     bgcolor: 'peachy.light',

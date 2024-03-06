@@ -22,8 +22,7 @@ export const Search: React.FC<SearchType> = ({ }) => {
     useEffect(() => {
         if (!targetSearch.length) return;
         
-        //todo send request
-        console.warn('todo send request');
+        //todo search
     }, [targetSearch]);
 
 

@@ -1,25 +1,24 @@
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
 import { MonthCalendar } from '@/Componets/Report/MonthCalendar';
 import { UIButton } from '@/Componets/UI/UIButton';
 import { UIInputField } from '@/Componets/UI/UIInputField';
 import { ReactNode } from 'react';
-import { getUserSessionAndEmail } from '@/Componets/actions';
 import { useTranslations } from 'next-intl';
 
 type FormRevenueType = {
-    formAction: (formData: FormData) => void
+    formAction: (formData: FormData) => void;
     defaultValues?: {
-        note: string,
-        cost: number,
-        date: Date,
-    },
-    children?: ReactNode
-    authEmail: string
+        note: string;
+        cost: number;
+        date: Date;
+    };
+    children?: ReactNode;
+    authEmail: string;
+    locale: string;
 };
 
-export const FormRevenue: React.FC<FormRevenueType> = ({ defaultValues, formAction, children, authEmail }) => {
+export const FormRevenue: React.FC<FormRevenueType> = ({ defaultValues, formAction, children, authEmail, locale }) => {
     const translation = useTranslations('Form');
 
     return (
@@ -41,7 +40,7 @@ export const FormRevenue: React.FC<FormRevenueType> = ({ defaultValues, formActi
                         required={false}
                         defaultValue={defaultValues?.note}
                     />
-                    <MonthCalendar defaultValue={defaultValues?.date} label={translation('revenue.date')} />
+                    <MonthCalendar defaultValue={defaultValues?.date} label={translation('revenue.date')} locale={locale} />
                 </Stack>
                 <Stack alignItems={'center'}>
                     <UIButton label={translation('confirm')} type="submit" />

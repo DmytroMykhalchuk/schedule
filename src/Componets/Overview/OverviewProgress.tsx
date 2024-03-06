@@ -8,12 +8,14 @@ import { UIPaper } from '@/ui/UIPaper';
 import Typography from '@mui/material/Typography'
 import { getUserSessionAndEmail } from '../actions';
 
-dayjs.locale(uk)
+
 
 type OverviewProgressType = {
+    locale: string;
 };
 
-export const OverviewProgress: React.FC<OverviewProgressType> = async ({ }) => {
+export const OverviewProgress: React.FC<OverviewProgressType> = async ({ locale }) => {
+    locale === 'uk' && dayjs.locale(uk);
     const { authEmail } = await getUserSessionAndEmail();
     const categories = await getCategoriesList(authEmail);
 

@@ -9,14 +9,15 @@ import { ReactNode } from 'react';
 import { UIPaper } from '@/ui/UIPaper';
 import { useTranslations } from 'next-intl';
 
-dayjs.locale(uk);
-
 type ProgressChartType = {
-    progress?: MonthProgressType,
-    categories: CategoryRecord[],
+    progress?: MonthProgressType;
+    categories: CategoryRecord[];
+    locale: string;
 };
 
-export const ProgressChart: React.FC<ProgressChartType> = ({ progress, categories }) => {
+export const ProgressChart: React.FC<ProgressChartType> = ({ progress, categories, locale }) => {
+    locale === 'uk' && dayjs.locale(uk);
+
     const translation = useTranslations('Report');
     const currentDate = dayjs();
 

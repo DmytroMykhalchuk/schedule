@@ -5,14 +5,16 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { useState } from "react";
 import uk from 'dayjs/locale/uk';
-dayjs.locale(uk)
 
 type MonthCalendarType = {
     defaultValue?: Date;
     label: string;
+    locale: string;
 };
 
-export const MonthCalendar: React.FC<MonthCalendarType> = ({ defaultValue, label }) => {
+export const MonthCalendar: React.FC<MonthCalendarType> = ({ defaultValue, label, locale }) => {
+    locale === 'uk' && dayjs.locale(uk);
+
     const currentDay = dayjs();
     const theme = useTheme();
     //@ts-ignore

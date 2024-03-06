@@ -1,14 +1,11 @@
-import { TaskByUserDB, TaskByUserRecord } from "@/server/actions/types";
-import { UIPaper } from "@/ui/UIPaper";
-import { PaperTitle } from "../Common/PaperTitle";
-import { TaskRowItem } from "../MyTasks/TaskRowItem";
-import { useTranslations } from "next-intl";
-import { priorityStyling, statusStyling, taskDayPropertyStyle } from "@/server/constants";
-import { capitalizeFirstLetter } from "@/utlis/capitalizeFirstLetter";
+import dayjs from 'dayjs';
 import uk from 'dayjs/locale/uk';
-import dayjs from "dayjs";
-
-dayjs.locale(uk);
+import { capitalizeFirstLetter } from '@/utlis/capitalizeFirstLetter';
+import { priorityStyling, statusStyling, taskDayPropertyStyle } from '@/server/constants';
+import { TaskByUserDB } from '@/server/actions/types';
+import { TaskRowItem } from '../MyTasks/TaskRowItem';
+import { UIPaper } from '@/ui/UIPaper';
+import { useTranslations } from 'next-intl';
 
 type NoAssigneeTasksType = {
     tasks: TaskByUserDB[];
@@ -16,7 +13,9 @@ type NoAssigneeTasksType = {
 };
 
 export const NoAssigneeTasks: React.FC<NoAssigneeTasksType> = ({ tasks, locale }) => {
-    const translation = useTranslations('MyTasks');;
+    locale === 'uk' && dayjs.locale(uk);
+    
+    const translation = useTranslations('MyTasks');
     const currentDay = dayjs();
 
     const weekMapNames = {

@@ -5,9 +5,8 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 // import uk from 'dayjs/locale/uk';
-import useDebounce from '@/utlis/useDebounce';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { authCookieKey, projectIdCookieKey, workHours } from '@/server/constants';
+import { projectIdCookieKey, workHours } from '@/server/constants';
 import { getCookieValue } from '@/utlis/getCookieValue';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
@@ -20,7 +19,6 @@ import { translateDateToDayjs } from '@/utlis/translateDateToDayjs';
 import { useSelector } from 'react-redux';
 import { getTaskFormAssignee } from '@/redux/task/taskSelector';
 import uk from 'dayjs/locale/uk';
-// dayjs.locale(uk)
 
 type WorkHoursType = {
     fromHour: number,
@@ -32,12 +30,14 @@ const getAllowedHours = (email: string, date: Dayjs, userId?: string | null, tas
 
     return axios.get('/api/tasks-alowed-hours/', {
         params: {
-            project_id: projectId,
-            email: email,
             date: date.format('DD.MM.YYYY'),
             task_id: taskId,
             user_id: userId,
-        }
+        },
+        headers: {
+            'x-project': projectId,
+            'x-user': email,
+        },
     }).then(response => {
         return response.data;
     }).catch(error => {
@@ -66,9 +66,8 @@ type FormElementDateType = {
 };
 
 export const FormElementDate: React.FC<FormElementDateType> = ({ authEmail, defaultDueDate, fromHour, toHour, taskId, translatedName, translatedForbiddenDate, dictionary, locale }) => {
-    if (locale === 'uk') {
-        dayjs.locale(uk);
-    }
+    locale === 'uk' && dayjs.locale(uk);
+
     const isAllowedMakeHoursRequest = useRef(false);
 
     const assignee = useSelector(getTaskFormAssignee);

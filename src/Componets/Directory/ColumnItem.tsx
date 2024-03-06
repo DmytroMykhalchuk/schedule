@@ -4,12 +4,12 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import styles from './styles.module.scss';
 import Typography from '@mui/material/Typography';
-import { ByDirectoryTaskRecord } from '@/server/actions/types';
+import { ByDirectoryOrCategoryTaskRecord } from '@/server/actions/types';
 import { TaskItem } from './Elements/TaskItem';
 import { useTranslations } from 'next-intl';
 
 type ColumnItemType = {
-    tasks?: ByDirectoryTaskRecord[];
+    tasks?: ByDirectoryOrCategoryTaskRecord[];
     title: string;
     locale: string;
     createTaskLabel: string;
@@ -42,6 +42,7 @@ export const ColumnItem: React.FC<ColumnItemType> = ({ tasks, title, locale, cre
             <Paper elevation={0} sx={{ position: 'sticky', bottom: -1, p: 2 }}>
                 <Stack alignItems={'center'} >
                     <Link href={`/${locale}/app/add/tasks`}>
+                    {/* <Link href={`photo`}> */}
                         <Button variant="outlined" color='inherit' sx={{ p: 1, textTransform: 'none', fontSize: '1.25em' }}>
                             + {createTaskLabel}
                         </Button>

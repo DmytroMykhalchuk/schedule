@@ -302,9 +302,9 @@ export type ReportPageInfoType = {
     revenue: RevenueChartType,
 };
 
-export type ByDirectoryIdTaskDB = Omit<TaskDB, 'assignee' | 'projectId' | 'directory' | 'dueDate' | 'description' | 'subtasks' | 'comments' | 'fromHour' | 'toHour'> & { assignee: { _id: mongoose.Types.ObjectId, name: string, email: string, picture: string }, category?: CategoryDB };
+export type ByDirectoryOrCategoryIdTaskDB = Omit<TaskDB, 'assignee' | 'projectId' | 'directory' | 'dueDate' | 'description' | 'subtasks' | 'comments' | 'fromHour' | 'toHour'> & { assignee: { _id: mongoose.Types.ObjectId, name: string, email: string, picture: string }, category?: CategoryDB };
 
-export type ByDirectoryTaskRecord = {
+export type ByDirectoryOrCategoryTaskRecord = {
     assignee: {
         _id: string;
         name: string;

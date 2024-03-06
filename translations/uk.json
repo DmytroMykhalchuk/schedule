@@ -61,8 +61,9 @@
         "add_task": "Додати задачу",
         "reply_to_message": "Відповідь на",
         "reply_to_user": "Відповідь",
-        "default_directory":"Немає директорії",
-        "no_assignes_tasks":"Не призначенні задачі",
+        "default_directory": "Немає директорії",
+        "no_assignes_tasks": "Не призначенні задачі",
+        "overview_title": "Огляд",
         "": ""
     },
     "Overview": {
@@ -119,7 +120,7 @@
         "update": "Оновити",
         "select_date": "Вибрати дату",
         "generate": "Згенерувати",
-        "required":"Обов'язкове до заповненя",
+        "required": "Обов'язкове до заповненя",
         "directory": {
             "add_title": "Додати директорію",
             "update_title": "Оновити директорію",
@@ -172,6 +173,9 @@
         "confirm": "Підтвердити",
         "avalable_projects": "Доступні проєкти",
         "": ""
+    },
+    "Notifications": {
+        "succesfully_updated": "Успішно оновлено"
     },
     "": ""
 }

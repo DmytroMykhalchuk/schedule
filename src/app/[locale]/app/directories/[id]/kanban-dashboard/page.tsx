@@ -5,7 +5,7 @@ import { ColumnItem } from '@/Componets/Directory/ColumnItem';
 import { getDirectoryAndTasks } from './actions';
 import { HeaderWithBreadcrumbs } from '@/Componets/Layouts/HeaderWithBreadcrumbs';
 import { getUserSessionAndEmail } from '@/Componets/actions';
-import { ByDirectoryTaskRecord, DirectoryType } from '@/server/actions/types';
+import { ByDirectoryOrCategoryTaskRecord, DirectoryType } from '@/server/actions/types';
 import { useTranslations } from 'next-intl';
 
 type PageType = {
@@ -32,14 +32,14 @@ const Page: React.FC<PageType> = async ({ params }) => {
 
 type ContentType = {
     directory: DirectoryType;
-    tasks: ByDirectoryTaskRecord[];
+    tasks: ByDirectoryOrCategoryTaskRecord[];
     locale: string;
 };
 
 export const Content: React.FC<ContentType> = ({ directory, tasks, locale }) => {
     const translation = useTranslations('MyTasks');
     const titles = [
-        { linkLabel: translation('directory_overview'), linkHref: `/${locale}/app/charts`, },
+        { linkLabel: translation('overview_title'), linkHref: `/${locale}/app/charts`, },
         { linkLabel: directory.name, linkHref: `/${locale}/app/add/directories/${directory._id}`, },
         { linkLabel: translation('kanban_view'), linkHref: '', },
     ];

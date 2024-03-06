@@ -1,3 +1,4 @@
+import { ByDirectoryOrCategoryTaskRecord } from '@/server/actions/types';
 import connectDB from '../connectDB';
 import dayjs from 'dayjs';
 import mongoose from 'mongoose';
@@ -5,7 +6,7 @@ import Task from '../models/Task';
 import User from '../models/User';
 import {
     AuthType,
-    ByDirectoryIdTaskDB,
+    ByDirectoryOrCategoryIdTaskDB,
     CategoryDB,
     CommentType,
     PriorityType,
@@ -430,13 +431,36 @@ export const TaskActions = {
         return tasks;
     },
 
-    async getTasksByDirectory(projectId: string, directoryId: string, categories: CategoryDB[]) {
+    async getTasksByDirectory(projectId: string, directoryId: string, categories: CategoryDB[]): Promise<ByDirectoryOrCategoryTaskRecord[]> {
         await connectDB();
 
         const tasks = await Task
             .find({ projectId: projectId, directory: directoryId }, { name: 1, assignee: 1, status: 1, dueDate: 1, priority: 1, categoryId: 1 })
             .populate('assignee', 'picture email name')
-            .lean() as ByDirectoryIdTaskDB[];
+            .lean() as ByDirectoryOrCategoryIdTaskDB[];
+
+        const preparedTasks = tasks.map((task) => {
+            const category = categories.find(item => item._id.toString() === task.categoryId)
+            return {
+                ...task,
+                assignee: {
+                    ...task.assignee,
+                    _id: task.assignee._id.toString(),
+                },
+                category: category,
+                _id: task._id.toString(),
+            }
+        });
+        return preparedTasks;
+    },
+
+    async getTasksByCategory(projectId: string, categoryId: string, categories: CategoryDB[]): Promise<ByDirectoryOrCategoryTaskRecord[]> {
+        await connectDB();
+
+        const tasks = await Task
+            .find({ projectId, categoryId }, { name: 1, assignee: 1, status: 1, dueDate: 1, priority: 1, categoryId: 1 })
+            .populate('assignee', 'picture email name')
+            .lean() as ByDirectoryOrCategoryIdTaskDB[];
 
         const preparedTasks = tasks.map((task) => {
             const category = categories.find(item => item._id.toString() === task.categoryId)

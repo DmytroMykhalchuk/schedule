@@ -7,15 +7,19 @@ type PageType = {
     };
     searchParams: {
         task_directory_required?: string;
+        is_updated?: string;
     };
 };
 
 const Page: React.FC<PageType> = async ({ params, searchParams }) => {
-    const { task_directory_required: isDirectoryRequired } = searchParams;
+    const { task_directory_required: isDirectoryRequired, is_updated: isUpdated } = searchParams;
     const { id: taskId, locale } = params;
 
     return (
-        <TaskEditPage taskId={taskId} locale={locale} isDirectoryRequired={Boolean(isDirectoryRequired)} />
+        <TaskEditPage taskId={taskId} locale={locale}
+            isDirectoryRequired={Boolean(isDirectoryRequired)}
+            isUpdated={Boolean(isUpdated)}
+        />
     )
 };
 

@@ -34,5 +34,3 @@ const Page: React.FC<PageType> = ({ params }) => {
   );
 }
 export default Page;
-
-//todo kanban view for categories

@@ -12,11 +12,7 @@ import { WorkHoursChart } from './WorkHoursChart';
 import { weekLength, yearMonthLength } from '@/server/constants';
 import { UIAvarageCaption } from '../../UI/UIAvarageCaption';
 
-dayjs.locale(uk);
-
 const currentDate = dayjs();
-const days = Array.from({ length: weekLength }).map((_, index) => currentDate.day(index + 1).format('dd'))
-const months = Array.from({ length: yearMonthLength }).map((_, index) => currentDate.subtract(index, 'month').format('MMM')).reverse()
 
 const weekAxisHours = [0, 2, 4, 6, 8];
 const monthAxisHours = [0, 40, 80, 120, 160, 200];
@@ -33,9 +29,13 @@ type TotalWorkingHoursType = {
         year: string;
         avarage: string;
     };
+    locale: string;
 };
 
-export const TotalWorkingHours: React.FC<TotalWorkingHoursType> = ({ weekWorkHours, monthWorkHours, translate }) => {
+export const TotalWorkingHours: React.FC<TotalWorkingHoursType> = ({ weekWorkHours, monthWorkHours, translate, locale }) => {
+    locale === 'uk' && dayjs.locale(uk);
+    const days = Array.from({ length: weekLength }).map((_, index) => currentDate.day(index + 1).format('dd'))
+    const months = Array.from({ length: yearMonthLength }).map((_, index) => currentDate.subtract(index, 'month').format('MMM')).reverse()
 
     const [length, setLength] = useState(weekLength as typeof weekLength | typeof yearMonthLength);
     const [subtitles, setSubtitles] = useState(days as string[]);
@@ -121,6 +121,7 @@ export const TotalWorkingHours: React.FC<TotalWorkingHoursType> = ({ weekWorkHou
                 translate={{
                     hoursLetter: translate.hoursShortLetter,
                 }}
+                locale={locale}
             />
         </UIPaper >
     );

@@ -8,11 +8,12 @@ import { getServerSession } from "next-auth";
 import { nextAuthConfig } from "@/configs/auth";
 
 type LayoutType = {
-    children: ReactNode,
-    params: { locale: string }
+    children: ReactNode;
+    params: { locale: string };
+    modal?: ReactNode;
 };
 
-const Layout: React.FC<LayoutType> = async ({ children, params }) => {
+const Layout: React.FC<LayoutType> = async ({ children, params, modal }) => {
     const locale = params.locale;
 
     const session = await getServerSession(nextAuthConfig);
@@ -43,6 +44,7 @@ const Layout: React.FC<LayoutType> = async ({ children, params }) => {
                 <Container>
                     {children}
                 </Container>
+                {modal && modal}
             </Stack>
         </Stack>
     );

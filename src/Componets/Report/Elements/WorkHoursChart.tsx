@@ -7,7 +7,6 @@ import uk from 'dayjs/locale/uk';
 import { capitalizeFirstLetter } from '@/utlis/capitalizeFirstLetter';
 import { WorkHours } from '@/server/actions/types';
 import { weekLength, yearMonthLength } from '@/server/constants';
-dayjs.locale(uk);
 
 type WorkHoursChartType = {
     workinkgHours: WorkHours,
@@ -17,9 +16,12 @@ type WorkHoursChartType = {
     translate: {
         hoursLetter: string;
     };
+    locale: string;
 };
 
-export const WorkHoursChart: React.FC<WorkHoursChartType> = ({ workinkgHours, length, subtitles, axisHours, translate }) => {
+export const WorkHoursChart: React.FC<WorkHoursChartType> = ({ locale, workinkgHours, length, subtitles, axisHours, translate }) => {
+    locale === 'uk' && dayjs.locale(uk);
+
     const axiosY = axisHours.sort((a, b) => b - a);
     const columnInfo = length === weekLength ? {
         totalColumn: 11, firstColumn: 1, barColumn: 2,
