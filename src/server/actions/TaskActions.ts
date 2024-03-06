@@ -28,10 +28,11 @@ import { CommentActions } from './CommentActions';
 import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
 import { getRandomWeekdayDate } from '@/utlis/getRandomWeekdayDate';
 import { ObjectId } from 'mongodb';
-import { defaultCategory, priorities, statuses, workHours } from '../constants';
+import { priorities, statuses, workHours } from '../constants';
 import { ProjectActions } from './ProjectActions';
 import { UserActions } from './UserActions';
 import Comment from '../models/Comment';
+import { MailActions } from './MailActions';
 
 export const TaskActions = {
     async storeTask(auth: AuthType, storeTask: StoreTaskType): Promise<TaskDB> {
@@ -72,6 +73,10 @@ export const TaskActions = {
 
             task.comments.push(comment);
             task.save();
+        }
+
+        if (storeTask.assignee && user._id.toString() !== storeTask.assignee) {
+            await MailActions.notifyAssigmentNewTask({ name: task.name, id: task._id }, task.assignee, user.name)
         }
 
         return task;
@@ -150,7 +155,8 @@ export const TaskActions = {
     async updateTask(auth: AuthType, updateTask: TaskUpdateType): Promise<{ success: boolean }> {
         await connectDB();
 
-        const project = await ProjectActions.getProjectByFilters(auth, { _id: 1 });
+        const user = await UserActions.getUserByEmail(auth.email);
+        const project = await ProjectActions.getProjectById(auth.email, { _id: 1 }, user._id);
 
         if (!project) {
             return { success: false };
@@ -169,6 +175,10 @@ export const TaskActions = {
             categoryId: updateTask.categoryId,
             directory: updateTask.directory,
         });
+
+        if (updateTask.assignee && user._id.toString() !== updateTask.assignee) {
+            await MailActions.notifyAssigmentNewTask({ name: task.name, id: task._id }, task.assignee, user.name)
+        }
 
         return { success: Boolean(task) };
     },
@@ -196,10 +206,10 @@ export const TaskActions = {
         return urgentsTasks;
     },
 
-    async addCommentId(taskId: string, commentId: mongoose.Types.ObjectId) {
+    async addCommentId(taskId: string, commentId: mongoose.Types.ObjectId): Promise<{ name: string, assignee: mongoose.Types.ObjectId | null, _id: mongoose.Types.ObjectId }> {
         await connectDB();
 
-        const result = Task.findByIdAndUpdate(taskId, { $push: { comments: commentId } });
+        const result = Task.findByIdAndUpdate(taskId, { $push: { comments: commentId } }, { name: 1, assignee: 1 });
 
         return result;
     },
@@ -475,5 +485,6 @@ export const TaskActions = {
             }
         });
         return preparedTasks;
-    }
+    },
+
 };

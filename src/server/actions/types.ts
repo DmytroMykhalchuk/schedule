@@ -190,10 +190,11 @@ export type UpdateDirectoryType = {
 };
 
 export type StoreUser = {
-    name: string
-    email: string
-    googleId: string
-    picture: string
+    name: string;
+    email: string;
+    googleId: string;
+    picture: string;
+    locale: string;
 };
 
 export type UserDB = {
@@ -202,6 +203,7 @@ export type UserDB = {
     picture: string,
     email: string
     _id: mongoose.Types.ObjectId,
+    locale: string;
 };
 
 export type UserTeamItemType = Pick<UserDB, '_id' | 'email' | 'name' | 'picture'> & { role: string }

@@ -120,6 +120,7 @@ export const weekLength = 5;
 export const yearMonthLength = 12;
 
 export const revenuePerPage = 10;
+export const scheduleEmail='schedule@gmail.com';
 
 export const dateMap = {
     [dayjs().format('DD.MM.YYYY')]: 'Today',

@@ -9,7 +9,9 @@ import { ObjectId } from 'mongodb';
 import { ProjectActions } from './ProjectActions';
 import { TaskActions } from './TaskActions';
 import { UserActions } from './UserActions';
+import { MailActions } from './MailActions';
 
+//todo execnt to env
 const pusher = new Pusher({
     appId: "1752490",
     key: "90149ab3e623050894c1",
@@ -41,7 +43,7 @@ export const CommentActions = {
         };
         const comment = await this.createCommentOfTask(commentStore);
 
-        await TaskActions.addCommentId(requestComment.taskId, comment._id);
+        const task = await TaskActions.addCommentId(requestComment.taskId, comment._id);
 
         pusher.trigger(`${channelPrefixName}${project._id.toString()}`, newCommentEventName, {
             comment: comment
@@ -57,6 +59,15 @@ export const CommentActions = {
             userId: comment.userId.toString(),
             createdAt: comment.createdAt,
         };
+
+        if (task.assignee && user._id.toString() !== task.assignee.toString()) {
+            await MailActions.notifyAboutComment(
+                { name: task.name, id: task._id.toString() },
+                task.assignee.toString(),
+                user.name,
+                responseComment.text
+            );
+        }
 
         return responseComment;
     },

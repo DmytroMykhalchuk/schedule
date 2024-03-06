@@ -2,29 +2,29 @@ import { ProjectListAvailableRecord } from './../types/projectTypes';
 import { ProjectActions } from '@/server/actions/ProjectActions';
 import { UserLoginResponse } from './../types/userTypes';
 import { StoreUser, UserDB } from './types';
-import { getMaxListeners } from "events";
 import connectDB from "../connectDB";
 import User from "../models/User";
-//@ts-ignore
-import uniqid from 'uniqid';
 import { getRandomNumber, getRandomPictureUrl } from "../utils/utils";
 
 
 export const UserActions = {
     async login(loginUser: StoreUser): Promise<UserLoginResponse> {
         await connectDB();
+
         const targetUser = await User.findOne({ googleId: loginUser.googleId });
 
         if (targetUser) {
-            targetUser.name = targetUser.name;
-            targetUser.picture = targetUser.picture;
-            targetUser.save();
+            targetUser.name = loginUser.name;
+            targetUser.picture = loginUser.picture;
+            targetUser.locale = loginUser.locale;
+            await targetUser.save();
 
             return {
                 id: targetUser._id.toString(),
                 image: targetUser.picture,
                 name: targetUser.name,
                 email: targetUser.email,
+                locale: targetUser.locale,
             };
 
         } else {
@@ -35,6 +35,7 @@ export const UserActions = {
                 image: user.picture,
                 name: user.name,
                 email: user.email,
+                locale: user.locale,
             };
         }
     },
@@ -75,8 +76,8 @@ export const UserActions = {
 
     async getAvailableProjects(userEmail: string): Promise<ProjectListAvailableRecord[]> {
         await connectDB();
-        const user = await this.getUserByEmail(userEmail, { _id: 1 });
-
+        const user = await this.getUserByEmail(userEmail, { _id: 1, locale: 1 });
+        console.log(user)
         const projects = await ProjectActions.getAvailableProjects(user._id);
 
         return projects;

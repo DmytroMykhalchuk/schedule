@@ -28,6 +28,7 @@ export const nextAuthConfig: AuthOptions = {
                     googleId: credentials?.sub!,
                     email: credentials?.email!,
                     picture: credentials?.picture!,
+                    locale: credentials?.locale!,
                 };
                 const data = await UserActions.login(loginParams)
 

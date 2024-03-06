@@ -21,6 +21,10 @@ const userSchema = new Schema(
             type: String,
             required: true,
         },
+        locale: {
+            type: String,
+            required: true,
+        }
     },
 );
 
