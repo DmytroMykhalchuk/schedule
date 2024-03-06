@@ -23,7 +23,9 @@ const Page: React.FC<PageType> = async ({ params }) => {
 
     return (
         <Stack>
-            <Content directory={info.directory} tasks={info.tasks || []} locale={locale} />
+            <div>
+                <Content directory={info.directory} tasks={info.tasks || []} locale={locale} />
+            </div>
         </Stack>
     );
 };
@@ -50,12 +52,14 @@ export const Content: React.FC<ContentType> = ({ directory, tasks, locale }) => 
             />
             <Grid container sx={{ flex: 1 }}>
                 <Grid className={styles.tableColumn} item xs={12} lg={4}>
-                    <ColumnItem
-                        tasks={tasks?.filter(item => item.status === 'not_started')}
-                        title={translation('statuses.not_started_title')}
-                        locale={locale}
-                        createTaskLabel={translation('add_task')}
-                    />
+                    <div>
+                        <ColumnItem
+                            tasks={tasks?.filter(item => item.status === 'not_started')}
+                            title={translation('statuses.not_started_title')}
+                            locale={locale}
+                            createTaskLabel={translation('add_task')}
+                        />
+                    </div>
                 </Grid>
                 <Grid className={styles.tableColumn} item xs={12} lg={4}>
                     <ColumnItem

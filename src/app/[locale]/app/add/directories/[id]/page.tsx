@@ -15,16 +15,18 @@ const Page: React.FC<PageType> = async ({ params }) => {
 
     return (
         <Stack alignItems={'center'} justifyContent={'center'}>
-            <DirectoryCreateForm
-                formAction={updateDirectory}
-                locale={locale}
-                title='directory.update_title'
-                type="update"
-                defaultValues={{
-                    id: directory._id,
-                    name: directory.name,
-                }}
-            />
+            <div>
+                <DirectoryCreateForm
+                    formAction={updateDirectory}
+                    locale={locale}
+                    title='directory.update_title'
+                    type="update"
+                    defaultValues={{
+                        id: directory._id,
+                        name: directory.name,
+                    }}
+                />
+            </div>
         </Stack>
     );
 };

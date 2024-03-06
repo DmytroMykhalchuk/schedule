@@ -20,16 +20,20 @@ export const MiddlePaperWrapper: React.FC<MiddlePaperWrapperType> = ({ children,
             minWidth: { xs: 320, md: 600 },
             backgroundColor: 'background.paper',
         }}>
-            <Box mb={2}>
-                {(pathBack && title)
-                    ? <Stack alignItems={'center'} direction={'row'}>
-                        <Link href={pathBack}><ArrowBackIosIcon sx={{ fontSize: '1.5em' }} /></Link>
-                        <Typography variant="h5" textAlign={'center'}>{title}</Typography>
+            {
+                (pathBack || title) &&
+                <Box mb={2}>
+                    {(pathBack && title)
+                        ? <Stack alignItems={'center'} direction={'row'}>
+                            <Link href={pathBack}><ArrowBackIosIcon sx={{ fontSize: '1.5em' }} /></Link>
+                            <Typography variant="h5" textAlign={'center'}>{title}</Typography>
 
-                    </Stack>
-                    : title && <Typography variant="h4" textAlign={'center'}>{title}</Typography>
-                }
-            </Box>
+                        </Stack>
+                        : title && <Typography variant="h4" textAlign={'center'}>{title}</Typography>
+                    }
+                </Box>
+            }
+
             {children}
         </Paper >
     );

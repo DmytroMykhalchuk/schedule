@@ -22,3 +22,12 @@
         outline: 4px solid rgba(255, 166, 0, 0.353);
     }
 }
+
+.copyItem {
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        color: $brown-light;
+    }
+}

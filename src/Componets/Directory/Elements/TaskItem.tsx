@@ -45,9 +45,7 @@ export const TaskItem: React.FC<TaskItemType> = ({ task, locale, dictionary }) =
                     <Typography variant="subtitle2">{dictionary.priority}</Typography>
                 </Stack>
                 <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                    <Link href={'mailto:' + task.assignee.email}>
-                        <Avatar alt="Remy Sharp" src={task.assignee.picture} sx={{ width: 30, height: 30, }} />
-                    </Link>
+                    <Avatar alt="Remy Sharp" src={task.assignee.picture} sx={{ width: 30, height: 30, }} />
                     <Box>
                         <IconButton>
                             <MoreHorizIcon />

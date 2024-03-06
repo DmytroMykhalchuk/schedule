@@ -26,7 +26,9 @@ const Page: React.FC<PageType> = async ({ params }) => {
 
     return (
         <Stack spacing={2} alignItems={'center'} justifyContent={'center'}>
-            <Content authEmail={authEmail} category={category} locale={locale} />
+            <div>
+                <Content authEmail={authEmail} category={category} locale={locale} />
+            </div>
         </Stack>
     );
 };

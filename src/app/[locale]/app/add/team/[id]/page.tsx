@@ -28,12 +28,15 @@ const Page: React.FC<PageType> = async ({ params }) => {
 
     return (
         <Stack alignItems={'center'} justifyContent={'center'} spacing={2}>
-            <Content
-                role={role}
-                authEmail={authEmail}
-                targetUserId={targetUserId}
-                locale={locale}
-            />
+            <div>
+
+                <Content
+                    role={role}
+                    authEmail={authEmail}
+                    targetUserId={targetUserId}
+                    locale={locale}
+                />
+            </div>
         </Stack>
     );
 };
@@ -49,8 +52,8 @@ export const Content: React.FC<ContentType> = ({ role, targetUserId, authEmail, 
     const translation = useTranslations('Form');
 
     return (
-        <>
-            <MiddlePaperWrapper title={translation('team_form.update_title')} pathBack={`/${locale}/app/add/team`}>
+        <MiddlePaperWrapper title={translation('team_form.update_title')} pathBack={`/${locale}/app/add/team`}>
+            <div>
                 <MemberForm action={updateMember} isDisabled
                     role={role}
                     userId={targetUserId}
@@ -60,8 +63,8 @@ export const Content: React.FC<ContentType> = ({ role, targetUserId, authEmail, 
                         role: translation('team_form.role'),
                     }}
                 />
-            </MiddlePaperWrapper>
-        </>
+            </div>
+        </MiddlePaperWrapper>
     );
 };
 

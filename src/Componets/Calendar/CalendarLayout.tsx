@@ -21,16 +21,18 @@ export const CalendarLayout: React.FC<CalendarLayoutType> = async ({ type, date,
     return (
         <>
             <Box>
-                <HeaderLayout
-                    title="page_title"
-                    pageName="Calendar"
-                    subtitle={{ isNeedTranslate: false, text: dayjs().format('MMMM D, YYYY') }}
-                    slot={<HeaderNavigation type={type} locale={locale} />}
-                    authUser={{
-                        name: session?.user?.name as string,
-                        image: session?.user?.image as string,
-                    }}
-                />
+                <div>
+                    <HeaderLayout
+                        title="page_title"
+                        pageName="Calendar"
+                        subtitle={{ isNeedTranslate: false, text: dayjs().format('MMMM D, YYYY') }}
+                        slot={<HeaderNavigation type={type} locale={locale} />}
+                        authUser={{
+                            name: session?.user?.name as string,
+                            image: session?.user?.image as string,
+                        }}
+                    />
+                </div>
             </Box>
             <BigCalendarWrapper type={type} date={date} authEmail={authEmail} locale={locale} />
         </>

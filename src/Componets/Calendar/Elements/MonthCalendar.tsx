@@ -29,17 +29,18 @@ export const MonthCalendar: React.FC<MonthCalendarType> = async ({ date, authEma
         for (let index = 1; index <= 7; index++) {
 
             items.push(
-                <Grid className={styles.tableRow__td} item key={rangeDay} xs={1}
+                <Grid className={styles.tableRow__td} item key={index} xs={1}
                     sx={{
                         px: 1,
                     }}
                 >
-
-                    {
-                        numberOfWeek === 0
-                            ? <HeaderDayItem numberOfDay={startMonthDay <= index ? rangeDay : ''} hasTask={selectedDays.includes(rangeDay)} isHeaderIndex={index} />
-                            : rangeDay <= totalDays ? <HeaderDayItem numberOfDay={rangeDay} hasTask={selectedDays.includes(rangeDay)} /> : ''
-                    }
+                    <div>
+                        {
+                            numberOfWeek === 0
+                                ? <HeaderDayItem numberOfDay={startMonthDay <= index ? rangeDay : ''} hasTask={selectedDays.includes(rangeDay)} isHeaderIndex={index} />
+                                : rangeDay <= totalDays ? <HeaderDayItem numberOfDay={rangeDay} hasTask={selectedDays.includes(rangeDay)} /> : ''
+                        }
+                    </div>
 
                 </Grid>
             );
@@ -70,8 +71,7 @@ export const MonthCalendar: React.FC<MonthCalendarType> = async ({ date, authEma
 
     return (
         <>
-            <Grid container columns={7} mb={2}
-            >
+            <Grid container columns={7} mb={2} >
                 <Paper sx={{
                     width: '100%',
                     borderRadius: 6,

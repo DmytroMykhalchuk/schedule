@@ -43,15 +43,14 @@ export const FormElementSubtasks: React.FC<FormElementSubtasksType> = ({ default
     };
 
     return (
-        <>
+        <div>
             <Typography variant="body1" fontWeight={600}>{translatedName}</Typography>
-            <FormControlLabel control={<Checkbox checked={isExtended} onChange={onChangeIsExtended} />} label={translatedName} />
+            <FormControlLabel control={<Checkbox checked={isExtended} onChange={onChangeIsExtended} color='warning' />} label={translatedName} />
             {isExtended && <Stack spacing={2}>
                 {subtasks.map((task, index) => (
                     <SubtasksItem
                         label={translatedTaskItem}
                         key={index}
-                        task={`${task}`}
                         position={index}
                         isLastIndex={index === subtasks.length - 1}
                         onDeleteSubTask={() => onDeleteSubTask(index)}
@@ -62,12 +61,11 @@ export const FormElementSubtasks: React.FC<FormElementSubtasksType> = ({ default
                 ))}
             </Stack>
             }
-        </>
+        </div>
     );
 };
 
 type SubtasksItemType = {
-    task: string;
     position: number;
     onDeleteSubTask: () => void;
     onAddNewSubtask: () => void;
@@ -77,14 +75,13 @@ type SubtasksItemType = {
     subtask: string;
 };
 
-const SubtasksItem: React.FC<SubtasksItemType> = ({ task, subtask, position, isLastIndex, onAddNewSubtask, onDeleteSubTask, label, onChangeSubtask }) => {
+const SubtasksItem: React.FC<SubtasksItemType> = ({ subtask, position, isLastIndex, onAddNewSubtask, onDeleteSubTask, label, onChangeSubtask }) => {
     return (
         <Stack direction={'row'} alignItems={'center'} spacing={1}>
             <Typography variant="body1">{position + 1}.</Typography>
             <TextField
                 label={label}
                 name={`subtasks`}
-                defaultValue={task}
                 size='small'
                 onChange={onChangeSubtask}
                 value={subtask}

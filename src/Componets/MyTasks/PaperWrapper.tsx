@@ -55,7 +55,7 @@ export const PaperWrapper: React.FC<PaperWrapperType> = ({ title, tasks, subtask
 
                         return (
                             <TaskRowItem key={index}
-                                url={task.taskId}
+                                url={`/app/add/tasks/${task.taskId}`}
                                 datePoint={{ color: dateColor, label: dateName }}
                                 name={task.name}
                                 priority={priorityProps}
@@ -83,7 +83,7 @@ export const PaperWrapper: React.FC<PaperWrapperType> = ({ title, tasks, subtask
                                 const dateName = isGeneralTask ? weekMapNames[task.dueDate] : translation(relativePointNames[task.dueDate]);
                                 return (
                                     <TaskRowItem key={index}
-                                        url={task.taskId}
+                                        url={`/app/add/tasks/${task.taskId}`}
                                         datePoint={{ color: dateColor, label: dateName }}
                                         name={task.name}
                                         priority={priorityProps}

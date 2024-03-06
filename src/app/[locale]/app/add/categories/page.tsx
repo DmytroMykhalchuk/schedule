@@ -25,7 +25,9 @@ const Page: React.FC<PageType> = async ({ params, searchParams }) => {
 
     return (
         <Stack spacing={2} alignItems={'center'} justifyContent={'center'}>
-            <Content authEmail={authEmail} locale={locale} categoriesCount={categories?.length || 0} />
+            <div>
+                <Content authEmail={authEmail} locale={locale} categoriesCount={categories?.length || 0} />
+            </div>
             <MiddlePaperWrapper>
                 <div>
                     <CategoryList categories={categories} />

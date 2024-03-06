@@ -13,7 +13,7 @@ export type UserLoginResponse = {
     id: string,
 };
 
-export type MemberType = {
+export type MemberRecord = {
     _id: string,
     name: string,
     email: string,

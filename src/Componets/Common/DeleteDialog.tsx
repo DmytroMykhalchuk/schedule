@@ -37,12 +37,13 @@ export const DeleteDialog: React.FC<DeleteDialogType> = ({ title, content, cance
                         {translation('cancel')}
                     </Button>
                 </Link>
-                <FormWrapper />
-                <FormWrapper>
-                    <Button variant='contained' type='submit' color="warning" sx={{ textTransform: 'none' }}>
-                        {translation('confirm')}
-                    </Button>
-                </FormWrapper>
+                <div>
+                    <FormWrapper>
+                        <Button variant='contained' type='submit' color="warning" sx={{ textTransform: 'none' }}>
+                            {translation('confirm')}
+                        </Button>
+                    </FormWrapper>
+                </div>
             </DialogActions>
         </Dialog>
     );

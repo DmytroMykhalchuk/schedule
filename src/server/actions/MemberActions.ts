@@ -1,27 +1,27 @@
-import { AuthType } from './types';
-import connectDB from "../connectDB"
-import User from "../models/User";
-import { ProjectActions } from "./ProjectActions";
-import { MemberType } from '../types/userTypes';
-import Task from '../models/Task';
+import connectDB from '../connectDB';
 import mongoose from 'mongoose';
+import Task from '../models/Task';
+import User from '../models/User';
+import { AuthType, UserDB } from './types';
+import { MemberRecord } from '../types/userTypes';
+import { ProjectActions } from './ProjectActions';
 
 export const MemberActions = {
-    async getMembers(authParams: AuthType): Promise<MemberType[]> {
+    async getMembers(authParams: AuthType): Promise<MemberRecord[]> {
         await connectDB();
 
         const project = await ProjectActions.getProjectByFilters(authParams, { users: 1, admin_id: 1 });
 
-        const users = await User.find({ _id: { $in: project?.users } }, { name: 1, picture: 1, email: 1 });
+        const users = await User.find({ _id: { $in: project?.users } }, { name: 1, picture: 1, email: 1 }).lean() as UserDB[];
 
-        const formattedUsers = users.map((user: { _id: string, isAdmin: boolean }) => {
-            if (user._id.toString() === project.admin_id) {
-                user.isAdmin = true;
-            } else {
-                user.isAdmin = false;
-            }
-            return user;
-        }) as MemberType[]
+        const formattedUsers = users.map((user => {
+
+            return {
+                ...user,
+                _id: user._id.toString(),
+                isAdmin: user._id.toString() === project.admin_id.toString(),
+            };
+        })) as MemberRecord[]
 
         return formattedUsers;
     },

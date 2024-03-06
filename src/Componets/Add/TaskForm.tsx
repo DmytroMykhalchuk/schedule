@@ -56,7 +56,9 @@ export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, 
                     </div>
                 </Grid>
                 <Grid item xs={12}>
-                    <FormElementStatus defaultStatus={defaultValues?.status} />
+                    <div>
+                        <FormElementStatus defaultStatus={defaultValues?.status} />
+                    </div>
                 </Grid>
                 <Grid item xs={12}>
                     <div>
@@ -89,7 +91,9 @@ export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, 
                     </div>
                 </Grid>
                 <Grid item xs={12}>
-                    <FormElementPriority defaultPriority={defaultValues?.priority} />
+                    <div>
+                        <FormElementPriority defaultPriority={defaultValues?.priority} />
+                    </div>
                 </Grid>
                 <Grid item xs={12}>
                     <div>
@@ -100,25 +104,31 @@ export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, 
             <Stack px={2} spacing={2}>
                 <FormElementDescription defaultDescription={defaultValues?.description} translatedName={translation('description')} />
                 <Stack spacing={2}>
-                    <Box width={'100%'}>
-                        <FormElementSubtasks
-                            translatedTaskItem={translation('task')}
-                            defaultSubtasks={defaultValues?.subtasks}
-                            translatedName={translation('subtasks')}
-                        />
-                    </Box>
-                    {
-                        UnderFormSlot &&
+                    <div>
                         <Box width={'100%'}>
-                            {UnderFormSlot}
+                            <FormElementSubtasks
+                                translatedTaskItem={translation('task')}
+                                defaultSubtasks={defaultValues?.subtasks}
+                                translatedName={translation('subtasks')}
+                            />
                         </Box>
-                    }
+                    </div>
+                    <div>
+                        {
+                            UnderFormSlot &&
+                            <Box width={'100%'}>
+                                {UnderFormSlot}
+                            </Box>
+                        }
+                    </div>
                 </Stack>
             </Stack>
             <Stack alignItems={'center'} py={2}>
-                <Button variant="contained" type='submit' color='warning'>
-                    {translationForm(labelConfirm)}
-                </Button>
+                <div>
+                    <Button variant="contained" type='submit' color='warning'>
+                        {translationForm(labelConfirm)}
+                    </Button>
+                </div>
             </Stack>
         </div>
     );

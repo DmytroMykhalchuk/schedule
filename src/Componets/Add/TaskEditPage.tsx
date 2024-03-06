@@ -14,6 +14,7 @@ import { TaskForm } from '@/Componets/Add/TaskForm';
 import { getUserSessionAndEmail } from '../actions';
 import { useTranslations } from 'next-intl';
 import { CommentType } from '@/server/actions/types';
+import { AddTaskButton } from './AddTaskButton';
 
 type TaskEditPageType = {
     taskId: string;
@@ -38,7 +39,7 @@ export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId, locale,
                     image: session?.user?.image!,
                 }}
             />
-            <Stack alignItems={'centre'} justifyContent={'center'}>
+            <Stack alignItems={'centre'} justifyContent={'center'} spacing={2}>
                 <MiddlePaperWrapper>
                     <form>
                         <Stack direction={'row'} sx={{ p: 2, pt: 0, width: '100%', }} justifyContent={'end'}>
@@ -75,12 +76,17 @@ export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId, locale,
                         />
                         <input type="hidden" name="task_id" value={task?._id?.toString() || ''} />
                     </form>
-                    <CommentDialogWrapper
-                        authEmail={authEmail}
-                        taskId={task._id}
-                        comments={comments}
-                    />
+                    <div>
+                        <CommentDialogWrapper
+                            authEmail={authEmail}
+                            taskId={task._id}
+                            comments={comments}
+                        />
+                    </div>
                 </MiddlePaperWrapper >
+                <div>
+                    <AddTaskButton />
+                </div>
             </Stack >
         </>
     );

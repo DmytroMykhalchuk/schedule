@@ -63,13 +63,19 @@ const Page: React.FC<PageType> = async ({ }) => {
                 }}
             />
             <Stack spacing={4}>
-                <PaperWrapper tasks={taskFiltered.today.tasks} title="today" />
-                <PaperWrapper tasks={taskFiltered.tomorrow.tasks} title="tomorrow" />
-                <PaperWrapper tasks={taskFiltered.next.tasks} title="this_week"
-                    subtasks={taskFiltered.previous.tasks.length ? {
-                        tasks: taskFiltered.previous.tasks,
-                        title: 'later'
-                    } : undefined} isGeneralTask />
+                <div>
+                    <PaperWrapper tasks={taskFiltered.today.tasks} title="today" />
+                </div>
+                <div>
+                    <PaperWrapper tasks={taskFiltered.tomorrow.tasks} title="tomorrow" />
+                </div>
+                <div>
+                    <PaperWrapper tasks={taskFiltered.next.tasks} title="this_week"
+                        subtasks={taskFiltered.previous.tasks.length ? {
+                            tasks: taskFiltered.previous.tasks,
+                            title: 'later'
+                        } : undefined} isGeneralTask />
+                </div>
 
             </Stack>
         </>

@@ -27,43 +27,45 @@ export const FormElementProjects: React.FC<FormElementProjectsType> = async ({ d
                     <Typography variant="body1" color={'gray'}>{translatedName}</Typography>
                 </Stack>
             </Grid>
-            <Grid item xs={9} direction={'column'} display={'flex'}>
-                <Select
-                    size='small'
-                    color='warning'
-                    sx={{
-                        '& svg.MuiSelect-icon': {
-                            display: 'none',
-                        },
-                        '& .MuiSelect-select': {
-                            p: 0,
-                        },
-                        '& fieldset': {
-                            border: 'none',
+            <Grid item xs={9} display={'flex'}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <Select
+                        size='small'
+                        color='warning'
+                        sx={{
+                            '& svg.MuiSelect-icon': {
+                                display: 'none',
+                            },
+                            '& .MuiSelect-select': {
+                                p: 0,
+                            },
+                            '& fieldset': {
+                                border: 'none',
+                            }
+                        }}
+                        placeholder="Directory"
+                        defaultValue={defaultValue || defaultDirectory.value}
+                        required
+                        name="directory"
+                    >
+                        <MenuItem value={defaultDirectory.value}>
+                            <Stack direction={'row'} spacing={1}>
+                                <Typography variant="body1" component={'span'}>{translatedDefaultCategory}</Typography>
+                                {<ShareIcon />}
+                            </Stack>
+                        </MenuItem>
+                        {
+                            directories.map((directory, index) => (
+                                <MenuItem value={directory._id.toString()} key={index}>
+                                    <Stack direction={'row'} spacing={1}>
+                                        <Typography variant="body1" component={'span'}>{directory.name}</Typography>
+                                    </Stack>
+                                </MenuItem>
+                            ))
                         }
-                    }}
-                    placeholder="Directory"
-                    defaultValue={defaultValue || defaultDirectory.value}
-                    required
-                    name="directory"
-                >
-                    <MenuItem value={defaultDirectory.value}>
-                        <Stack direction={'row'} spacing={1}>
-                            <Typography variant="body1" component={'span'}>{translatedDefaultCategory}</Typography>
-                            {<ShareIcon />}
-                        </Stack>
-                    </MenuItem>
-                    {
-                        directories.map((directory, index) => (
-                            <MenuItem value={directory._id.toString()} key={index}>
-                                <Stack direction={'row'} spacing={1}>
-                                    <Typography variant="body1" component={'span'}>{directory.name}</Typography>
-                                </Stack>
-                            </MenuItem>
-                        ))
-                    }
-                </Select>
-                {isDirectoryRequired && <ErrorMessage />}
+                    </Select>
+                    {isDirectoryRequired && <ErrorMessage />}
+                </div>
             </Grid>
         </Grid>
     );

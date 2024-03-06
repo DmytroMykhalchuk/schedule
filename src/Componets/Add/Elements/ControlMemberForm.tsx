@@ -55,7 +55,6 @@ export const ControlMemberForm: React.FC<ControlMemberFormType> = ({ userId, rol
             <UIInputField
                 label={dictionary.roleLabel}
                 name="role"
-                defaultValue={role}
                 required
                 inputProps={{ maxLength: 30 }}
                 onChange={onChangeRole}

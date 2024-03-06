@@ -42,7 +42,7 @@ export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date, authEmail
         return days;
     };
 
-    const renderColumnContent = (numberOfLine: number): JSX.Element[] => {
+    const renderColumnBorders = (numberOfLine: number): JSX.Element[] => {
         const items = [] as JSX.Element[];
 
         for (let index = 0; index < formatedWorkHours.length; index++) {
@@ -54,7 +54,6 @@ export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date, authEmail
                         styles.border
                     )}
                 >
-
                 </Stack>
             )
         }
@@ -72,7 +71,6 @@ export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date, authEmail
             >
                 <Stack sx={{ py: 4 }}>
                     <Box className={styles.innerColumn}>
-                        {renderColumnContent(numberOfLine)}
                         {dayTasks.map((task, index) => (
                             <TaskItem
                                 key={index}
@@ -85,7 +83,7 @@ export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date, authEmail
                             />
                         ))}
 
-
+                        {renderColumnBorders(numberOfLine)}
                     </Box>
                 </Stack>
             </Grid>
@@ -195,13 +193,12 @@ export const TaskItem: React.FC<TaskItemType> = ({ primaryColor, secondaryColor,
     return (
         <Box
             sx={{
-
                 mb: 0.5,
                 position: 'absolute',
-                top: ((fromHour - workHours[0]) * 90) - 8,
+                top: ((fromHour - workHours[0]) * 90) - 4,
                 height: ((toHour - fromHour) * 90) + 8 + 'px',
                 width: '100%',
-                px: 1,
+                px: 0.5,
             }}
         ><Link href={'/app/my-tasks/' + taskId}>
                 <Typography variant="subtitle2" sx={{
@@ -210,7 +207,7 @@ export const TaskItem: React.FC<TaskItemType> = ({ primaryColor, secondaryColor,
                     p: 1,
                     height: '100%',
                     borderColor: '#F6EFA7',
-                    borderRadius: 4,
+                    borderRadius: 2,
                     borderWidth: 1,
                     borderStyle: 'solid',
                 }}>

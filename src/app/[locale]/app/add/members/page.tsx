@@ -7,8 +7,8 @@ import Typography from '@mui/material/Typography';
 import { getMembers } from './actions';
 import { getUserSessionAndEmail } from '@/Componets/actions';
 import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
-import { MemberType } from '@/server/types/userTypes';
 import { useTranslations } from 'next-intl';
+import { MemberRecord } from '@/server/types/userTypes';
 
 type PageType = {
     params: {
@@ -20,18 +20,21 @@ const Page: React.FC<PageType> = async ({ params }) => {
     const { locale } = params;
     const { authEmail } = await getUserSessionAndEmail();
     const users = await getMembers(authEmail);
+
     return (
         <Stack alignItems={'center'} justifyContent={'center'}>
-            <Content
-                users={users}
-                locale={locale}
-            />
+            <div>
+                <Content
+                    users={users}
+                    locale={locale}
+                />
+            </div>
         </Stack >
     );
 };
 
 type ContentType = {
-    users: MemberType[];
+    users: MemberRecord[];
     locale: string;
 };
 
@@ -48,12 +51,14 @@ const Content: React.FC<ContentType> = ({ users, locale }) => {
                             <Typography variant="body1">{user.name}</Typography>
                             <Typography variant="caption">{user.email}</Typography>
                         </Box>
-                        {
-                            user.isAdmin ||
-                            <Link href={user._id}>
-                                <DeleteIcon color="warning" />
-                            </Link>
-                        }
+                        <div>
+                            {
+                                user.isAdmin ||
+                                <Link href={user._id}>
+                                    <DeleteIcon color="warning" />
+                                </Link>
+                            }
+                        </div>
                     </Stack>
                 ))}
             </Stack>

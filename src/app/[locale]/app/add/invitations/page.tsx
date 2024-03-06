@@ -1,13 +1,12 @@
-import { MiddlePaperWrapper } from "@/ui/MiddlePaperWrapper";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import styles from '@/Componets/Add/styles.module.scss';
-import { generateInvite, getInvitations, removeInvite } from "./actions";
-import IconButton from '@mui/material/IconButton'
-import DeleteIcon from '@mui/icons-material/Delete';
-import { getUserSessionAndEmail } from "@/Componets/actions";
-import { useTranslations } from "next-intl";
+import Typography from '@mui/material/Typography';
+import { generateInvite, getInvitations, removeInvite } from './actions';
+import { getUserSessionAndEmail } from '@/Componets/actions';
+import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
+import { useTranslations } from 'next-intl';
+import { InvitationsList } from '@/Componets/Add/InvitationsList';
 
 type PageType = {
     params: {
@@ -23,24 +22,11 @@ const Page: React.FC<PageType> = async ({ params }) => {
 
     return (
         <Stack justifyContent={'center'} alignItems={'center'} spacing={2}>
-            <Content authEmail={authEmail} locale={locale} />
+            <div>
+                <Content authEmail={authEmail} locale={locale} />
+            </div>
             <MiddlePaperWrapper>
-                <Stack>
-                    {
-                        ivitiations.map((item, index) => (
-                            <Stack direction={'row'} key={index} alignItems={'center'}>
-                                <Typography variant="body1" fontWeight={600} flex={1}>{item}</Typography>
-                                <form action={removeInvite}>
-                                    <input type="hidden" name="auth_email" value={authEmail} />
-                                    <input type="hidden" name={'invite'} value={item} />
-                                    <IconButton aria-label="delete invite code" type="submit" color='warning'>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </form>
-                            </Stack>
-                        ))
-                    }
-                </Stack>
+                <InvitationsList authEmail={authEmail} ivitiations={ivitiations}/>
             </MiddlePaperWrapper>
         </Stack>
     );
