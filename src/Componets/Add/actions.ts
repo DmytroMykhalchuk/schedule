@@ -88,7 +88,11 @@ export const updateTask = async (formData: FormData) => {
         }
     );
 
-    if (result.success) {
+    if (result?.wrongData) {
+        redirect('?wrong_data=1');
+    }
+
+    if (result?.success) {
         redirect('/app/add/tasks/' + taskId + '?is_updated=1');
     }
 };

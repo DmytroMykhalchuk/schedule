@@ -4,27 +4,28 @@ import IconButton from '@mui/material/IconButton';
 import Link from 'next/link';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
+import { AddTaskButton } from './AddTaskButton';
 import { CommentDialog } from '@/Componets/Comment/CommentDialog';
+import { CommentType } from '@/server/actions/types';
 import { cookies } from 'next/headers';
 import { getTask, updateTask } from './actions';
+import { getUserSessionAndEmail } from '../actions';
 import { HeaderLayout } from '@/Componets/Layouts/HeaderLayout';
 import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
+import { Notification } from '../Common/Notification';
 import { projectIdCookieKey } from '@/server/constants';
 import { TaskForm } from '@/Componets/Add/TaskForm';
-import { getUserSessionAndEmail } from '../actions';
 import { useTranslations } from 'next-intl';
-import { CommentType } from '@/server/actions/types';
-import { AddTaskButton } from './AddTaskButton';
-import { Notification } from '../Common/Notification';
 
 type TaskEditPageType = {
     taskId: string;
     locale: string;
     isDirectoryRequired: boolean;
     isUpdated?: boolean;
+    isNotAvailableDate: boolean;
 };
 
-export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId, locale, isDirectoryRequired, isUpdated }) => {
+export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId, locale, isDirectoryRequired, isUpdated, isNotAvailableDate }) => {
     const { authEmail, session } = await getUserSessionAndEmail()
 
     const response = await getTask(taskId, authEmail);
@@ -76,6 +77,7 @@ export const TaskEditPage: React.FC<TaskEditPageType> = async ({ taskId, locale,
                             authEmail={authEmail}
                             locale={locale}
                             isDirectoryRequired={isDirectoryRequired}
+                            isNotAvailableDate={isNotAvailableDate}
                         />
                         <input type="hidden" name="task_id" value={task?._id?.toString() || ''} />
                     </form>

@@ -143,7 +143,7 @@
             "update_title": "Оновити роль",
             "role": "Роль"
         },
-        "forbidden_date": "Дата {date} не доступна",
+        "forbidden_date": "Дата або час не доступний",
         "project_form": {
             "title": "Створити проєкт",
             "project_name": "Ім'я проєкту"

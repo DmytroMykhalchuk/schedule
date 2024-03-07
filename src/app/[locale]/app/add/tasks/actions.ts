@@ -1,4 +1,4 @@
-import { defaultFirstDirectory, defaultFirstUserId } from "@/Componets/Add/actions";
+import { defaultFirstUserId } from "@/Componets/Add/actions";
 import { getCookieProjectId } from "@/Componets/actions";
 import { TaskActions } from "@/server/actions/TaskActions";
 import { defaultCategory, defaultDirectory } from "@/server/constants";
@@ -33,7 +33,11 @@ export const createTask = async (formData: FormData) => {
 
     const result = await TaskActions.storeTask({ projectId, email }, newTask);
 
-    if (result?._id) {
-        redirect(`/app/add/tasks/${result._id}`);
-    }
+    if (result.hasOwnProperty('wrongData')) {
+        console.log('w')
+        redirect('?wrong_data=1')
+    } else {
+            //@ts-ignore
+            redirect(`/app/add/tasks/${result._id}`);
+        }
 };

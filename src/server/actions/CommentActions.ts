@@ -11,12 +11,11 @@ import { TaskActions } from './TaskActions';
 import { UserActions } from './UserActions';
 import { MailActions } from './MailActions';
 
-//todo execnt to env
 const pusher = new Pusher({
-    appId: "1752490",
-    key: "90149ab3e623050894c1",
-    secret: "9a5bc84db603fc34ddaa",
-    cluster: "eu",
+    appId: process.env.PUSHER_APP_ID!,
+    key: process.env.PUSHER_APP_KEY!,
+    secret: process.env.PUSHER_APP_SECRET!,
+    cluster: process.env.PUSHER_APP_CLUSTER!,
     useTLS: true
 });
 

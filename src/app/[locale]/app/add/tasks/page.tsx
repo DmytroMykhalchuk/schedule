@@ -12,18 +12,19 @@ type PageType = {
     };
     searchParams: {
         task_directory_required?: string;
+        wrong_data?: string;
     };
 };
 
 const Page: React.FC<PageType> = async ({ params, searchParams }) => {
     const { locale } = params;
-    const { task_directory_required: isDirectoryRequired } = searchParams;
+    const { task_directory_required: isDirectoryRequired, wrong_data: isNotAvailableDate } = searchParams;
     const { authEmail } = await getUserSessionAndEmail();
 
     return (
         <Stack alignItems={'center'}>
             <div>
-                <Content authEmail={authEmail} locale={locale} isDirectoryRequired={Boolean(isDirectoryRequired)} />
+                <Content authEmail={authEmail} locale={locale} isDirectoryRequired={Boolean(isDirectoryRequired)} isNotAvailableDate={Boolean(isNotAvailableDate)} />
             </div>
         </Stack>
     );
@@ -33,9 +34,10 @@ type ContentType = {
     authEmail: string;
     locale: string;
     isDirectoryRequired: boolean;
+    isNotAvailableDate: boolean;
 };
 
-const Content: React.FC<ContentType> = ({ authEmail, locale, isDirectoryRequired }) => {
+const Content: React.FC<ContentType> = ({ authEmail, locale, isDirectoryRequired, isNotAvailableDate }) => {
     const translation = useTranslations('MyTasks');
     return (
         <>
@@ -50,6 +52,7 @@ const Content: React.FC<ContentType> = ({ authEmail, locale, isDirectoryRequired
                         authEmail={authEmail}
                         locale={locale}
                         isDirectoryRequired={isDirectoryRequired}
+                        isNotAvailableDate={isNotAvailableDate}
                     />
                 </form>
             </MiddlePaperWrapper>

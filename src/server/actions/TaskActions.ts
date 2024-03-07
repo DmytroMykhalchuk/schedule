@@ -33,11 +33,16 @@ import { ProjectActions } from './ProjectActions';
 import { UserActions } from './UserActions';
 import Comment from '../models/Comment';
 import { MailActions } from './MailActions';
+import { translateDateToDayjs } from '@/utlis/translateDateToDayjs';
 
 export const TaskActions = {
-    async storeTask(auth: AuthType, storeTask: StoreTaskType): Promise<TaskDB> {
+    async storeTask(auth: AuthType, storeTask: StoreTaskType): Promise<TaskDB | { wrongData: boolean }> {
+        const canCreate = await this.isAvalableTaskInThisDate(storeTask.assignee, storeTask.dueDate, storeTask.fromHour, storeTask.toHour);
+        if (!canCreate) {
+            return { wrongData: true };
+        }
+
         await connectDB();
-        //todo validation for hours
         const user = await UserActions.getUserByEmail(auth.email);
 
         const taskModel = new Task({
@@ -152,11 +157,16 @@ export const TaskActions = {
         return { task: handledTask, comments: preparedCommnets };
     },
 
-    async updateTask(auth: AuthType, updateTask: TaskUpdateType): Promise<{ success: boolean }> {
+    async updateTask(auth: AuthType, updateTask: TaskUpdateType): Promise<{ success: boolean } | { wrongData: boolean }> {
+        const canCreate = await this.isAvalableTaskInThisDate(updateTask.assignee, updateTask.dueDate, updateTask.fromHour, updateTask.toHour, updateTask.taskId);
+        if (!canCreate) {
+            return { wrongData: true };
+        }
+
         await connectDB();
 
         const user = await UserActions.getUserByEmail(auth.email);
-        const project = await ProjectActions.getProjectById(auth.email, { _id: 1 }, user._id);
+        const project = await ProjectActions.getProjectById(auth.projectId, { _id: 1 }, user._id);
 
         if (!project) {
             return { success: false };
@@ -215,8 +225,12 @@ export const TaskActions = {
     },
 
     async getAllowedHours(auth: AuthType, date: string, userId: string | null, taskId?: string): Promise<number[]> {
+        const selectedDay = translateDateToDayjs(date, 'DD.MM.YYYY');
+        if (selectedDay.day(0).isSame(selectedDay, 'day') || selectedDay.day(6).isSame(selectedDay, 'day')) {
+            return [];
+        }
         await connectDB();
-        const allowedHours = workHours;
+        const allowedHours = [...workHours];
 
         if (!userId) {
             return allowedHours;
@@ -230,7 +244,6 @@ export const TaskActions = {
         };
 
         const tasks = await Task.find({ projectId: project._id, assignee: user._id, dueDate: date }, { fromHour: 1, toHour: 1, dueDate: 1 });
-
         tasks.forEach((task: { _id: mongoose.Types.ObjectId, fromHour: number, toHour: number }, index) => {
             if (task._id.toString() === taskId) return;
 
@@ -485,6 +498,35 @@ export const TaskActions = {
             }
         });
         return preparedTasks;
+    },
+
+    async isAvalableTaskInThisDate(assignee: string | null, dueDate: string, fromHour: number, toHour: number, taskId?: string): Promise<boolean> {
+        if (!assignee) return true;
+
+        if (fromHour >= toHour) return false;
+
+        await connectDB();
+
+        const tasks = await Task.find({ assignee, dueDate }, { fromHour: 1, toHour: 1 }).lean() as { _id: mongoose.Types.ObjectId, fromHour: number, toHour: number }[];
+        let isAvailable = true;
+
+        tasks.forEach(task => {
+            if (taskId === task._id.toString()) {
+                return;
+            }
+            if (
+
+                (fromHour >= task.fromHour && fromHour < task.toHour)
+                || (toHour > task.fromHour && toHour < task.toHour)
+
+            ) {
+                isAvailable = false;
+            }
+        });
+
+        console.log({ isAvailable })
+
+        return isAvailable;
     },
 
 };

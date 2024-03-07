@@ -37,11 +37,13 @@ type TaskFormType = {
     authEmail: string;
     locale: string;
     isDirectoryRequired: boolean;
+    isNotAvailableDate: boolean;
 };
 
-export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, UnderFormSlot, authEmail, locale, isDirectoryRequired }) => {
+export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, UnderFormSlot, authEmail, locale, isDirectoryRequired, isNotAvailableDate }) => {
     const translation = useTranslations('MyTasks');
     const translationForm = useTranslations('Form');
+
     return (
         <div>
             <input type="hidden" name="auth_email" value={authEmail} />
@@ -87,6 +89,8 @@ export const TaskForm: React.FC<TaskFormType> = ({ defaultValues, labelConfirm, 
                                 cancel: translationForm('cancel'),
                                 selectDate: translationForm('select_date'),
                             }}
+                            isNotAvailableDate={isNotAvailableDate}
+                            defaultAssignee={defaultValues?.assignee}
                         />
                     </div>
                 </Grid>

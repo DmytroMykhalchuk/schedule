@@ -6,5 +6,9 @@ export const getCheckedWeekDay = (currentDay: Dayjs): Dayjs => {
     } else if (currentDay.isSame(currentDay.day(6), 'day')) {
         return currentDay.subtract(1, 'day');
     }
+    // console.log(currentDay.isSame(currentDay.day(5), 'day')
+    // ,currentDay.day(5).format('DD.MM.YYYY'),
+    // currentDay.format('DD.MM.YYYY')
+    // )
     return currentDay;
 }

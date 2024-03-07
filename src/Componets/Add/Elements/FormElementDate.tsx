@@ -63,9 +63,11 @@ type FormElementDateType = {
         selectDate: string;
     };
     locale: string;
+    isNotAvailableDate: boolean;
+    defaultAssignee?: string | null;
 };
 
-export const FormElementDate: React.FC<FormElementDateType> = ({ authEmail, defaultDueDate, fromHour, toHour, taskId, translatedName, translatedForbiddenDate, dictionary, locale }) => {
+export const FormElementDate: React.FC<FormElementDateType> = ({ authEmail, defaultDueDate, defaultAssignee, fromHour, toHour, taskId, translatedName, translatedForbiddenDate, dictionary, locale, isNotAvailableDate }) => {
     locale === 'uk' && dayjs.locale(uk);
 
     const isAllowedMakeHoursRequest = useRef(false);
@@ -78,17 +80,18 @@ export const FormElementDate: React.FC<FormElementDateType> = ({ authEmail, defa
     const [selectedWorkHours, setSelectedWorkHours] = useState({ fromHour: fromHour || 0, toHour: toHour || 0 })
     const [chunkHours, setChunkHours] = useState([] as number[][]);
 
-
     useEffect(() => {
-        if (!assignee || !isAllowedMakeHoursRequest.current) {
+        const currentAssignee = assignee || defaultAssignee;
+        if (!currentAssignee || !isAllowedMakeHoursRequest.current) {
             if (!isAllowedMakeHoursRequest.current) {
                 isAllowedMakeHoursRequest.current = true;
             }
             return;
         }
 
+
         const fetchData = async () => {
-            const response = await getAllowedHours(authEmail, date, assignee, taskId);
+            const response = await getAllowedHours(authEmail, date, currentAssignee, taskId);
             if (!(response?.code === 200 && response?.data)) return;
             deChunkAllowedHours(response.data);
             setAllowedHours(response.data);
@@ -104,6 +107,13 @@ export const FormElementDate: React.FC<FormElementDateType> = ({ authEmail, defa
         fetchData();
 
     }, [date, assignee]);
+
+    useEffect(() => {
+        setHasForbiddenDate({
+            formattedDay: '',
+            isError: Boolean(isNotAvailableDate),
+        });
+    }, [isNotAvailableDate]);
 
     const deChunkAllowedHours = (hours: number[]) => {
         const ranges = [] as number[][];
@@ -136,17 +146,16 @@ export const FormElementDate: React.FC<FormElementDateType> = ({ authEmail, defa
             return;
         }
 
-        if (selectedDay.day(0).isSame(selectedDay, 'day') || selectedDay.day(6).isSame(selectedDay, 'day')) {
-            setHasForbiddenDate({
-                isError: true,
-                formattedDay: date.format('DD.MM.YYYY'),
-            });
-            if (!selectedDay.isSame(date, 'day'))
-                setDate(getCheckedWeekDay(selectedDay));
-            return;
+        if (selectedDay.day(0).isSame(selectedDay, 'day')) {
+            setDate(selectedDay.add(1, 'day'));
         }
+        else if (selectedDay.day(6).isSame(selectedDay, 'day')) {
+            setDate(selectedDay.subtract(1, 'day'));
+        } else {
+            setDate(selectedDay)
+        }
+
         hasForbiddenDate.isError && setHasForbiddenDate({ isError: false, formattedDay: '' })
-        setDate(selectedDay);
     };
 
     const onChangeHourFrom = (fromHour: number) => {
@@ -165,6 +174,8 @@ export const FormElementDate: React.FC<FormElementDateType> = ({ authEmail, defa
             fromHour,
             toHour: toHour,
         }));
+
+        hasForbiddenDate.isError && setHasForbiddenDate({ isError: false, formattedDay: '' })
     };
 
     const onChangeHourTo = (toHour: number) => {
@@ -174,6 +185,8 @@ export const FormElementDate: React.FC<FormElementDateType> = ({ authEmail, defa
                 ? allowedHours.indexOf(toHour - 1) != -1 ? toHour - 1 : toHour
                 : prev.fromHour,
         }));
+
+        hasForbiddenDate.isError && setHasForbiddenDate({ isError: false, formattedDay: '' })
     };
 
     const getAllowedToHourValues = () => {
@@ -202,7 +215,7 @@ export const FormElementDate: React.FC<FormElementDateType> = ({ authEmail, defa
         return allowedValues;
     };
 
-
+    console.log(date.format('DD.MM.YYYY'))
     return (
         <Grid container spacing={2} sx={{ p: 2 }}>
             <Grid item xs={3} justifyContent={'center'}>
@@ -265,7 +278,6 @@ export const FormElementDate: React.FC<FormElementDateType> = ({ authEmail, defa
                                 }}
                             />
                         </LocalizationProvider>
-                        {hasForbiddenDate.isError && <Typography variant="caption" color="error">{translatedForbiddenDate.replace('date', hasForbiddenDate.formattedDay)}</Typography>}
                     </Stack>
                     <Stack direction={'row'} spacing={1} alignItems={'center'}>
                         <HourSelect allowedHours={getAllowedFromHourValues()} onChange={onChangeHourFrom} value={selectedWorkHours.fromHour || allowedHours[0]} name="from_hour" />
@@ -273,6 +285,7 @@ export const FormElementDate: React.FC<FormElementDateType> = ({ authEmail, defa
                         <HourSelect allowedHours={getAllowedToHourValues()} onChange={onChangeHourTo} value={selectedWorkHours.toHour || allowedHours[1]} name="to_hour" />
                     </Stack>
                 </Stack>
+                {(hasForbiddenDate.isError) && <Typography variant="caption" color="error">{translatedForbiddenDate.replace('date', hasForbiddenDate.formattedDay)}</Typography>}
             </Grid>
         </Grid>
     );

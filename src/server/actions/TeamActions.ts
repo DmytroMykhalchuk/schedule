@@ -98,5 +98,3 @@ export const TeamActions = {
         return { success: true };
     },
 };
-
-//todo add email notification
