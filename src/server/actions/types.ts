@@ -152,14 +152,15 @@ export type StoreCommentRequestType = {
 };
 
 export type CommentType = {
-    _id: string,
-    userId: string
-    name: string,
-    picture: string,
-    text: string
-    isOwner: boolean
-    replyId: string
-    createdAt: Date
+    _id: string;
+    userId: string;
+    name: string;
+    picture: string;
+    text: string;
+    isOwner: boolean;
+    replyId: string;
+    createdAt: Date;
+    taskId: string;
 };
 
 export type ProjectUsers = {

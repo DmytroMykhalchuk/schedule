@@ -127,3 +127,5 @@ export const dateMap = {
     [dayjs().add(1, 'day').format('DD.MM.YYYY')]: 'Tommorow',
     [dayjs().add(2, 'day').format('DD.MM.YYYY')]: 'Day after tomorrow',
 };
+
+export const searchAnwserLmit=5

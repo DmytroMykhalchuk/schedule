@@ -11,7 +11,18 @@
         "new_comments": "Останні коментарі",
         "team": "Команда",
         "categories": "Категорії",
-        "project_directories": "Директорії проєкту"
+        "project_directories": "Директорії проєкту",
+        "search":{
+            "task_title":"Таски",
+            "directory_title":"Директорії",
+            "invite_title":"Запрошення",
+            "category_title":"Категорії",
+            "user_title":"Співучасники",
+            "comment_title":"Коментарі",
+            "not_found":"Не знайдено",
+            "searching":"Пошук",
+            "":""
+        }
     },
     "Calendar": {
         "navigation": {

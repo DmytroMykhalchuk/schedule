@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 export type UserRecord = {
     googleId: string;
     name: string;
@@ -20,4 +22,13 @@ export type MemberRecord = {
     email: string;
     picture: string;
     isAdmin: boolean;
-}
+};
+
+export type UserInfoDB = {
+    _id: mongoose.Types.ObjectId,
+    name: string;
+    email: string;
+    picture: string;
+};
+
+export type UserInfoRecord = Omit<UserInfoDB, '_id'> & { _id: string; };

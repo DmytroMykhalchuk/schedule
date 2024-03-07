@@ -24,7 +24,12 @@ const Page: React.FC<PageType> = async ({ params }) => {
         <>
             <Box>
                 <div>
-                    <HomeHeader userName={session?.user?.name || ''} userPicture={session?.user?.image || ''} />
+                    <HomeHeader
+                        locale={locale}
+                        userName={session?.user?.name || ''}
+                        userPicture={session?.user?.image || ''}
+                        authEmail={session?.user?.email || ''}
+                    />
                 </div>
             </Box>
             <Grid container spacing={2}>
