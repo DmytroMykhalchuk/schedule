@@ -7,12 +7,15 @@ import { UIInputField } from '../UI/UIInputField';
 import { useTranslations } from 'next-intl';
 import { useCodeInvite } from '@/app/[locale]/sign-in/actions';
 
+
 type InviteInputFormType = {
     locale: string;
     authEmail: string;
+    isReachedMaxUsers: boolean;
+    isNotFound: boolean;
 };
 
-export const InviteInputForm: React.FC<InviteInputFormType> = ({ locale, authEmail }) => {
+export const InviteInputForm: React.FC<InviteInputFormType> = ({ locale, authEmail, isReachedMaxUsers, isNotFound }) => {
     const translation = useTranslations('Auth');
 
     return (
@@ -32,6 +35,12 @@ export const InviteInputForm: React.FC<InviteInputFormType> = ({ locale, authEma
                     <Button variant="outlined" color="warning" type='submit' sx={{ textTransform: 'none' }}>
                         {translation('confirm')}
                     </Button>
+                    {isReachedMaxUsers &&
+                        <Typography variant="caption" color={'error'}>{translation('reached_max_users')}</Typography>
+                    }
+                    {isNotFound &&
+                        <Typography variant="caption" color={'error'}>{translation('not_found')}</Typography>
+                    }
                 </form>
             </Stack>
         </>

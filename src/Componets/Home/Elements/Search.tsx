@@ -79,7 +79,7 @@ export const Search: React.FC<SearchType> = ({ dictionary, authEmail, locale }) 
     return (
         <Box className={styles.searchWrapper} flex={1} bgcolor={'secondary'}>
             <FormControl variant="outlined" fullWidth color="warning" sx={{
-                backgroundColor: '#f1f1f1',
+                backgroundColor: 'background.paper',
                 maxWidth: 380,
                 position: 'relative',
             }}>

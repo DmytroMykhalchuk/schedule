@@ -26,7 +26,13 @@ export const useCodeInvite = async (formData: FormData) => {
 
     const result = await InvitingsActions.useCodeInvite(email, inviteCode);
 
-    if(result?.isAccepted){
-        cookies().set(projectIdCookieKey,result.projectId);
+    if (!result?.isAccepted && result?.isReachedMaxUsers) {
+        redirect('?reached_max_users=1')
+    } else if (!result?.isAccepted) {
+        redirect('?not_found=1')
+    }
+
+    if (result?.isAccepted) {
+        cookies().set(projectIdCookieKey, result.projectId);
     }
 }

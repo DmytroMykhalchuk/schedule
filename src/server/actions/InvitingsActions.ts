@@ -4,6 +4,7 @@ import connectDB from "../connectDB"
 import { ProjectActions } from "./ProjectActions";
 import Project from '../models/Project';
 import { UserActions } from './UserActions';
+import { limitCountUsers } from '../constants';
 
 export const InvitingsActions = {
     async getInvitatons(authParams: AuthType): Promise<string[]> {
@@ -35,19 +36,21 @@ export const InvitingsActions = {
         return { success: true };
     },
 
-    async useCodeInvite(email: string, inviteCode: string): Promise<{ isAccepted: false } | { isAccepted: true, projectId: string }> {
+    async useCodeInvite(email: string, inviteCode: string): Promise<{ isAccepted: false, isReachedMaxUsers?: boolean } | { isAccepted: true, projectId: string }> {
         await connectDB();
-        const user = await UserActions.getUserByEmail(email, { _id: 1 });
 
-        if (!user) {
+        const user = await UserActions.getUserByEmail(email, { _id: 1 });
+        const project = await Project.findOne({ invitations: inviteCode }, { users: 1 });
+
+        if (!user || !project) {
             return { isAccepted: false };
         }
+        if (project.users.length >= limitCountUsers) {
+            return { isAccepted: false, isReachedMaxUsers: true, };
+        }
 
-        const project = await Project.findOneAndUpdate({ invitations: inviteCode }, {
-            $push: {
-                users: user._id
-            }
-        });
+        project.users.push(user._id);
+        await project.save();
 
         return Boolean(project)
             ? {

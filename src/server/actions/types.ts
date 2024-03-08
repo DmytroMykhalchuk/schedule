@@ -1,3 +1,4 @@
+import { payment } from './../services/stripe';
 import { Dayjs } from "dayjs";
 import mongoose from "mongoose"
 
@@ -19,6 +20,14 @@ export type DBProjectType = {
     team: ProjectTeamItem[],
     invitations: string[],
     categories: CategoryDB[],
+    premium: {
+        isActive: boolean,
+        payment: {
+            subscriptionId: string;
+            sessionId: string;
+            lastPayment: Date | null;
+        };
+    }
 }
 
 export type ProjectTeamItem = { userId: mongoose.Types.ObjectId, role: string }

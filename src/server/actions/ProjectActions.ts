@@ -1,3 +1,5 @@
+import { cancelSubcription, checkIsActive, payment } from './../services/stripe';
+import { initPayment } from './../../app/[locale]/app/settings/actions';
 import { RevenueActions } from '@/server/actions/RevenueActions';
 import connectDB from '../connectDB';
 import mongoose from 'mongoose';
@@ -9,6 +11,7 @@ import { ProjectListAvailableDB } from '../types/projectTypes';
 import { ProjectListAvailableRecord } from './../types/projectTypes';
 import { TaskActions } from './TaskActions';
 import { UserActions } from './UserActions';
+import User from '../models/User';
 
 type StoreProjectType = {
     name: string,
@@ -153,5 +156,63 @@ export const ProjectActions = {
             ...project,
             _id: project._id.toString(),
         }));
+    },
+
+    async initPayment(auth: AuthType) {
+        await connectDB();
+        const project = await this.getProjectByFilters(auth, { premium: 1, admin_id: 1 });
+
+        const author = await User.findById(project.admin_id, { email: 1, name: 1 }).orFail();
+
+        const session = await payment(author.name, author.email)
+
+        project.premium.payment.sessionId = session.id;
+        await project.save();
+
+        return session.url;
+    },
+
+    async checkPayment(projectId: string): Promise<{ isActive: boolean }> {
+        await connectDB();
+
+        const project = await Project.findById(projectId, { premium: 1 });
+
+        const info = await checkIsActive(project.premium.payment?.sessionId);
+        if (info.isActive) {
+            project.premium.payment.subscriptionId = info.subscriptionId;
+            project.premium.isActive = true;
+            await project.save();
+
+            return { isActive: true };
+        }
+
+        return { isActive: false };
+    },
+
+    async cancelPremium(auth: AuthType): Promise<ProccessStatusType> {
+        await connectDB();
+        const project = await this.getProjectByFilters(auth, { premium: 1 });
+
+        const result = await cancelSubcription(project.premium.payment.subscriptionId)
+
+        if (result.success) {
+            project.premium.isActive = false;
+            project.premium.payment = {
+                subscriptionId: null,
+                sessionId: null,
+                lastPayment: null,
+            };
+
+            await project.save();
+        }
+
+        return result;
+    },
+
+    async getHasPremium(auth: AuthType): Promise<{ hasPremium: boolean }> {
+        await connectDB();
+        const project = await this.getProjectByFilters(auth, { premium: 1 });
+
+        return { hasPremium: project.premium.isActive };
     },
 };

@@ -119,8 +119,10 @@ export const defaultDirectory = {
 export const weekLength = 5;
 export const yearMonthLength = 12;
 
+export const limitCountUsers = 5;
+
 export const revenuePerPage = 10;
-export const scheduleEmail='schedule@gmail.com';
+export const scheduleEmail = 'schedule@gmail.com';
 
 export const dateMap = {
     [dayjs().format('DD.MM.YYYY')]: 'Today',
@@ -128,4 +130,4 @@ export const dateMap = {
     [dayjs().add(2, 'day').format('DD.MM.YYYY')]: 'Day after tomorrow',
 };
 
-export const searchAnwserLmit=5
+export const searchAnwserLmit = 5

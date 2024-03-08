@@ -12,16 +12,16 @@
         "team": "Команда",
         "categories": "Категорії",
         "project_directories": "Директорії проєкту",
-        "search":{
-            "task_title":"Таски",
-            "directory_title":"Директорії",
-            "invite_title":"Запрошення",
-            "category_title":"Категорії",
-            "user_title":"Співучасники",
-            "comment_title":"Коментарі",
-            "not_found":"Не знайдено",
-            "searching":"Пошук",
-            "":""
+        "search": {
+            "task_title": "Таски",
+            "directory_title": "Директорії",
+            "invite_title": "Запрошення",
+            "category_title": "Категорії",
+            "user_title": "Співучасники",
+            "comment_title": "Коментарі",
+            "not_found": "Не знайдено",
+            "searching": "Пошук",
+            "": ""
         }
     },
     "Calendar": {
@@ -183,10 +183,23 @@
         "invite_code": "Код запрошення",
         "confirm": "Підтвердити",
         "avalable_projects": "Доступні проєкти",
+        "reached_max_users":"Досягнуто ліміт користувачів на проєкт. Зверніться до адміністратора проєкту.",
+        "not_found":"Проєкт не знайдено",
         "": ""
     },
     "Notifications": {
         "succesfully_updated": "Успішно оновлено"
+    },
+    "Premium": {
+        "premium":"Premium",
+        "title_success": "Підписка активована",
+        "subtitle_success": "Дякуємо за ваш вибір",
+        "title_unsuccess": "Підписка не активована",
+        "subtitle_unsuccess": "Якщо вважаєте що це помилка, повідомте нам на пошту example@gmail.com",
+        "preference_text": "Підключайте до проєкту більше 5 учасників",
+        "cancel_premium":"Скасувати підписку",
+        "cancle_warning":"Наявну кількість користувачів буде збережено.",
+        "": ""
     },
     "": ""
 }
