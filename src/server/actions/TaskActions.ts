@@ -270,7 +270,7 @@ export const TaskActions = {
         return { success: Boolean(task) };
     },
 
-    async generateTasks(projectId: string, count = 350) {
+    async generateTasks(projectId: string, adminId: string, count = 350, countTargetUsers = 3, limitDayCount = 30, isPast = false) {
         await connectDB();
         const project = await ProjectActions.getProjectById(projectId);
 
@@ -279,16 +279,16 @@ export const TaskActions = {
 
         const users = await User.find();
         const shuffledUsers = users.sort(() => 0.5 - Math.random());
-        let targetUsers = [...shuffledUsers.slice(0, 5), project.admin_id];
+        let targetUsers = [...shuffledUsers.slice(0, countTargetUsers)];
 
         const taskIds = [] as mongoose.Types.ObjectId[];
-        const userIds = targetUsers.map(item => item._id);
+        const userIds = [...targetUsers.map(item => item._id), project.admin_id] as mongoose.Types.ObjectId[];
 
         const dateMarkHours = {} as any;
 
         for (let index = 0; index < count; index++) {
-            const randomDate = getRandomWeekdayDate();
-            const randomUserId = targetUsers[Math.floor(Math.random() * targetUsers.length)]._id;
+            const randomDate = getRandomWeekdayDate(limitDayCount, isPast);
+            const randomUserId = userIds[Math.floor(Math.random() * userIds.length)];
 
             const fromHour = getRandomInt(workHours[0], workHours[workHours.length - 2]);
             const toHour = getRandomInt(fromHour + 1, workHours[workHours.length - 1]);
@@ -359,7 +359,10 @@ export const TaskActions = {
             taskIds.push(task._id);
         }
 
-        return { userIds, taskIds };
+        return {
+            userIds: userIds.filter(userId => userId.toString() !== adminId),
+            taskIds
+        };
     },
 
     generateSubtasks(min = 1, max = 10): string[] {
@@ -523,8 +526,6 @@ export const TaskActions = {
                 isAvailable = false;
             }
         });
-
-        console.log({ isAvailable })
 
         return isAvailable;
     },

@@ -1,3 +1,4 @@
+import { RevenueActions } from '@/server/actions/RevenueActions';
 import connectDB from '../connectDB';
 import mongoose from 'mongoose';
 import Project from '../models/Project';
@@ -110,11 +111,14 @@ export const ProjectActions = {
 
     async genearateRandomTasks(projectId: string, count = 350, maxDayCount = 30): Promise<void> {
         await connectDB();
+        const project = await Project.findById(projectId);
+
         await DirectoryActions.generateDirectories(projectId);
 
-        const { userIds, taskIds } = await TaskActions.generateTasks(projectId);
-
-        const result = await Project.findOneAndUpdate({ _id: projectId }, { $push: { tasks: taskIds, users: userIds } })
+        const { userIds: nextUserIds, taskIds: nextTaskIds } = await TaskActions.generateTasks(projectId, project.admin_id.toString());
+        const { userIds: beforeUserIds, taskIds: beforeTaskIds } = await TaskActions.generateTasks(projectId, project.admin_id.toString(), 365, 0, 365, true);
+        await RevenueActions.genreateRevenues(project.admin_id.toString(), projectId);
+        const result = await Project.findOneAndUpdate({ _id: projectId }, { $push: { tasks: [...nextTaskIds, ...beforeTaskIds], users: [...nextUserIds, ...beforeUserIds] } })
     },
 
     async removeGenerated(projectId: string): Promise<ProccessStatusType> {
@@ -128,15 +132,16 @@ export const ProjectActions = {
         await DirectoryActions.deleteDirectories(project.directories);
         await TaskActions.deleteGeneratedTasks(projectId);
         await CommentActions.deleteGeneratedComments(projectId);
+        await RevenueActions.deleteGenerated(projectId);
 
         project.directories = [];
         project.categories = [];
 
         project.users = project.users.filter((user: mongoose.Types.ObjectId) => user.toString() === project.admin_id.toString());
-
+        project.team = project.team.filter((user: { userId: mongoose.Types.ObjectId }) => user.userId.toString() === project.admin_id.toString());
         project.save();
 
-        return { success: false };
+        return { success: true };
     },
 
     async getAvailableProjects(userId: string): Promise<ProjectListAvailableRecord[]> {

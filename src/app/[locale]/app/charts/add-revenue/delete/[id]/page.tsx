@@ -3,18 +3,19 @@ import { ReactNode } from "react";
 import { deleteRevenue } from "../../actions";
 
 type PageType = {
-    params: { id: string },
+    params: {
+        locale: string;
+        id: string;
+    },
 };
 
 const Page: React.FC<PageType> = ({ params }) => {
-    const { id } = params;
+    const { locale, id } = params;
 
     return (
         <DeleteDialog
             FormWrapper={(props: any) => <FormWrapper directoryId={id} {...props} />}
-            cancelHref="/app/charts/add-revenue"
-            content='It will be deleted completely. Are you sure?'
-            title="Confrim action"
+            cancelHref={`/${locale}/app/charts/add-revenue`}
         />
     );
 };

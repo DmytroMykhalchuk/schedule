@@ -2,6 +2,7 @@
 
 import { getCookieProjectId } from "@/Componets/actions";
 import { ProjectActions } from "@/server/actions/ProjectActions";
+import { UserActions } from "@/server/actions/UserActions";
 import { redirect } from "next/navigation";
 
 export const generateDB = async () => {
@@ -13,10 +14,10 @@ export const generateDB = async () => {
         return;
     }
 
-    // await UserActions.randomGenerate();
+    await UserActions.randomGenerate();
     await ProjectActions.genearateRandomTasks(projectId);
 
-    // redirect('/app');
+    redirect('/app');
 };
 
 export const removeGenerated = async () => {
@@ -29,5 +30,5 @@ export const removeGenerated = async () => {
     }
 
     const result = await ProjectActions.removeGenerated(projectId);
-    result.success && redirect('/app');
+    result?.success && redirect('/app');
 };

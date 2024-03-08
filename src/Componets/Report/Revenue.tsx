@@ -21,7 +21,7 @@ type RevenueType = {
 
 export const Revenue: React.FC<RevenueType> = ({ chartData, locale }) => {
     locale === 'uk' && dayjs.locale(uk);
-    
+
     const translation = useTranslations('Report');
     const chartInfo = extractDataChart(chartData);
 
@@ -54,7 +54,7 @@ export const Revenue: React.FC<RevenueType> = ({ chartData, locale }) => {
                 <Stack direction={'row'} spacing={3} alignItems={'center'}>
                     <Typography variant="h4">
                         {chartInfo.total >= 0 ? '+' : '-'}
-                        ${chartInfo.total.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                        ${Math.abs(chartInfo.total).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                     </Typography>
                     <UIAvarageCaption
                         caption={translation('project_revenue.avg_per_month', { cost: chartInfo.avarage })}
@@ -76,12 +76,13 @@ export const Revenue: React.FC<RevenueType> = ({ chartData, locale }) => {
                         Array.from({ length: 12 }).map((_, index) => {
                             const monthInfo = mapMonth[11 - index];
                             const value = chartData[+monthInfo.monthPosition];
+                            const maxCost = chartInfo.rangeY[0];
 
                             return (
                                 <Grid key={index} item xs={1} alignItems={'center'} sx={{ position: 'relative' }}>
-                                    <Bar isLoverAvarage={value < chartInfo.avarage} cost={value} maxCost={chartInfo.rangeY[chartInfo.rangeY.length - 1]} />
+                                    <Bar cost={value} maxCost={maxCost} />
                                     <Stack alignItems={'center'} justifyContent={'center'}>
-                                        {chartInfo.rangeY.reverse().map((_, index) => (
+                                        {[...chartInfo.rangeY].reverse().map((_, index) => (
                                             <Box key={index} p={2} sx={{ borderBottomStyle: 'solid', borderBottomColor: '#ccc', borderBottomWidth: '1px', width: '100%', }}>
                                             </Box>
                                         ))}
@@ -109,12 +110,13 @@ export const Revenue: React.FC<RevenueType> = ({ chartData, locale }) => {
 };
 
 type BarType = {
-    isLoverAvarage: boolean
-    cost: number,
-    maxCost: number,
+    cost: number;
+    maxCost: number;
 };
 
-const Bar: React.FC<BarType> = ({ isLoverAvarage, cost, maxCost }) => {
+const Bar: React.FC<BarType> = ({ cost, maxCost }) => {
+    const isLoverAvarage = cost <= 0;
+
     return (
         <Box sx={{
             position: 'absolute',
@@ -131,7 +133,7 @@ const Bar: React.FC<BarType> = ({ isLoverAvarage, cost, maxCost }) => {
         }}>
             <Box sx={{
                 backgroundColor: isLoverAvarage ? purple[400] : 'secondary.light',
-                height: cost / maxCost * 100 + '%',
+                height: Math.abs(cost) / maxCost * 100 + '%',
                 bottom: 0,
                 borderRadius: 4,
             }} />
@@ -148,8 +150,9 @@ const extractDataChart = (chartData: RevenueChartType) => {
         if (Object.prototype.hasOwnProperty.call(chartData, key)) {
             const cost = chartData[key];
             total += cost;
-            if (maxValue < cost) {
-                maxValue = cost;
+            const absCost = Math.abs(cost);
+            if (maxValue < absCost) {
+                maxValue = absCost;
             }
             counter++;
         }
@@ -158,10 +161,14 @@ const extractDataChart = (chartData: RevenueChartType) => {
     let roundedValue = 10;
 
     for (let i = 0; i < 30; i++) {
-        const formattedIndex = i + 1;
-        const isN = formattedIndex % 2;
+        if (roundedValue > maxValue) {
+            break;
+        }
 
-        let currentValue = 10 ** Math.ceil(formattedIndex / 2);
+        const formattedIndex = i + 1;
+        const isN = i % 2;
+
+        let currentValue = 10 ** (Math.ceil(formattedIndex / 2));
 
         if (isN === 0) {
         } else {
@@ -169,9 +176,6 @@ const extractDataChart = (chartData: RevenueChartType) => {
         }
 
         roundedValue = currentValue;
-        if (roundedValue > maxValue) {
-            break;
-        }
     }
 
     const rangeY = [0, roundedValue * 0.25, roundedValue * 0.5, roundedValue * 0.75, roundedValue];

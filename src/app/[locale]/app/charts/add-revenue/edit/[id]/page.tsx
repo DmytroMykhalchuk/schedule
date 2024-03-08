@@ -8,14 +8,15 @@ import { getUserSessionAndEmail } from '@/Componets/actions';
 
 type PageType = {
     params: {
-        id: string
+        locale: string;
+        id: string;
     }
 };
 
 const Page: React.FC<PageType> = async ({ params }) => {
     const { authEmail } = await getUserSessionAndEmail();
 
-    const id = params.id;
+    const { locale, id } = params;
     const revenue = await getRevenurById(params.id, authEmail);
 
     return (
@@ -25,7 +26,11 @@ const Page: React.FC<PageType> = async ({ params }) => {
                     cost: revenue.cost,
                     date: revenue.targetDate,
                     note: revenue.note,
-                }}>
+                }}
+                authEmail={authEmail}
+                locale={locale}
+                
+            >
                 <input type="hidden" name="revenue_id" value={id} />
                 <Link href={'mailto:' + revenue.author.email}>
                     <Stack direction={'row'} mb={2} alignItems={'center'} spacing={2}>

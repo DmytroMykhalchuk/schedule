@@ -1,4 +1,4 @@
-import { getCookieProjectId } from "@/Componets/actions";
+import { getCookieProjectId, getUserSessionAndEmail } from "@/Componets/actions";
 import { RevenueActions } from "@/server/actions/RevenueActions";
 import { RevenueRecordPopulatedType } from "@/server/actions/types";
 import { redirect } from "next/navigation";
@@ -32,7 +32,7 @@ export const addRevenueRecord = async (formData: FormData) => {
 
     const result = await RevenueActions.addRevenue({ projectId, email }, { cost, date, note });
     if (result?.success) {
-        redirect('/app/charts/add-revenue');
+        redirect('/app/charts/add-revenue?created_id=' + result?.revenueId);
     }
 };
 
@@ -60,7 +60,8 @@ export const deleteRevenue = async (formData: FormData) => {
     'use server';
     const projectId = getCookieProjectId();
     const id = formData.get('revenue_id') as string;
-    const email = formData.get('auth_email') as string;
+    
+    const { authEmail: email } = await getUserSessionAndEmail()
 
     const result = await RevenueActions.deleteRevenue({ projectId, email }, id);
 

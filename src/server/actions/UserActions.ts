@@ -55,7 +55,7 @@ export const UserActions = {
         return users.map(user => user.toObject());
     },
 
-    async randomGenerate(count = 10): Promise<void> {
+    async randomGenerate(count = 3): Promise<void> {
         await connectDB();
 
         const mailMask = 'example.user';
@@ -69,6 +69,7 @@ export const UserActions = {
                 googleId: getRandomNumber(12),
                 picture: getRandomPictureUrl(),
                 sessions: [],
+                locale: 'uk',
             });
             const result = await person.save();
         }
@@ -77,7 +78,6 @@ export const UserActions = {
     async getAvailableProjects(userEmail: string): Promise<ProjectListAvailableRecord[]> {
         await connectDB();
         const user = await this.getUserByEmail(userEmail, { _id: 1, locale: 1 });
-        console.log(user)
         const projects = await ProjectActions.getAvailableProjects(user._id);
 
         return projects;

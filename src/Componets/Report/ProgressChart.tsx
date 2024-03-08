@@ -73,7 +73,7 @@ type TableRowWrapperType = {
 };
 
 const TableRowWrapper: React.FC<TableRowWrapperType> = ({ children }) => (
-    <Grid className={styles.progressProject__row} container sx={{ position: 'relative' }}>
+    <Grid className={styles.progressProject__row} container sx={{ position: 'relative', overflow: 'hidden' }}>
         <Grid className={styles.progressProject__td} item xs={4}>
             {children}
         </Grid>

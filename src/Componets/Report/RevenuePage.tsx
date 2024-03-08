@@ -8,15 +8,16 @@ type RevenuePageType = {
     page?: number;
     formAction: (formData: FormData) => void;
     locale: string;
+    createdId?: string;
 };
 
-export const RevenuePage: React.FC<RevenuePageType> = async ({ page, formAction, locale }) => {
+export const RevenuePage: React.FC<RevenuePageType> = async ({ page, formAction, locale, createdId }) => {
     const { authEmail } = await getUserSessionAndEmail();
 
     return (
         <Stack alignItems={'center'} justifyContent={'center'} spacing={2}>
             <div>
-                <FormRevenue formAction={formAction} authEmail={authEmail} locale={locale} />
+                <FormRevenue formAction={formAction} authEmail={authEmail} locale={locale} createdId={createdId} />
             </div>
             <MiddlePaperWrapper>
                 <div>

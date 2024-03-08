@@ -1,9 +1,8 @@
 import Stack from '@mui/material/Stack';
+import { ControlRevenueForm } from './ControlRevenueForm';
 import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
-import { MonthCalendar } from '@/Componets/Report/MonthCalendar';
-import { UIButton } from '@/Componets/UI/UIButton';
-import { UIInputField } from '@/Componets/UI/UIInputField';
 import { ReactNode } from 'react';
+import { UIButton } from '@/Componets/UI/UIButton';
 import { useTranslations } from 'next-intl';
 
 type FormRevenueType = {
@@ -16,9 +15,10 @@ type FormRevenueType = {
     children?: ReactNode;
     authEmail: string;
     locale: string;
+    createdId?: string;
 };
 
-export const FormRevenue: React.FC<FormRevenueType> = ({ defaultValues, formAction, children, authEmail, locale }) => {
+export const FormRevenue: React.FC<FormRevenueType> = ({ defaultValues, formAction, children, authEmail, locale, createdId }) => {
     const translation = useTranslations('Form');
 
     return (
@@ -28,19 +28,16 @@ export const FormRevenue: React.FC<FormRevenueType> = ({ defaultValues, formActi
                 {children}
 
                 <Stack alignItems={'start'} spacing={2} mb={2}>
-                    <UIInputField
-                        label={translation('revenue.total')}
-                        name="cost"
-                        inputAdorment={{ label: '$', position: 'start' }}
-                        defaultValue={defaultValues?.cost}
+                    <ControlRevenueForm
+                        defaultValues={defaultValues}
+                        dictionary={{
+                            date: translation('revenue.date'),
+                            note: translation('revenue.note'),
+                            total: translation('revenue.total'),
+                        }}
+                        locale={locale}
+                        createdId={createdId}
                     />
-                    <UIInputField
-                        label={translation('revenue.note')}
-                        name="note"
-                        required={false}
-                        defaultValue={defaultValues?.note}
-                    />
-                    <MonthCalendar defaultValue={defaultValues?.date} label={translation('revenue.date')} locale={locale} />
                 </Stack>
                 <Stack alignItems={'center'}>
                     <UIButton label={translation('confirm')} type="submit" />

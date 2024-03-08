@@ -34,7 +34,6 @@ export const createTask = async (formData: FormData) => {
     const result = await TaskActions.storeTask({ projectId, email }, newTask);
 
     if (result.hasOwnProperty('wrongData')) {
-        console.log('w')
         redirect('?wrong_data=1')
     } else {
             //@ts-ignore

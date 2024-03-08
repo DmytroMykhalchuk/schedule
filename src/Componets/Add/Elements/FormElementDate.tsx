@@ -215,7 +215,6 @@ export const FormElementDate: React.FC<FormElementDateType> = ({ authEmail, defa
         return allowedValues;
     };
 
-    console.log(date.format('DD.MM.YYYY'))
     return (
         <Grid container spacing={2} sx={{ p: 2 }}>
             <Grid item xs={3} justifyContent={'center'}>

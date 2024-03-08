@@ -10,9 +10,11 @@ type MonthCalendarType = {
     defaultValue?: Date;
     label: string;
     locale: string;
+    value?: Date;
+    onChange?: (date: dayjs.Dayjs) => void
 };
 
-export const MonthCalendar: React.FC<MonthCalendarType> = ({ defaultValue, label, locale }) => {
+export const MonthCalendar: React.FC<MonthCalendarType> = ({ defaultValue, label, locale, onChange, value }) => {
     locale === 'uk' && dayjs.locale(uk);
 
     const currentDay = dayjs();
@@ -23,7 +25,9 @@ export const MonthCalendar: React.FC<MonthCalendarType> = ({ defaultValue, label
     const [date, setDate] = useState(currentDay);
 
     const onChangeDate = (value: dayjs.Dayjs | null) => {
-        value && setDate(value)
+        if (!value) return;
+        setDate(value);
+        onChange && onChange(value);
     };
 
     return (
@@ -32,6 +36,7 @@ export const MonthCalendar: React.FC<MonthCalendarType> = ({ defaultValue, label
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='uk'>
                 <DatePicker
                     defaultValue={dayjs(defaultValue)}
+                    value={value ? dayjs(value) : undefined}
                     views={['month', 'year']}
                     openTo="month"
                     maxDate={currentDay.add(1, 'month')}

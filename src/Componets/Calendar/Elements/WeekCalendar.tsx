@@ -21,6 +21,7 @@ type WeekCalendarType = {
 
 export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date, authEmail, locale }) => {
     const currentDate = dayjs(date);
+    
     const tasks = await getWeekTasks(currentDate.format('YYYY-MM-DD'), authEmail);
 
     const renderHeader = (): JSX.Element[] => {
@@ -61,7 +62,7 @@ export const WeekCalendar: React.FC<WeekCalendarType> = async ({ date, authEmail
     };
 
     const renderColumn = (numberOfLine: number): JSX.Element => {
-        const dayTasks = tasks.filter(item => item.dueDate === dayjs().day(numberOfLine + 1).format('DD.MM.YYYY'));
+        const dayTasks = tasks.filter(item => item.dueDate === currentDate.day(numberOfLine + 1).format('DD.MM.YYYY'));
 
         return (
             <Grid
@@ -193,10 +194,11 @@ export const TaskItem: React.FC<TaskItemType> = ({ primaryColor, secondaryColor,
     return (
         <Box
             sx={{
+                pt:'2px',
                 mb: 0.5,
                 position: 'absolute',
-                top: ((fromHour - workHours[0]) * 90) - 4,
-                height: ((toHour - fromHour) * 90) + 8 + 'px',
+                top: ((fromHour - workHours[0]) * 90) - 2,
+                height: ((toHour - fromHour) * 90)  + 'px',
                 width: '100%',
                 px: 0.5,
             }}
@@ -210,6 +212,7 @@ export const TaskItem: React.FC<TaskItemType> = ({ primaryColor, secondaryColor,
                     borderRadius: 2,
                     borderWidth: 1,
                     borderStyle: 'solid',
+                    wordBreak:'break-all'
                 }}>
                     {task}
                 </Typography >

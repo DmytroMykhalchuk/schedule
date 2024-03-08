@@ -15,7 +15,8 @@ export const CalendarActions = {
             return [];
         }
         const formattedDate = findDate?.slice(2);
-        const regex = new RegExp(formattedDate, 'i') // i for case insensitive
+
+        const regex = new RegExp(formattedDate)
         const tasks = await Task.find({ projectId: project._id, dueDate: { $regex: regex } });
 
         const days = tasks.map(task => +task.dueDate.substr(0, 2))

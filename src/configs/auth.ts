@@ -19,7 +19,6 @@ export const nextAuthConfig: AuthOptions = {
             },
             async authorize(credentials) {
                 if (!(credentials?.name || credentials?.sub || credentials?.locale || credentials?.picture)) {
-                    console.log('empty credentials')
                     return null;
                 }
 
