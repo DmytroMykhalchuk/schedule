@@ -1,3 +1,4 @@
+import { HomeCalendar } from "@/Componets/Home/HomeCalendar";
 import { Team } from "@/Componets/Home/Team";
 import { HeaderLayout } from "@/Componets/Layouts/HeaderLayout";
 import { NoAssigneeTasks } from "@/Componets/Overview/NoAssigneeTasks";
@@ -33,7 +34,7 @@ const Page: React.FC<PageType> = async ({ params }) => {
 
                 <Grid item xs={12} lg={6}>
                     <div>
-                        {/* <HomeCalendar authEmail={authEmail} locale={locale}/> */}
+                        <HomeCalendar authEmail={authEmail} locale={locale}/>
                         <Stack spacing={2}>
                             <div>
                                 <Team authEmail={authEmail} locale={locale} />

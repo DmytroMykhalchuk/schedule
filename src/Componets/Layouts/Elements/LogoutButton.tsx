@@ -24,10 +24,8 @@ export const LogoutButton: React.FC<LogoutButtonType> = ({ locale }) => {
     };
 
     return (
-        <>
-            <Button type='submit' onClick={onLogout}>
-                <LogoutIcon className={styles.menuIcon} />
-            </Button>
-        </>
+        <Button type='submit' onClick={onLogout}>
+            <LogoutIcon className={styles.menuIcon} />
+        </Button>
     );
 };

@@ -17,7 +17,9 @@ export const HomeCalendar: React.FC<HomeCalendarType> = ({ authEmail, locale }) 
             <Typography variant="subtitle2">
                 {translation('page_title')}
             </Typography>
-            <LinkedDateCalendar authEmail={authEmail} locale={locale} />
+            <div>
+                <LinkedDateCalendar authEmail={authEmail} locale={locale} />
+            </div>
         </Paper>
     );
 };

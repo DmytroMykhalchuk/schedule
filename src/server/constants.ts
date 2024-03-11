@@ -125,9 +125,9 @@ export const revenuePerPage = 10;
 export const scheduleEmail = 'schedule@gmail.com';
 
 export const dateMap = {
-    [dayjs().format('DD.MM.YYYY')]: 'Today',
-    [dayjs().add(1, 'day').format('DD.MM.YYYY')]: 'Tommorow',
-    [dayjs().add(2, 'day').format('DD.MM.YYYY')]: 'Day after tomorrow',
+    [dayjs().format('DD.MM.YYYY')]: 'today',
+    [dayjs().add(1, 'day').format('DD.MM.YYYY')]: 'tommorow',
+    [dayjs().add(2, 'day').format('DD.MM.YYYY')]: 'day after tomorrow',
 };
 
 export const searchAnwserLmit = 5

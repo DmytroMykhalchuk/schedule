@@ -22,7 +22,6 @@ export const PageActions = {
     async getChartsInfo(authParams: AuthType): Promise<ReportPageInfoType> {
         await connectDB();
         const currentDate = dayjs();
-        const currentDateStamp = currentDate.format('DD.MM.YYYY');
 
         const user = await UserActions.getUserByEmail(authParams.email);
 
@@ -75,7 +74,7 @@ export const PageActions = {
                 }
 
                 if (currentDate.isSame(task.dueDate, 'week')) {
-                    const dayOfWeek = task.dueDate.day();
+                    const dayOfWeek = task.dueDate.day() - 1;
                     if (weekWorkHours.hasOwnProperty(dayOfWeek)) {
                         weekWorkHours[dayOfWeek] += task.toHour - task.fromHour;
                     } else {

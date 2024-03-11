@@ -42,3 +42,11 @@ $peachy-dark: #ffcda3;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.mobileElement {
+    display: none;
+
+    @media (max-width:600px) {
+        display: block;
+    }
+}

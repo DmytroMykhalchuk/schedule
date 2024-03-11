@@ -10,6 +10,8 @@ import { NotificationInvite } from '@/Componets/Enter/NotificationInvite';
 import { projectIdCookieKey } from '@/server/constants';
 import { redirect } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { LogoutButton } from '@/Componets/Layouts/Elements/LogoutButton';
+import { MiddlePaperWrapper } from '@/ui/MiddlePaperWrapper';
 
 type PageType = {
     searchParams: {
@@ -38,9 +40,14 @@ const Page: React.FC<PageType> = async ({ searchParams, params }) => {
     projectId && authEmail && redirect(`/${locale}/app/`);
 
     return (
-        <Stack alignItems={'center'} justifyContent={'center'} minHeight={'100vh'}>
+        <Stack alignItems={'center'} justifyContent={'center'} minHeight={'100vh'} spacing={2}>
             <NotificationInvite />
             <Content authEmail={authEmail} locale={locale} isReachedMaxUsers={Boolean(reachedMaxUsers)} isNotFound={Boolean(notFound)} />
+            <MiddlePaperWrapper>
+                <Stack alignItems={'center'}>
+                    <LogoutButton locale={locale} />
+                </Stack>
+            </MiddlePaperWrapper>
         </Stack>
     );
 };
@@ -56,11 +63,7 @@ export const Content: React.FC<ContentType> = ({ locale, authEmail, isReachedMax
     const translation = useTranslations('Auth');
 
     return (
-        <Paper sx={{
-            p: 2,
-            borderRadius: 4,
-            minWidth: { xs: 320, md: 600 }
-        }}>
+        <MiddlePaperWrapper>
             <Box mb={2}>
                 <Typography variant="h3" textAlign={'center'}>{translation('welcome')}</Typography>
                 <Typography variant="body1" textAlign={'center'}>{translation('welocme_subtitle')}</Typography>
@@ -70,7 +73,7 @@ export const Content: React.FC<ContentType> = ({ locale, authEmail, isReachedMax
                 <Typography variant="h6" fontWeight={600}>{translation('avalable_projects')}</Typography>
                 <AvailbleProjects authEmail={authEmail as string} locale={locale} />
             </Box>
-        </Paper>
+        </MiddlePaperWrapper>
     );
 };
 

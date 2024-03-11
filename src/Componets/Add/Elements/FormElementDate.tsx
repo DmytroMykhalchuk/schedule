@@ -4,7 +4,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-// import uk from 'dayjs/locale/uk';
+import uk from 'dayjs/locale/uk';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { projectIdCookieKey, workHours } from '@/server/constants';
 import { getCookieValue } from '@/utlis/getCookieValue';
@@ -18,7 +18,6 @@ import { getCheckedWeekDay } from '@/utlis/getCheckedWeekDay';
 import { translateDateToDayjs } from '@/utlis/translateDateToDayjs';
 import { useSelector } from 'react-redux';
 import { getTaskFormAssignee } from '@/redux/task/taskSelector';
-import uk from 'dayjs/locale/uk';
 
 type WorkHoursType = {
     fromHour: number,

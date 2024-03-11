@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { authCookieKey, projectIdCookieKey } from "@/server/constants";
 import { getServerSession } from "next-auth";
 import { nextAuthConfig } from "@/configs/auth";
+import { MobileMessage } from "@/Componets/Layouts/MobileMessage";
 
 type LayoutType = {
     children: ReactNode;
@@ -31,8 +32,11 @@ const Layout: React.FC<LayoutType> = async ({ children, params, modal }) => {
 
 
     return (
-        <Stack direction={'row'}>
+        <Stack direction={'row'} sx={{ position: 'relative' }}>
             <AppSideBar locale={locale} />
+            <div>
+                <MobileMessage />
+            </div>
             <Stack
                 sx={{
                     width: '100%',

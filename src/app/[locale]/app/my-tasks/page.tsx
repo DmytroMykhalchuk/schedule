@@ -10,9 +10,13 @@ import { TaskShortType } from '@/server/actions/types';
 dayjs.extend(customParseFormat)
 
 type PageType = {
+    params: {
+        locale: string;
+    };
 };
 
-const Page: React.FC<PageType> = async ({ }) => {
+const Page: React.FC<PageType> = async ({ params }) => {
+    const { locale } = params;
     const { authEmail, session } = await getUserSessionAndEmail();
     const tasks = await getMyTasks(authEmail);
 
@@ -64,17 +68,19 @@ const Page: React.FC<PageType> = async ({ }) => {
             />
             <Stack spacing={4}>
                 <div>
-                    <PaperWrapper tasks={taskFiltered.today.tasks} title="today" />
+                    <PaperWrapper tasks={taskFiltered.today.tasks} title="today" locale={locale} />
                 </div>
                 <div>
-                    <PaperWrapper tasks={taskFiltered.tomorrow.tasks} title="tomorrow" />
+                    <PaperWrapper tasks={taskFiltered.tomorrow.tasks} title="tomorrow" locale={locale} />
                 </div>
                 <div>
                     <PaperWrapper tasks={taskFiltered.next.tasks} title="this_week"
                         subtasks={taskFiltered.previous.tasks.length ? {
                             tasks: taskFiltered.previous.tasks,
                             title: 'later'
-                        } : undefined} isGeneralTask />
+                        } : undefined} isGeneralTask
+                        locale={locale}
+                    />
                 </div>
 
             </Stack>

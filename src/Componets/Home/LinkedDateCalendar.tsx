@@ -20,7 +20,7 @@ function getRandomNumber(min: number, max: number) {
   return Math.round(Math.random() * (max - min) + min);
 };
 
-function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }, authEmail: string) {
+function fakeFetch(date: Dayjs, authEmail: string) {
   const formattedDate = date.format('DD.MM.YYYY');
   const targetProjectId = getCookieValue(projectIdCookieKey);
 
@@ -35,9 +35,10 @@ function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }, authEmail: 
   }).then(response => {
     return response.json();
   }).then(data => {
-    return data?.days;
+    return data?.data?.days;
   })
     .catch(err => {
+
 
     }).finally(() => {
       // signal.onabort = () => {
@@ -82,9 +83,7 @@ export const LinkedDateCalendar = ({ authEmail, locale }: { authEmail: string, l
 
   const fetchHighlightedDays = (date: Dayjs) => {
     const controller = new AbortController();
-    fakeFetch(date, {
-      signal: controller.signal,
-    }, authEmail)
+    fakeFetch(date, authEmail)
       .then((daysToHighlight) => {
         Array.isArray(daysToHighlight) && setHighlightedDays(daysToHighlight);
         setIsLoading(false);

@@ -31,3 +31,5 @@ const Page: React.FC<PageType> = async ({ params, searchParams }) => {
 };
 
 export default Page;
+
+//todo add function closing defacto

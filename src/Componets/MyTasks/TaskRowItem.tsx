@@ -29,11 +29,11 @@ type TaskRowItemType = {
 export const TaskRowItem: React.FC<TaskRowItemType> = ({ url, name, status, datePoint, priority }) => {
     return (
         <Grid container spacing={1} pr={2} columns={9}>
-            <Grid item xs={3}>
-                <Link className={styles.truncate} href={url}>
-                    <Stack direction={'row'} spacing={1} flex={1}>
+            <Grid item xs={3} sx={{overflow:'hidden'}}>
+                <Link className={styles.truncate} href={url} style={{flex:1}}>
+                    <Stack direction={'row'} spacing={1} flex={1}className={styles.elipsis_1}>
                         <AdjustIcon />
-                        <Typography className={styles.truncate} variant="body1" >{name}</Typography>
+                        <Typography className={styles.elipsis_1}  variant="body1" >{name}</Typography>
                     </Stack>
                 </Link>
             </Grid>

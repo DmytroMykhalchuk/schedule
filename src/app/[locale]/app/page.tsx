@@ -8,6 +8,7 @@ import { ProjectDirectories } from "@/Componets/Home/ProjectDirectories";
 import { TasksWrapepr } from "@/Componets/Home/TasksWrapepr";
 import { NewComments } from "@/Componets/Home/NewComments";
 import { Team } from "@/Componets/Home/Team";
+import { HomeCalendar } from "@/Componets/Home/HomeCalendar";
 
 type PageType = {
     params: {
@@ -35,7 +36,9 @@ const Page: React.FC<PageType> = async ({ params }) => {
             <Grid container spacing={2}>
                 <Grid item sm={12} md={4}>
                     <Stack spacing={2}>
-                        {/* <HomeCalendar authEmail={authEmail} locale={locale}/> */}
+                        <div>
+                            <HomeCalendar authEmail={authEmail} locale={locale} />
+                        </div>
                         <div>
                             <ProjectDirectories authEmail={authEmail} locale={locale} />
                         </div>

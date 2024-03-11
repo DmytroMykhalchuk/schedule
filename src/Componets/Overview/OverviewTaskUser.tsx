@@ -23,11 +23,11 @@ export const OverviewTaskUser: React.FC<OverviewTaskUserType> = ({ taskTree, loc
     const translation = useTranslations('MyTasks');
 
     const weekMapNames = {
-        [currentDay.day(1).format('DD.MM.YYYY')]: currentDay.day(1).format('dddd'),
-        [currentDay.day(2).format('DD.MM.YYYY')]: currentDay.day(2).format('dddd'),
-        [currentDay.day(3).format('DD.MM.YYYY')]: currentDay.day(3).format('dddd'),
-        [currentDay.day(4).format('DD.MM.YYYY')]: currentDay.day(4).format('dddd'),
-        [currentDay.day(5).format('DD.MM.YYYY')]: currentDay.day(5).format('dddd'),
+        [currentDay.day(1).format('DD.MM.YYYY')]: currentDay.day(1).format('DD.MM.YYYY'),
+        [currentDay.day(2).format('DD.MM.YYYY')]: currentDay.day(2).format('DD.MM.YYYY'),
+        [currentDay.day(3).format('DD.MM.YYYY')]: currentDay.day(3).format('DD.MM.YYYY'),
+        [currentDay.day(4).format('DD.MM.YYYY')]: currentDay.day(4).format('DD.MM.YYYY'),
+        [currentDay.day(5).format('DD.MM.YYYY')]: currentDay.day(5).format('DD.MM.YYYY'),
         [currentDay.format('DD.MM.YYYY')]: translation('today'),
         [currentDay.add(1, 'day').format('DD.MM.YYYY')]: translation('tomorrow'),
     };

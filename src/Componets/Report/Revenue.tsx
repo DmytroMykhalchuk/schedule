@@ -13,6 +13,7 @@ import { RevenueChartType } from '@/server/actions/types';
 import { UIAvarageCaption } from '../UI/UIAvarageCaption';
 import { UIPaper } from '@/ui/UIPaper';
 import { useTranslations } from 'next-intl';
+import { RevenueMarker } from './Elements/RevenueMarker';
 
 type RevenueType = {
     chartData: RevenueChartType;
@@ -92,7 +93,7 @@ export const Revenue: React.FC<RevenueType> = ({ chartData, locale }) => {
                         })
                     }
                 </Grid>
-                <Grid container columns={14} pt={2}>
+                <Grid container columns={14} pt={2} mb={1}>
                     <Grid item xs={2}></Grid>
                     {
                         Array.from({ length: 12 }).map((_, index) => (
@@ -104,6 +105,10 @@ export const Revenue: React.FC<RevenueType> = ({ chartData, locale }) => {
                         ))
                     }
                 </Grid>
+                <Stack justifyContent={'center'} direction={'row'} spacing={2}>
+                    <RevenueMarker color={'secondary.light'} label={translation('revenue')}/>
+                    <RevenueMarker color={purple[400]} label={translation('losses')}/>
+                </Stack>
             </UIPaper>
         </>
     );
