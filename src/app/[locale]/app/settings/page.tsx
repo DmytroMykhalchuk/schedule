@@ -29,7 +29,7 @@ const Page: React.FC<PageType> = ({ }) => {
 type ContentType = {
 };
 
-export const Content: React.FC<ContentType> = async ({ }) => {
+const Content: React.FC<ContentType> = async ({ }) => {
     const { authEmail } = await getUserSessionAndEmail();
     const info = await getHasPremium(authEmail);
     return (

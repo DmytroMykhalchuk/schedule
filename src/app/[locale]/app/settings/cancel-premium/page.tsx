@@ -31,7 +31,7 @@ type ContentType = {
     authEmail: string;
 };
 
-export const Content: React.FC<ContentType> = ({ locale, authEmail }) => {
+const Content: React.FC<ContentType> = ({ locale, authEmail }) => {
     const translation = useTranslations("Premium");
     return (
         <DeleteDialog
@@ -48,7 +48,7 @@ type FormWrapperType = {
     children?: ReactNode
 };
 
-export const FormWrapper: React.FC<FormWrapperType> = async ({ children, authEmail }) => {
+const FormWrapper: React.FC<FormWrapperType> = async ({ children, authEmail }) => {
 
     return (
         <form action={cancelPremium}>

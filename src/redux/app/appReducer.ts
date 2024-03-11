@@ -2,7 +2,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { ThemeMode } from './appTypes'
-import { theme } from '@/app/theme/theme'
 
 export interface CounterState {
     value: number,

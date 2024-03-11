@@ -12,23 +12,23 @@ type PageType = {
 
 const Page: React.FC<PageType> = async ({ params }) => {
     const { locale, id } = params;
+    const { authEmail } = await getUserSessionAndEmail();
 
     return (
         <DeleteDialog
             cancelHref={`/${locale}/app/add/categories`}
-            FormWrapper={(props = {}) => (<FormWrapper categoryId={id} {...props} />)}
+            FormWrapper={(props={})=> (<FormWrapper categoryId={id} authEmail={authEmail} {...props}/>)}
         />
     );
 };
 
 type FormWrapperType = {
-    categoryId: string
-    children?: ReactNode
+    categoryId: string;
+    children?: ReactNode;
+    authEmail: string;
 };
 
-export const FormWrapper: React.FC<FormWrapperType> = async ({ children, categoryId }) => {
-    const { authEmail } = await getUserSessionAndEmail();
-
+const FormWrapper: React.FC<FormWrapperType> = ({ children, categoryId, authEmail }) => {
     return (
         <form action={deleteCategory}>
             <input type="hidden" name="auth_email" value={authEmail} />

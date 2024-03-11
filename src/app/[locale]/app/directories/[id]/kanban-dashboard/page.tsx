@@ -36,7 +36,7 @@ type ContentType = {
     locale: string;
 };
 
-export const Content: React.FC<ContentType> = ({ directory, tasks, locale }) => {
+const Content: React.FC<ContentType> = ({ directory, tasks, locale }) => {
     const translation = useTranslations('MyTasks');
     const titles = [
         { linkLabel: translation('overview_title'), linkHref: `/${locale}/app/charts`, },

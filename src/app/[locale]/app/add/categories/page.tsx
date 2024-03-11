@@ -43,7 +43,7 @@ type ContentType = {
     categoriesCount: number;
 };
 
-export const Content: React.FC<ContentType> = ({ authEmail, locale, categoriesCount }) => {
+const Content: React.FC<ContentType> = ({ authEmail, locale, categoriesCount }) => {
     const translation = useTranslations('Form');
     return (
         <MiddlePaperWrapper pathBack={`/${locale}/app/add/`} title={translation('category_form.add_title')}>

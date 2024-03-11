@@ -39,7 +39,7 @@ type ContentType = {
     locale: string;
 };
 
-export const Content: React.FC<ContentType> = ({ authEmail, category, locale }) => {
+const Content: React.FC<ContentType> = ({ authEmail, category, locale }) => {
     const translation = useTranslations('Form');
 
     return (

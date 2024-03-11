@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { PickersActionBarProps } from '@mui/x-date-pickers';
 
+//todo remove ts-ignore
 export const CalendarActionBar: React.FC<PickersActionBarProps> = ({ onAccept, onCancel, className, ...props }) => {
     //@ts-ignore
     const confirmLabel = props?.dictionary?.confirm;

@@ -25,7 +25,7 @@ type ContentType = {
     tasks: UrgentTask[],
 };
 
-export const Content: React.FC<ContentType> = ({ tasks }) => {
+const Content: React.FC<ContentType> = ({ tasks }) => {
     const translation = useTranslations('MyTasks');
 
     return (
