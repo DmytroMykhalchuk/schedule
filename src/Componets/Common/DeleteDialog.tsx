@@ -9,10 +9,10 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
 type DeleteDialogType = {
-    title?: string,
-    content?: ReactNode
-    cancelHref: string
-    FormWrapper: JSX.ElementType
+    title?: string;
+    content?: ReactNode;
+    cancelHref: string;
+    FormWrapper: JSX.ElementType;
 };
 
 export const DeleteDialog: React.FC<DeleteDialogType> = ({ title, content, cancelHref, FormWrapper }) => {

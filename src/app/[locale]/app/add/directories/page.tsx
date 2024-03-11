@@ -19,7 +19,14 @@ const Page: React.FC<PageType> = async ({ params }) => {
     return (
         <Stack alignItems={'center'} justifyContent={'center'} spacing={2}>
             <div>
-                <DirectoryCreateForm locale={locale} formAction={createDirectory} title='directory.add_title' type='create' directoriesCount={directories?.length} />
+                <DirectoryCreateForm
+                    locale={locale}
+                    authEmail={authEmail}
+                    formAction={createDirectory}
+                    title='directory.add_title'
+                    type='create'
+                    directoriesCount={directories?.length}
+                />
             </div>
             <MiddlePaperWrapper>
                 <div>

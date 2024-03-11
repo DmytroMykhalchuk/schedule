@@ -157,10 +157,10 @@ export const TaskActions = {
         return { task: handledTask, comments: preparedCommnets };
     },
 
-    async updateTask(auth: AuthType, updateTask: TaskUpdateType): Promise<{ success: boolean } | { wrongData: boolean }> {
+    async updateTask(auth: AuthType, updateTask: TaskUpdateType): Promise<{ success: boolean, wrongData?: boolean }> {
         const canCreate = await this.isAvalableTaskInThisDate(updateTask.assignee, updateTask.dueDate, updateTask.fromHour, updateTask.toHour, updateTask.taskId);
         if (!canCreate) {
-            return { wrongData: true };
+            return { success: false, wrongData: true };
         }
 
         await connectDB();

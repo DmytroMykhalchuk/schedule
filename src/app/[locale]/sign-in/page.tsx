@@ -59,7 +59,7 @@ type ContentType = {
     isNotFound: boolean;
 };
 
-export const Content: React.FC<ContentType> = ({ locale, authEmail, isReachedMaxUsers, isNotFound }) => {
+const Content: React.FC<ContentType> = ({ locale, authEmail, isReachedMaxUsers, isNotFound }) => {
     const translation = useTranslations('Auth');
 
     return (

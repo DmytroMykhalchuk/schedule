@@ -4,7 +4,13 @@ import Typography from '@mui/material/Typography';
 import { DatePickerToolbarProps } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
 
-export const CalendarToolbar: React.FC<DatePickerToolbarProps<Dayjs>> = ({ value, className, dictionary }) => {
+type PropsType = {
+    dictionary?: {
+        title: string;
+    };
+};
+
+export const CalendarToolbar: React.FC<DatePickerToolbarProps<Dayjs> & PropsType> = ({ value, className, dictionary }) => {
 
     return (
         <Box className={className}>

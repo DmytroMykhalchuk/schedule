@@ -34,7 +34,7 @@ const Page: React.FC<PageType> = async ({ params }) => {
 type ContentType = {
 };
 
-export const Content: React.FC<ContentType> = ({ }) => {
+const Content: React.FC<ContentType> = ({ }) => {
     const translation = useTranslations('Auth');
     return (
         <>
@@ -47,6 +47,5 @@ export const Content: React.FC<ContentType> = ({ }) => {
         </>
     );
 };
-
 
 export default Page;

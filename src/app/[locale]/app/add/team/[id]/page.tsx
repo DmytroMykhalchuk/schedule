@@ -48,7 +48,7 @@ type ContentType = {
     locale: string;
 };
 
-export const Content: React.FC<ContentType> = ({ role, targetUserId, authEmail, locale }) => {
+const Content: React.FC<ContentType> = ({ role, targetUserId, authEmail, locale }) => {
     const translation = useTranslations('Form');
 
     return (

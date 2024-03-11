@@ -11,10 +11,9 @@ import { MobileMessage } from "@/Componets/Layouts/MobileMessage";
 type LayoutType = {
     children: ReactNode;
     params: { locale: string };
-    modal?: ReactNode;
 };
 
-const Layout: React.FC<LayoutType> = async ({ children, params, modal }) => {
+const Layout: React.FC<LayoutType> = async ({ children, params }) => {
     const locale = params.locale;
 
     const session = await getServerSession(nextAuthConfig);
@@ -48,7 +47,6 @@ const Layout: React.FC<LayoutType> = async ({ children, params, modal }) => {
                 <Container>
                     {children}
                 </Container>
-                {modal && modal}
             </Stack>
         </Stack>
     );

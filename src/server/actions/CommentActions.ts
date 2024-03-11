@@ -57,6 +57,7 @@ export const CommentActions = {
             _id: comment._id.toString(),
             userId: comment.userId.toString(),
             createdAt: comment.createdAt,
+            taskId: comment.taskId.toString(),
         };
 
         if (task.assignee && user._id.toString() !== task.assignee.toString()) {
