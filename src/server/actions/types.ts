@@ -1,3 +1,4 @@
+import { payment } from './../services/stripe';
 import { Dayjs } from "dayjs";
 import mongoose from "mongoose"
 
@@ -19,6 +20,14 @@ export type DBProjectType = {
     team: ProjectTeamItem[],
     invitations: string[],
     categories: CategoryDB[],
+    premium: {
+        isActive: boolean,
+        payment: {
+            subscriptionId: string;
+            sessionId: string;
+            lastPayment: Date | null;
+        };
+    }
 }
 
 export type ProjectTeamItem = { userId: mongoose.Types.ObjectId, role: string }
@@ -31,7 +40,7 @@ export type UrgentTask = {
 
 export type AuthType = {
     projectId: string,
-    sessionId: string,
+    email: string,
 };
 
 export type StoreTaskType = {
@@ -46,7 +55,7 @@ export type StoreTaskType = {
     comment?: string | null
     fromHour: number,
     toHour: number,
-    categoryId: string
+    categoryId: string | null
 };
 
 export type StoreCommentType = {
@@ -122,8 +131,8 @@ export type ViewTaskType = {
     dueDate: string,
     status: StatusType,
     priority: PriorityType,
-    assignee: string,
-    directory: string,
+    assignee: string | null,
+    directory?: string,
     subtasks: string[],
     fromHour: number,
     toHour: number,
@@ -142,7 +151,7 @@ export type TaskUpdateType = {
     subtasks: string[] | null,
     fromHour: number,
     toHour: number,
-    categoryId: string
+    categoryId: string | null
 };
 
 export type StoreCommentRequestType = {
@@ -152,14 +161,15 @@ export type StoreCommentRequestType = {
 };
 
 export type CommentType = {
-    _id: string,
-    userId: string
-    name: string,
-    picture: string,
-    text: string
-    isOwner: boolean
-    replyId: string
-    createdAt: Date
+    _id: string;
+    userId: string;
+    name: string;
+    picture: string;
+    text: string;
+    isOwner: boolean;
+    replyId: string;
+    createdAt: Date;
+    taskId: string;
 };
 
 export type ProjectUsers = {
@@ -174,7 +184,7 @@ export type ProccessStatusType = {
 };
 
 export type DirectoryType = {
-    _id: mongoose.Types.ObjectId,
+    _id: string,
     name: string,
 };
 
@@ -190,19 +200,20 @@ export type UpdateDirectoryType = {
 };
 
 export type StoreUser = {
-    name: string
-    email: string
-    google_id: string
-    picture: string
+    name: string;
+    email: string;
+    googleId: string;
+    picture: string;
+    locale: string;
 };
 
 export type UserDB = {
-    sessions: string[],
-    google_id: number,
+    googleId: string,
     name: string,
     picture: string,
     email: string
-    _id: string,
+    _id: mongoose.Types.ObjectId,
+    locale: string;
 };
 
 export type UserTeamItemType = Pick<UserDB, '_id' | 'email' | 'name' | 'picture'> & { role: string }
@@ -303,9 +314,9 @@ export type ReportPageInfoType = {
     revenue: RevenueChartType,
 };
 
-export type ByDirectoryIdTaskDB = Omit<TaskDB, 'assignee' | 'projectId' | 'directory' | 'dueDate' | 'description' | 'subtasks' | 'comments' | 'fromHour' | 'toHour'> & { assignee: { _id: mongoose.Types.ObjectId, name: string, email: string, picture: string }, category?: CategoryDB };
+export type ByDirectoryOrCategoryIdTaskDB = Omit<TaskDB, 'assignee' | 'projectId' | 'directory' | 'dueDate' | 'description' | 'subtasks' | 'comments' | 'fromHour' | 'toHour'> & { assignee: { _id: mongoose.Types.ObjectId, name: string, email: string, picture: string }, category?: CategoryDB };
 
-export type ByDirectoryTaskRecord = {
+export type ByDirectoryOrCategoryTaskRecord = {
     assignee: {
         _id: string;
         name: string;
@@ -321,6 +332,11 @@ export type ByDirectoryTaskRecord = {
 }
 
 
-
+export type TaskTree = {
+    [id: string]: {
+        tasks: TaskByUserRecord[];
+        user: TaskByUserUser;
+    }
+};
 
 

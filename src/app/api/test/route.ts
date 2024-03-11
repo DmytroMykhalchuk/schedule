@@ -1,8 +1,9 @@
+import { mailer } from "@/server/services/mailer"
+import { useTranslations } from "next-intl";
 import { NextResponse } from "next/server"
 
-export const GET = (req: Request) => {
-    const { searchParams } = new URL(req.url);
+export const GET = async (req: Request) => {
 
-    const response = searchParams.get('test');
-    return NextResponse.json(response)
-};
+    mailer('dimamuchalchuk@gmail.com', 'subject', '<a href="#">text</a>');
+    return NextResponse.json('success')
+}

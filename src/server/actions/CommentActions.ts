@@ -1,20 +1,21 @@
-import { StoreCommentType, CommentDB, AuthType, StoreCommentRequestType, CommentType, LatestCommentType } from './types';
+import Comment from '../models/Comment';
 import connectDB from '../connectDB';
 import mongoose from 'mongoose';
 import Pusher from 'pusher';
+import { AuthType, CommentDB, CommentType, LatestCommentType, StoreCommentRequestType, StoreCommentType } from './types';
+import { channelPrefixName, newCommentEventName, removedCommentEventName } from '../constants';
+import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
 import { ObjectId } from 'mongodb';
 import { ProjectActions } from './ProjectActions';
-import { UserActions } from './UserActions';
-import { channelPrefixName, newCommentEventName, removedCommentEventName } from '../constants';
-import Comment from '../models/Comment';
 import { TaskActions } from './TaskActions';
-import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
+import { UserActions } from './UserActions';
+import { MailActions } from './MailActions';
 
 const pusher = new Pusher({
-    appId: "1752490",
-    key: "90149ab3e623050894c1",
-    secret: "9a5bc84db603fc34ddaa",
-    cluster: "eu",
+    appId: process.env.PUSHER_APP_ID!,
+    key: process.env.PUSHER_APP_KEY!,
+    secret: process.env.PUSHER_APP_SECRET!,
+    cluster: process.env.PUSHER_APP_CLUSTER!,
     useTLS: true
 });
 
@@ -22,7 +23,7 @@ export const CommentActions = {
     async storeComment(auth: AuthType, requestComment: StoreCommentRequestType) {
         await connectDB();
 
-        const user = await UserActions.getUserBySessionId(auth.sessionId);
+        const user = await UserActions.getUserByEmail(auth.email);
         const project = await ProjectActions.getProjectById(auth.projectId, { _id: 1 }, user._id);
 
         if (!project) {
@@ -41,7 +42,7 @@ export const CommentActions = {
         };
         const comment = await this.createCommentOfTask(commentStore);
 
-        await TaskActions.addCommentId(requestComment.taskId, comment._id);
+        const task = await TaskActions.addCommentId(requestComment.taskId, comment._id);
 
         pusher.trigger(`${channelPrefixName}${project._id.toString()}`, newCommentEventName, {
             comment: comment
@@ -58,13 +59,22 @@ export const CommentActions = {
             createdAt: comment.createdAt,
         };
 
+        if (task.assignee && user._id.toString() !== task.assignee.toString()) {
+            await MailActions.notifyAboutComment(
+                { name: task.name, id: task._id.toString() },
+                task.assignee.toString(),
+                user.name,
+                responseComment.text
+            );
+        }
+
         return responseComment;
     },
 
     async removeComment(auth: AuthType, commentId: string): Promise<{ success: boolean }> {
         await connectDB();
 
-        const user = await UserActions.getUserBySessionId(auth.sessionId);
+        const user = await UserActions.getUserByEmail(auth.email);
 
         const comment = await Comment.findByIdAndDelete({ _id: commentId, userId: user._id });
 
@@ -103,7 +113,7 @@ export const CommentActions = {
             return [];
         }
 
-        const comments = await Comment.find({ projectId: project._id }).populate('taskId', 'name').sort('-createdAt').limit(10);
+        const comments = await Comment.find({ projectId: project._id }).populate('taskId', 'name').sort('-createdAt').limit(6);
 
         return comments as LatestCommentType[];
     },
@@ -126,7 +136,7 @@ export const CommentActions = {
                 replyId: getRandomBoolean(0.4) ? commentsIds[Math.floor(Math.random() * commentsIds.length)]?.toString() || '' : '',
                 taskId: taskId,
                 text: getRandomString(3, 50),
-                userId: randomUser._id,
+                userId: randomUser._id.toString(),
                 _id: new ObjectId(),
             };
 

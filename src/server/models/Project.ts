@@ -31,6 +31,16 @@ const projectSchema = new Schema<DBProjectType>({
         type: [{ _id: mongoose.Types.ObjectId, name: String, color: String, textColor: String }],
         default: [],
     },
+    premium: {
+        isActive: {
+            type: Boolean, default: false,
+        },
+        payment: {
+            subscriptionId: { type: String, default: null, },
+            sessionId: { type: String, default: null, },
+            lastPayment: { type: Date, default: null, },
+        }
+    },
 });
 
 export default mongoose.models.Project || mongoose.model<DBProjectType>('Project', projectSchema);

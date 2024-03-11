@@ -1,10 +1,12 @@
-import dayjs from 'dayjs';
 import connectDB from '../connectDB';
-import { revenuePerPage } from '../constants';
+import dayjs from 'dayjs';
 import Revenue from '../models/Revenue';
+import { AuthType, ProccessStatusType, RevenueChartType, RevenueDBdType, RevenueItemPopulatedDB, RevenueRecordPopulatedType, RevenueRecordType, RevenueStoreType, UpdateRevenueType } from './types';
 import { ProjectActions } from './ProjectActions';
+import { revenuePerPage } from '../constants';
 import { UserActions } from './UserActions';
-import { AuthType, RevenueStoreType, ProccessStatusType, RevenueRecordType, RevenueDBdType, RevenueItemPopulatedDB, RevenueRecordPopulatedType, UpdateRevenueType, RevenueChartType } from './types';
+import { getRandomWeekdayDate } from '@/utlis/getRandomWeekdayDate';
+import { getRandomBoolean, getRandomInt, getRandomString } from '../utils/utils';
 
 export const RevenueActions = {
     async getLastRevenue(authParams: AuthType, page: number): Promise<{ total: number, revenues: RevenueRecordType[] }> {
@@ -60,10 +62,11 @@ export const RevenueActions = {
         return preperedRevenue;
     },
 
-    async addRevenue(authParams: AuthType, storeRevenue: RevenueStoreType): Promise<ProccessStatusType> {
+    async addRevenue(authParams: AuthType, storeRevenue: RevenueStoreType): Promise<ProccessStatusType & { revenueId?: string }> {
         await connectDB();
 
-        const user = await UserActions.getUserBySessionId(authParams.sessionId);
+        const user = await UserActions.getUserByEmail(authParams.email);
+
         const project = await ProjectActions.getProjectById(authParams.projectId, { _id: 1 }, user._id);
 
         if (!project || !user) {
@@ -80,12 +83,29 @@ export const RevenueActions = {
 
         const revenue = await revenueModel.save();
 
-        return { success: Boolean(revenue) };
+        return { success: Boolean(revenue), revenueId: revenue._id.toString() };
+    },
+
+    async genreateRevenues(authorId: string, projectId: string, count = 100,) {
+        await connectDB();
+        const isPast = true;
+        
+        for (let index = 0; index < count; index++) {
+            const randomDate = getRandomWeekdayDate(365, isPast);
+            const revenueModel = new Revenue({
+                projectId: projectId,
+                author: authorId,
+                targetDate: randomDate,
+                cost: getRandomInt(-1000, 1000),
+                note: getRandomBoolean(0.3) ? getRandomString() : '',
+            });
+            const revenue = await revenueModel.save();
+        }
     },
 
     async updateRevenue(authParams: AuthType, updateRevenue: UpdateRevenueType): Promise<ProccessStatusType> {
         await connectDB();
-        const user = await UserActions.getUserBySessionId(authParams.sessionId, { _id: 1 });
+        const user = await UserActions.getUserByEmail(authParams.email, { _id: 1 });
         const project = await ProjectActions.getProjectById(authParams.projectId, { _id: 1 }, user._id);
 
         if (!project || !user) {
@@ -146,4 +166,10 @@ export const RevenueActions = {
 
         return chart;
     },
+
+    async deleteGenerated(projectId: string) {
+        await connectDB();
+
+        await Revenue.deleteMany({ projectId: projectId });
+    }
 };

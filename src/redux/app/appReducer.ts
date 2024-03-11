@@ -1,12 +1,18 @@
+'use client';
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
+import { ThemeMode } from './appTypes'
+import { theme } from '@/app/theme/theme'
 
 export interface CounterState {
-    value: number
+    value: number,
+    themeMode: ThemeMode,
 }
 
 const initialState: CounterState = {
     value: 0,
+    themeMode: 'light',
+    // themeMode: 'dark',
 }
 
 export const appSlice = createSlice({
@@ -26,10 +32,16 @@ export const appSlice = createSlice({
         incrementByAmount: (state, action: PayloadAction<{ id: number, msg?: string }>) => {
             state.value += action.payload.id
         },
+        toggleTheme: (state) => {
+            const currentTheme = localStorage.getItem('themeMode') as ThemeMode;
+            const theme = currentTheme === 'light' ? 'dark' : 'light';
+            state.themeMode = theme;
+            localStorage.setItem('themeMode', theme);
+        },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = appSlice.actions
+export const { increment, decrement, incrementByAmount, toggleTheme } = appSlice.actions
 
 export default appSlice.reducer;

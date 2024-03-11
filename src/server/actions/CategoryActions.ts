@@ -1,10 +1,13 @@
 import connectDB from '../connectDB';
-import { AuthType, ProccessStatusType, CategoryRecord, CategoryDB } from './types';
+import Task from '../models/Task';
+import { AuthType, ByDirectoryOrCategoryTaskRecord, CategoryDB, CategoryRecord, ProccessStatusType } from './types';
+import { categoryColors } from '../constants';
 import { getContrastColor } from '@/utlis/getContrastColor';
+import { getRandomString } from '../utils/utils';
 import { ObjectId } from 'mongodb';
 import { ProjectActions } from './ProjectActions';
-import { categoryColors } from '../constants';
-import { getRandomString } from '../utils/utils';
+import Category from '@mui/icons-material/Category';
+import { TaskActions } from './TaskActions';
 
 export type StoreCategory = {
     color: string,
@@ -95,6 +98,8 @@ export const CategoryActions = {
 
         project?.save();
 
+        await Task.updateMany({ categoryId: categoryId }, { categoryId: '' });
+
         return { success: Boolean(project) };
     },
 
@@ -125,6 +130,27 @@ export const CategoryActions = {
 
         const categoryIds = project.categories.map((item: CategoryDB) => item._id);
         return categoryIds;
+    },
+
+    async getCategoryAndTasks(auth: AuthType, categoryId: string): Promise<{ tasks: ByDirectoryOrCategoryTaskRecord[], category?: CategoryRecord }> {
+        await connectDB();
+
+        const project = await ProjectActions.getProjectByFilters(auth, { _id: 1, categories: 1 });
+        const targetCategory = project?.categories?.find((category: CategoryDB) => category._id.toString() === categoryId);
+
+        if (!project || !targetCategory) {
+            return { tasks: [], category: undefined }
+        }
+
+        const tasks = await TaskActions.getTasksByCategory(auth.projectId, categoryId, project.categories);
+
+        return {
+            tasks,
+            category: {
+                ...targetCategory.toObject(),
+                _id:targetCategory._id.toString(),
+            },
+        };
     },
 
 };

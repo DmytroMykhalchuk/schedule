@@ -1,13 +1,14 @@
-import { ProccessStatusType, AuthType, DirectoryType, UpdateDirectoryType, TaskDB, DirectoryWithUsersType } from './types';
+import { ProccessStatusType, AuthType, DirectoryType, UpdateDirectoryType, DirectoryWithUsersType } from './types';
 import connectDB from "../connectDB";
 import Project from "../models/Project";
 import { ProjectActions } from './ProjectActions';
 import { ObjectId } from 'mongodb';
-import User from '../models/User';
 import { UserActions } from './UserActions';
 import Directory from '../models/Directory';
 import { getRandomString } from '../utils/utils';
 import { TaskActions } from './TaskActions';
+import mongoose from 'mongoose';
+import Task from '../models/Task';
 
 export const DirectoryActions = {
     async storeDirectory(directoryName: string, projectId: string): Promise<ProccessStatusType> {
@@ -28,7 +29,7 @@ export const DirectoryActions = {
     async getDirectories(auth: AuthType): Promise<DirectoryWithUsersType[]> {
         await connectDB();
 
-        const user = await UserActions.getUserBySessionId(auth.sessionId);
+        const user = await UserActions.getUserByEmail(auth.email);
 
         const project = await Project.findOne({ _id: auth.projectId, users: user._id }, { directories: 1 }).populate('directories').orFail();
 
@@ -38,24 +39,37 @@ export const DirectoryActions = {
             _id: item._id,
             name: item.name,
             users: tasks
-                .filter((task) => task.directory.toString() === item._id.toString())
+                .filter((task) => task.directory && task.directory.toString() === item._id.toString())
+                .map((item) => item.assignee)
                 .filter((value, index, self) => self.indexOf(value) === index) //unique
-                .map((item) => item.assignee),
         }));
 
         return preparedDirectories;
     },
 
-    async getDirectory(directoryId: string): Promise<DirectoryType> {
+    async getDirectory(auth: AuthType, directoryId: string): Promise<DirectoryType | null> {
         await connectDB();
+
+        const project = await ProjectActions.getProjectByFilters(auth);
+        if (!project) {
+            return null;
+        }
 
         const directory = await Directory.findOne({ _id: directoryId });
 
-        return directory;
+        return {
+            ...directory.toObject(),
+            _id: directory._id.toString(),
+        };
     },
 
-    async updateDirectory(updateDirectory: UpdateDirectoryType): Promise<ProccessStatusType> {
+    async updateDirectory(auth: AuthType, updateDirectory: UpdateDirectoryType): Promise<ProccessStatusType> {
         await connectDB();
+
+        const project = await ProjectActions.getProjectByFilters(auth);
+        if (!project) {
+            return { success: false };
+        }
 
         const directory = await Directory.findOneAndUpdate({ _id: updateDirectory.directoryId }, {
             name: updateDirectory.directoryName,
@@ -64,10 +78,20 @@ export const DirectoryActions = {
         return { success: Boolean(directory) };
     },
 
-    async deleteDirectory(directoryId: string): Promise<ProccessStatusType> {
+    async deleteDirectory(auth: AuthType, directoryId: string): Promise<ProccessStatusType> {
         await connectDB();
 
+        const project = await ProjectActions.getProjectByFilters(auth, { directories: 1 });
+        if (!project) {
+            return { success: false };
+        }
+
         const directory = await Directory.findOneAndDelete({ _id: directoryId });
+
+        project.directories = project.directories.filter((id: mongoose.Types.ObjectId) => id.toString() !== directoryId);
+        project.save();
+
+        await Task.findOneAndUpdate({ directoryId: directoryId }, { directoryId: '' });
 
         return { success: Boolean(directory) };
     },

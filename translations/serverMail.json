@@ -1,0 +1,14 @@
+{
+    "uk": {
+        "new_comment": {
+            "subject":"Новий комент у вашій тасці",
+            "text":"Користувач userName залишив коментар у задачі taskName: comment"
+        },
+        "task_assigned": {
+            "subject": "Призначену нову задачу!",
+            "text": "Користувач userName призначив нову задачу: taskName!"
+        },
+        "": ""
+    },
+    "en": {}
+}
