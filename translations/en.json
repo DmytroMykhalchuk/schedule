@@ -1,6 +1,209 @@
 {
     "Index": {
-        "title": "Hello world!"
+        "title": "Hello, world!"
     },
-    "": ""
+    "AppHome": {
+        "header": {
+            "title": "Welcome, {name}!",
+            "subtitle": "Here's your agenda for today"
+        },
+        "urgent_tasks": "Urgent Tasks",
+        "new_comments": "Recent Comments",
+        "team": "Team",
+        "categories": "Categories",
+        "project_directories": "Project Directories",
+        "search": {
+            "task_title": "Tasks",
+            "directory_title": "Directories",
+            "invite_title": "Invitations",
+            "category_title": "Categories",
+            "user_title": "Teammates",
+            "comment_title": "Comments",
+            "not_found": "Not found",
+            "searching": "Searching",
+            "": ""
+        }
+    },
+    "Calendar": {
+        "navigation": {
+            "day": "Day",
+            "week": "Week",
+            "month": "Month"
+        },
+        "page_title": "Calendar"
+    },
+    "MyTasks": {
+        "page_title": "My Tasks",
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "day after tomorrow": "Day after tomorrow",
+        "this_week": "This Week",
+        "no_tasks": "No tasks",
+        "later": "Later",
+        "statuses": {
+            "pasued": "Paused",
+            "not_started": "Not Started",
+            "in_progress": "In Progress",
+            "done": "Done",
+            "not_started_title": "To Do",
+            "in_progress_title": "In Progress",
+            "done_title": "Done"
+        },
+        "priorities": {
+            "low_priority": "Low",
+            "medium_priority": "Medium",
+            "critical_prority": "High"
+        },
+        "task_by_user_title": "User's Tasks",
+        "default_title": "New Task #1",
+        "assignee": "Assignee",
+        "status": "Status",
+        "project": "Project",
+        "due_date": "Due Date",
+        "priority": "Priority",
+        "category": "Category",
+        "description": "Description",
+        "subtasks": "Subtasks",
+        "is_subtasks": "Subtasks",
+        "new_task": "New Task",
+        "task": "Task",
+        "no_comments": "No comments",
+        "directory_overview": "Directory Overview",
+        "kanban_view": "Kanban View",
+        "add_task": "Add Task",
+        "reply_to_message": "Reply to",
+        "reply_to_user": "Reply",
+        "default_directory": "No Directory",
+        "no_assignes_tasks": "No Assigned Tasks",
+        "overview_title": "Overview"
+    },
+    "Overview": {
+        "page_title": "Overview"
+    },
+    "Report": {
+        "page_title": "Report",
+        "total_projects": {
+            "title": "Total Projects",
+            "add_button": "Add New Project"
+        },
+        "total_users": {
+            "title": "Total Users",
+            "add_button": "Add User"
+        },
+        "project_progress": "Project Progress",
+        "project_categories": "Project Categories",
+        "total_working_hours": {
+            "title": "Total Working Hours",
+            "year": "Year",
+            "week": "Week",
+            "hours": "hours",
+            "hour_short": "h",
+            "avg_per_month": "Avg. {hours}h/month"
+        },
+        "project_revenue": {
+            "title": "Project Revenue",
+            "avg_per_month": "Avg. ${cost}/month"
+        },
+        "add_new_revenue": "Add Record",
+        "revenue": "Revenue",
+        "losses": "Losses"
+    },
+    "Form": {
+        "add_member": "Add Member",
+        "add_more": "Add More",
+        "add_new": "",
+        "revenue": {
+            "title": "Add Record",
+            "total": "Total",
+            "note": "Note",
+            "date": "Date"
+        },
+        "directories": "Directories",
+        "tasks": "Tasks",
+        "team": "Team",
+        "invitations": "Invitations",
+        "members": "Members",
+        "categories": "Categories",
+        "confirm": "Confirm",
+        "create": "Create",
+        "cancel": "Cancel",
+        "update": "Update",
+        "select_date": "Select Date",
+        "generate": "Generate",
+        "required": "Required",
+        "directory": {
+            "add_title": "Add Directory",
+            "update_title": "Update Directory",
+            "directory_placeholder": "Directory Name"
+        },
+        "invitation_form": {
+            "add_title": "Invitation"
+        },
+        "member_form": {
+            "title": "Members"
+        },
+        "category_form": {
+            "add_title": "Add Category",
+            "update_title": "Update Category",
+            "category_placeholder": "Category Name",
+            "color_label": "Choose Color"
+        },
+        "team_form": {
+            "add_title": "Add to Team",
+            "update_title": "Update Role",
+            "role": "Role"
+        },
+        "forbidden_date": "Date or time not available",
+        "project_form": {
+            "title": "Create Project",
+            "project_name": "Project Name"
+        }
+    },
+    "Common": "Learn More",
+    "Modal": {
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "confirm_action": "Confirm Action",
+        "default_delete_message": "The record will be permanently deleted. Are you sure you want to delete?"
+    },
+    "Settings": {
+        "dark_mode": "Dark Mode",
+        "light_mode": "Light Mode"
+    },
+    "Auth": {
+        "login_by_google": "Login with Google",
+        "welcome": "Welcome!",
+        "welocme_subtitle": "To use our service, you need access to some projects.",
+        "create_project": "Create Project",
+        "or": "or",
+        "invite_code": "Invite Code",
+        "confirm": "Confirm",
+        "avalable_projects": "Available Projects",
+        "reached_max_users": "The project's user limit has been reached. Please contact the project administrator.",
+        "not_found": "Project not found"
+    },
+    "Notifications": {
+        "succesfully_updated": "Successfully updated"
+    },
+    "Premium": {
+        "premium": "Premium",
+        "title_success": "Subscription Activated",
+        "subtitle_success": "Thank you for choosing us",
+        "title_unsuccess": "Subscription Not Activated",
+        "subtitle_unsuccess": "If you think this is a mistake, please let us know at example@gmail.com",
+        "preference_text": "Connect more than 5 members to the project",
+        "cancel_premium": "Cancel Subscription",
+        "cancle_warning": "The existing number of users will be retained."
+    },
+    "Terms": {
+        "title": "Terms of Use",
+        "content": "This project is developed solely for demonstration and educational purposes."
+    },
+    "Privacy": {
+        "title": "Privacy Policy",
+        "content": "We collect users' email addresses only for authentication purposes and do not disclose this information to third parties. User data is stored on secure servers and may be deleted upon request. We use cookies only to provide convenient use of our site. Periodically, we may change our privacy policy, and users of our project will be notified of this change. If you have any questions regarding our privacy policy or terms of use, please contact us at dende5634@gmail.com."
+    },
+    "Mobile": {
+        "message": "Currently only desktop version is available"
+    }
 }
