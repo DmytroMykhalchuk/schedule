@@ -126,7 +126,7 @@ export const scheduleEmail = 'schedule@gmail.com';
 
 export const dateMap = {
     [dayjs().format('DD.MM.YYYY')]: 'today',
-    [dayjs().add(1, 'day').format('DD.MM.YYYY')]: 'tommorow',
+    [dayjs().add(1, 'day').format('DD.MM.YYYY')]: 'tomorrow',
     [dayjs().add(2, 'day').format('DD.MM.YYYY')]: 'day after tomorrow',
 };
 

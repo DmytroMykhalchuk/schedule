@@ -44,3 +44,5 @@ export const ThemeSwither: React.FC<PageType> = ({ dictionary }) => {
         </Box>
     );
 };
+
+//todo fix first switching theme
